@@ -54,7 +54,6 @@ $lang = array (
   // Config Page - General Configuration
   "node_call"                   =>  "Node roepletters",
   "dmr_id"                      =>  "CCS7/DMR ID",
-  "hotspot_id"                  =>  "Hotspot ID",
   "radio_freq"                  =>  "Radio frequentie",
   "lattitude"                   =>  "Breedtegraad",
   "longitude"                   =>  "Lengtegraad",

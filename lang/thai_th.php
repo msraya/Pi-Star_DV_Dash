@@ -55,7 +55,6 @@ $lang = array (
   // Config Page - General Configuration
   "node_call"                   =>  "นามเรียกขานของสถานี",
   "dmr_id"                      =>  "CCS7/DMR ID",
-  "hotspot_id"                  =>  "Hotspot ID",
   "radio_freq"                  =>  "ความถี่ที่ใช้งาน",
   "lattitude"                   =>  "ละติจูด",
   "longitude"                   =>  "ลองจิจูด",
