@@ -2023,7 +2023,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	$configysf2p25['Log']['FilePath'] = "/var/log/pi-star";
 	$configysf2p25['Log']['FileRoot'] = "YSF2P25";	
 	if (isset($configysf2p25['aprs.fi'])) { unset($configysf2p25['aprs.fi']); }
-	
+
 	// Clean up for NXDN Gateway
 	if (file_exists('/etc/nxdngateway')) {
 		if (isset($confignxdngateway['Network']['HostsFile'])) {
