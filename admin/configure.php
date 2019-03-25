@@ -3125,7 +3125,7 @@ else:
     <tr>
     <td align="left"><a class="tooltip2" href="#"><?php echo $lang['dmr_plus_network'];?>:<span><b>DMR+ Network</b>Set your options= for DMR+ here</span></a></td>
     <td align="left">
-    Options=<input type="text" name="dmrNetworkOptions" size="68" maxlength="100" value="<?php if (isset($configdmrgateway['DMR Network 2']['Options'])) { echo $configdmrgateway['DMR Network 2']['Options']; } ?>" />
+    Options=<input type="text" name="dmrNetworkOptions" size="65" maxlength="100" value="<?php if (isset($configdmrgateway['DMR Network 2']['Options'])) { echo $configdmrgateway['DMR Network 2']['Options']; } ?>" />
     </td>
     </tr>
     <tr>
@@ -3254,7 +3254,7 @@ else:
       echo '    <tr>
     <td align="left"><a class="tooltip2" href="#">'.$lang['dmr_plus_network'].':<span><b>DMR+ Network</b>Set your options= for DMR+ here</span></a></td>
     <td align="left">
-    Options=<input type="text" name="dmrNetworkOptions" size="68" maxlength="100" value="';
+    Options=<input type="text" name="dmrNetworkOptions" size="65" maxlength="100" value="';
 	if (isset($configmmdvm['DMR Network']['Options'])) { echo $configmmdvm['DMR Network']['Options']; }
         echo '" />
     </td>
@@ -3985,7 +3985,7 @@ echo '
     <tr><th width="200"><?php echo $lang['user'];?></th><th colspan="3"><?php echo $lang['password'];?></th></tr>
     <tr>
     <td align="left"><b>pi-star</b></td>
-    <td align="left"><label for="pass1">Password:</label><input type="password" name="adminPassword" id="pass1" onkeyup="checkPass(); return false;" size="30"/>
+    <td align="left"><label for="pass1">Password:</label><input type="password" name="adminPassword" id="pass1" onkeyup="checkPass(); return false;" size="20"/>
     <label for="pass2">Confirm Password:</label><input type="password" name="adminPassword" id="pass2" onkeyup="checkPass(); return false;">
     <br /><span id="confirmMessage" class="confirmMessage"></span></td>
     <td align="right"><input type="button" id="submitpwd" value="<?php echo $lang['set_password'];?>" onclick="submitPassform()" disabled/></td>
