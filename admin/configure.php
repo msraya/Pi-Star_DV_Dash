@@ -547,6 +547,12 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  $configdapnetgw['General']['WhiteList'] = preg_replace('/[^0-9\,]/', '', escapeshellcmd($_POST['pocsagWhitelist']));
 	}
 
+	// Set the POCSAG Blacklist
+	if (isset($configdapnetgw['General']['BlackList'])) { unset($configdapnetgw['General']['BlackList']); }
+	if (empty($_POST['pocsagBlacklist']) != TRUE ) {
+	  $configdapnetgw['General']['BlackList'] = preg_replace('/[^0-9\,]/', '', escapeshellcmd($_POST['pocsagBlacklist']));
+	}
+
 	// Set the POCSAG Server
 	if (empty($_POST['pocsagServer']) != TRUE ) {
 	  $configdapnetgw['DAPNET']['Address'] = escapeshellcmd($_POST['pocsagServer']);
@@ -3852,8 +3858,12 @@ $p25Hosts = fopen("/usr/local/etc/P25Hosts.txt", "r");
         <td align="left"><input type="password" name="pocsagAuthKey" size="30" maxlength="50" value="<?php echo $configdapnetgw['DAPNET']['AuthKey'];?>" /></td>
       </tr>
       <tr>
-        <td align="left"><a class="tooltip2" href="#">POCSAG Whitelist:<span><b>POCSAG Whitelist</b>Set your POCSAG RICs here</span></a></td>
-        <td align="left"><input type="text" name="pocsagWhitelist" size="30" maxlength="50" value="<?php if (isset($configdapnetgw['General']['WhiteList'])) { echo $configdapnetgw['General']['WhiteList']; } ?>" /></td>
+        <td align="left"><a class="tooltip2" href="#">POCSAG Whitelist:<span><b>POCSAG Whitelist</b>Set your POCSAG RIC Whitelist here, if these are set ONLY these RICs will be transmitted. List is comma seperated.</span></a></td>
+        <td align="left"><input type="text" name="pocsagWhitelist" size="60" maxlength="75" value="<?php if (isset($configdapnetgw['General']['WhiteList'])) { echo $configdapnetgw['General']['WhiteList']; } ?>" /></td>
+      </tr>
+      <tr>
+        <td align="left"><a class="tooltip2" href="#">POCSAG Blacklist:<span><b>POCSAG Blacklist</b>Set your POCSAG RIC Blacklist here, if these are set any other RIC will be transmitted, but not these. List is comma seperated.</span></a></td>
+        <td align="left"><input type="text" name="pocsagBlacklist" size="60" maxlength="75" value="<?php if (isset($configdapnetgw['General']['BlackList'])) { echo $configdapnetgw['General']['BlackList']; } ?>" /></td>
       </tr>
       <?php
       if (isset($configdapnetgw['General']['BlackList'])) { ?>
