@@ -19,7 +19,7 @@
     <a href="edit_ysfgateway.php" style="color: #ffffff;">YSF GW</a> |
     <a href="edit_p25gateway.php" style="color: #ffffff;">P25 GW</a> |
     <a href="edit_nxdngateway.php" style="color: #ffffff;">NXDN GW</a> |
-    DAPNet [<a href="edit_dapnetgateway.php" style="color: #ffffff;">GW</a>|<a href="edit_dapnetapi.php" style="color: #ffffff;">API</a>]<br /> 
+     DAPNet [<a href="edit_dapnetgateway.php" style="color: #ffffff;">GW</a>|<a href="edit_dapnetapi.php" style="color: #ffffff;">API</a>]<br /> 
     <b>Full Edit:</b>
     <a href="fulledit_dmrgateway.php" style="color: #ffffff;">DMR GW</a> |
     <a href="fulledit_pistar-remote.php" style="color: #ffffff;">PiStar-Remote</a> |
