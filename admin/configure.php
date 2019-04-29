@@ -922,6 +922,9 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  $configysf2dmr['DMR Network']['Address'] = $ysf2dmrMasterHostArr[0];
 	  $configysf2dmr['DMR Network']['Password'] = '"'.$ysf2dmrMasterHostArr[1].'"';
 	  $configysf2dmr['DMR Network']['Port'] = $ysf2dmrMasterHostArr[2];
+	  if (empty($_POST['bmHSSecurity']) != TRUE ) {
+	    $configysf2dmr['DMR Network']['Password'] = '"'.escapeshellcmd($_POST['bmHSSecurity']).'"';
+	  }
 	}
 
 	// Set the YSF2DMR Starting TG
@@ -1031,6 +1034,12 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  $configmmdvm['DMR Network']['Address'] = $dmrMasterHostArr[0];
 	  $configmmdvm['DMR Network']['Password'] = '"'.$dmrMasterHostArr[1].'"';
 	  $configmmdvm['DMR Network']['Port'] = $dmrMasterHostArr[2];
+	  if (empty($_POST['bmHSSecurity']) != TRUE ) {
+		  $configModem['BrandMeister']['Password'] = escapeshellcmd($_POST['bmHSSecurity']);
+		  if ($dmrMasterHostArr[0] != '127.0.0.1') { $configmmdvm['DMR Network']['Password'] = '"'.escapeshellcmd($_POST['bmHSSecurity']).'"'; }
+	  } else {
+		  unset ($configModem['BrandMeister']['Password']);
+	  }
 
 		if (substr($dmrMasterHostArr[3], 0, 2) == "BM") {
 			unset ($configmmdvm['DMR Network']['Options']);
@@ -1097,6 +1106,9 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  $dmrMasterHostArr1 = explode(',', escapeshellcmd($_POST['dmrMasterHost1']));
 	  $configdmrgateway['DMR Network 1']['Address'] = $dmrMasterHostArr1[0];
 	  $configdmrgateway['DMR Network 1']['Password'] = '"'.$dmrMasterHostArr1[1].'"';
+	  if (empty($_POST['bmHSSecurity']) != TRUE ) {
+	    $configdmrgateway['DMR Network 1']['Password'] = '"'.escapeshellcmd($_POST['bmHSSecurity']).'"';
+	  }
 	  $configdmrgateway['DMR Network 1']['Port'] = $dmrMasterHostArr1[2];
 	  $configdmrgateway['DMR Network 1']['Name'] = $dmrMasterHostArr1[3];
 	}
@@ -3087,10 +3099,12 @@ else:
 	fclose($dmrMasterFile1);
 ?>
     </select></td></tr>
-    <!-- <tr>
-    <td align="left"><a class="tooltip2" href="#">BrandMeister Password:<span><b>BrandMeister Password</b>Override the Password for BrandMeister</span></a></td>
-    <td align="left"><input type="text" name="bmPasswordOverride" size="30" maxlength="30" value="<?php echo $configdmrgateway['DMR Network 1']['Password']; ?>"></input></td>
-    </tr> -->
+    <tr>
+      <td align="left"><a class="tooltip2" href="#">BM Hotspot Security:<span><b>BrandMeister Password</b>Override the Password for BrandMeister with your own custom password, make sure you already configured this using BM Self Care. Empty the field to use the default.</span></a></td>
+      <td align="left">
+        <input type="password" name="bmHSSecurity" size="30" maxlength="30" value="<?php if (isset($configModem['BrandMeister']['Password'])) {echo $configModem['BrandMeister']['Password'];} ?>"></input>
+      </td>
+    </tr>
     <tr>
     <td align="left"><a class="tooltip2" href="#"><?php echo $lang['bm_network'];?> Enable:<span><b>BrandMeister Network Enable</b></span></a></td>
     <td align="left">
@@ -3239,10 +3253,12 @@ else:
     else { echo "<div class=\"switch\"><input id=\"toggle-dmrGatewayXlxEn\" class=\"toggle toggle-round-flat\" type=\"checkbox\" name=\"dmrGatewayXlxEn\" value=\"ON\" /><label for=\"toggle-dmrGatewayXlxEn\"></label></div>\n"; } ?>
     </td></tr>
 <?php }
-    if (substr($dmrMasterNow, 0, 2) == "BM") { echo '    <!-- <tr>
-    <td align="left"><a class="tooltip2" href="#">BrandMeister Password:<span><b>BrandMeister Password</b>Override the Password for BrandMeister</span></a></td>
-    <td align="left"><input type="text" name="bmPasswordOverride" size="30" maxlength="30" value="'.$configmmdvm['DMR Network']['Password'].'"></input></td>
-    </tr> -->
+    if (substr($dmrMasterNow, 0, 2) == "BM") { echo '    <tr>
+      <td align="left"><a class="tooltip2" href="#">Hotspot Security:<span><b>Custom Password</b>Override the Password for your DMR Host with your own custom password, make sure you already configured this with your chosen DMR Host too. Empty the field to use the default.</span></a></td>
+      <td align="left">
+        <input type="password" name="bmHSSecurity" size="30" maxlength="30" value="'; if (isset($configModem['BrandMeister']['Password'])) {echo $configModem['BrandMeister']['Password'];}; echo '"></input>
+      </td>
+    </tr>
     <tr>
     <td align="left"><a class="tooltip2" href="#">'.$lang['bm_network'].':<span><b>BrandMeister Dashboards</b>Direct links to your BrandMeister Dashboards</span></a></td>
     <td>
@@ -3619,6 +3635,12 @@ $ysfHosts = fopen("/usr/local/etc/YSFHosts.txt", "r"); ?>
         fclose($dmrMasterFile);
         ?>
     </select></td>
+    </tr>
+    <tr>
+      <td align="left"><a class="tooltip2" href="#">Hotspot Security:<span><b>DMR Master Password</b>Override the Password for DMR with your own custom password, make sure you already configured this on your chosed DMR Master. Empty the field to use the default.</span></a></td>
+      <td align="left" colspan="2">
+        <input type="password" name="bmHSSecurity" size="30" maxlength="30" value="<?php if (isset($configModem['BrandMeister']['Password'])) {echo $configModem['BrandMeister']['Password'];} ?>"></input>
+      </td>
     </tr>
     <tr>
       <td align="left"><a class="tooltip2" href="#">DMR TG:<span><b>YSF2DMR TG</b>Enter your DMR TG here</span></a></td>
