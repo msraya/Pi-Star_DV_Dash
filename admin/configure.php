@@ -101,6 +101,55 @@ if (file_exists('/etc/nxdn2dmr')) {
 	if (fopen($nxdn2dmrConfigFile,'r')) { $confignxdn2dmr = parse_ini_file($nxdn2dmrConfigFile, true); }
 }
 
+// Load the mobilegps config file
+if (file_exists('/etc/mobilegps')) {
+	$mobilegpsConfigFile = '/etc/mobilegps';
+	if (fopen($mobilegpsConfigFile,'r')) { $configmobilegps = parse_ini_file($mobilegpsConfigFile, true); }
+}
+
+// Mobile GPS
+if ( $configmmdvm['Mobile GPS']['Enable'] == 1 ) {
+    // Mobile GPS config (create default file)
+    if (!file_exists('/etc/mobilegps')) {
+        exec('sudo touch /tmp/zmh2nHP4qgkwgv.tmp');
+        exec('sudo chown www-data:www-data /tmp/zmh2nHP4qgkwgv.tmp');
+	
+	exec('echo "[General]" > /tmp/zmh2nHP4qgkwgv.tmp');
+	exec('echo "MinDistance=400" >> /tmp/zmh2nHP4qgkwgv.tmp');
+	exec('echo "MinTime=60" >> /tmp/zmh2nHP4qgkwgv.tmp');
+	exec('echo "MaxTime=300" >> /tmp/zmh2nHP4qgkwgv.tmp');
+	exec('echo "Daemon=0" >> /tmp/zmh2nHP4qgkwgv.tmp');
+	exec('echo "Debug=0" >> /tmp/zmh2nHP4qgkwgv.tmp');
+	exec('echo "" >> /tmp/zmh2nHP4qgkwgv.tmp');
+	exec('echo "[Log]" >> /tmp/zmh2nHP4qgkwgv.tmp');
+	exec('echo "DisplayLevel=0" >> /tmp/zmh2nHP4qgkwgv.tmp');
+	exec('echo "FileLevel=2" >> /tmp/zmh2nHP4qgkwgv.tmp');
+	exec('echo "FilePath=/var/log/pi-star" >> /tmp/zmh2nHP4qgkwgv.tmp');
+        exec('echo "FileRoot=MobileGPS" >> /tmp/zmh2nHP4qgkwgv.tmp');
+	exec('echo "" >> /tmp/zmh2nHP4qgkwgv.tmp');
+	exec('echo "[GPS]" >> /tmp/zmh2nHP4qgkwgv.tmp');
+	exec('echo "Port=/dev/ttyUSB0" >> /tmp/zmh2nHP4qgkwgv.tmp');
+	exec('echo "Speed=9600" >> /tmp/zmh2nHP4qgkwgv.tmp');
+	exec('echo "Debug=0" >> /tmp/zmh2nHP4qgkwgv.tmp');
+	exec('echo "" >> /tmp/zmh2nHP4qgkwgv.tmp');
+	exec('echo "[Network]" >> /tmp/zmh2nHP4qgkwgv.tmp');
+	exec('echo "Address=127.0.0.1" >> /tmp/zmh2nHP4qgkwgv.tmp');
+	exec('echo "Port=7834" >> /tmp/zmh2nHP4qgkwgv.tmp');
+	exec('echo "Debug=0" >> /tmp/zmh2nHP4qgkwgv.tmp');
+	exec('echo "" >> /tmp/zmh2nHP4qgkwgv.tmp');
+	exec('sudo mount -o remount,rw /');
+        exec('sudo cp /tmp/zmh2nHP4qgkwgv.tmp /etc/mobilegps');
+        exec('sudo chmod 644 /etc/mobilegps');
+        exec('sudo chown root:root /etc/mobilegps');
+        exec('sudo mount -o remount,ro /');
+
+	if (file_exists('/etc/mobilegps')) {
+	    $mobilegpsConfigFile = '/etc/mobilegps';
+	    if (fopen($mobilegpsConfigFile,'r')) { $configmobilegps = parse_ini_file($mobilegpsConfigFile, true); }
+	}
+    }
+}
+
 // DAPNet Gateway config
 if (file_exists('/etc/dapnetgateway')) {
 	$configDAPNetConfigFile = '/etc/dapnetgateway';
@@ -441,11 +490,19 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  }
 
 	// Set Mobile GPS
-	if (isset($_POST['MobileGPS'])) {
+	if (empty($_POST['MobileGPS']) != TRUE ) {
 	   $mobilegpsEnabled = (escapeshellcmd($_POST['MobileGPS']) == 'ON' ) ? "1" : "0";
 	   $configmmdvm['Mobile GPS']['Enable'] = $mobilegpsEnabled;
 	   $configysfgateway['Mobile GPS']['Enable'] = $mobilegpsEnabled;
 	   $confignxdngateway['Mobile GPS']['Enable'] = $mobilegpsEnabled;
+
+	   if (empty($_POST['mobilegpsPort']) != TRUE ) {
+	      $configmobilegps['GPS']['Port'] = escapeshellcmd($_POST['mobilegpsPort']);
+	   }
+	    
+	   if (empty($_POST['mobilegpsBaudrate']) != TRUE ) {
+	      $configmobilegps['GPS']['Speed'] = escapeshellcmd($_POST['mobilegpsBaudrate']);
+	   }
 	}
 
 	// Set the Town
@@ -2460,7 +2517,43 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
                 }
         }
 
-	// DAPNet Gateway Config file wragling
+	// mobilegps config file wrangling
+        $mobilegpsContent = "";
+        foreach($configmobilegps as $mobilegpsSection=>$mobilegpsValues) {
+                // UnBreak special cases
+                $mobilegpsSection = str_replace("_", " ", $mobilegpsSection);
+                $mobilegpsContent .= "[".$mobilegpsSection."]\n";
+                // append the values
+                foreach($mobilegpsValues as $mobilegpsKey=>$mobilegpsValue) {
+                        $mobilegpsContent .= $mobilegpsKey."=".$mobilegpsValue."\n";
+                        }
+                        $mobilegpsContent .= "\n";
+                }
+        if (!$handleMOBILEGPSconfig = fopen('/tmp/zmh2nHP4qgkwgv.tmp', 'w')) {
+                return false;
+        }
+        if (!is_writable('/tmp/zmh2nHP4qgkwgv.tmp')) {
+          echo "<br />\n";
+          echo "<table>\n";
+          echo "<tr><th>ERROR</th></tr>\n";
+          echo "<tr><td>Unable to write configuration file(s)...</td><tr>\n";
+          echo "<tr><td>Please wait a few seconds and retry...</td></tr>\n";
+          echo "</table>\n";
+          unset($_POST);
+          echo '<script type="text/javascript">setTimeout(function() { window.location=window.location;},5000);</script>';
+          die();
+        }
+        else {
+                $success = fwrite($handleMOBILEGPSconfig, $mobilegpsContent);
+                fclose($handleMOBILEGPSconfig);
+                if (intval(exec('cat /tmp/zmh2nHP4qgkwgv.tmp | wc -l')) > 22 ) {
+                        exec('sudo mv /tmp/zmh2nHP4qgkwgv.tmp /etc/mobilegps');		// Move the file back
+                        exec('sudo chmod 644 /etc/mobilegps');				// Set the correct runtime permissions
+                        exec('sudo chown root:root /etc/mobilegps');			// Set the owner
+                }
+        }
+
+        // DAPNet Gateway Config file wragling
 	$dapnetContent = "";
         foreach($configdapnetgw as $dapnetSection=>$dapnetValues) {
                 // UnBreak special cases
@@ -3865,6 +3958,60 @@ $p25Hosts = fopen("/usr/local/etc/P25Hosts.txt", "r");
     </table>
 	<div><input type="button" value="<?php echo $lang['apply'];?>" onclick="submitform()" /><br /><br /></div>
 <?php } ?>
+
+<!-- Mobile GPS-->
+<!-- TRANSLAGE -->
+<?php if ( $configmmdvm['Mobile GPS']['Enable'] == 1 ) { ?>
+	<div><b>Mobile GPS Configuration</b></div>
+    <table>
+      <tr>
+        <th width="200"><a class="tooltip" href="#"><?php echo $lang['setting'];?><span><b>Setting</b></span></a></th>
+        <th colspan="2"><a class="tooltip" href="#"><?php echo $lang['value'];?><span><b>Value</b>The current value from the<br />configuration files</span></a></th>
+      </tr>
+      <tr>
+        <td align="left"><a class="tooltip2" href="#">GPS Port:<span><b>GPS Port</b>Define the GPS serial port here</span></a></td>
+	<td align="left" colspan="2"><select name="mobilegpsPort">
+	    <?php
+	    exec('ls -lR /dev/ | grep "dialout" | awk \'{print "/dev/"$10}\'', $serialPorts);
+
+	    if (! in_array($configmobilegps['GPS']['Port'], $serialPorts))
+	    {
+		array_unshift($serialPorts, $configmobilegps['GPS']['Port']);
+	    }
+	    
+	    foreach ($serialPorts as $serialPort) {
+		echo '<option ';
+		if ($configmobilegps['GPS']['Port'] == $serialPort) { echo 'selected="selected" '; }
+		echo 'value="'.$serialPort.'">'.$serialPort.'</option>'."\n";
+	    }
+	    ?>
+	    </select></td>
+      </tr>
+      <tr>
+        <td align="left"><a class="tooltip2" href="#">GPS Baudrate:<span><b>GPS Baudrate</b>Set the serial baudrate speed here</span></a></td>
+        <td align="left" colspan-"2"><select name="mobilegpsBaudrate">
+	    <?php
+	    $serialSpeeds = array('110', '300', '600', '1200', '2400', '4800', '9600', '14400', '19200', '28800', '38400', '56000', '57600', '115200');
+
+	    if (! in_array($configmobilegps['GPS']['Speed'], $serialSpeeds))
+	    {
+		array_unshift($serialSpeeds, $configmobilegps['GPS']['Speed']);
+	    }
+	    
+	    foreach ($serialSpeeds as $serialSpeed) {
+		echo '<option ';
+		if ($configmobilegps['GPS']['Speed'] == $serialSpeed) { echo 'selected="selected" '; }
+		echo 'value="'.$serialSpeed.'">'.$serialSpeed.'</option>'."\n";
+	    }
+	    ?>
+	    </select></td>
+      </tr>
+    </table>
+	<div><input type="button" value="<?php echo $lang['apply'];?>" onclick="submitform()" /><br /><br /></div>
+<?php } ?>	
+
+
+<!-- Mobile GPS-->
 
 <?php if ( $configmmdvm['POCSAG']['Enable'] == 1 ) { ?>
 	<div><b><?php echo $lang['pocsag_config'];?></b></div>
