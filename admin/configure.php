@@ -2519,40 +2519,44 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
         }
 
 	// mobilegps config file wrangling
-        $mobilegpsContent = "";
-        foreach($configmobilegps as $mobilegpsSection=>$mobilegpsValues) {
+	if (isset($configmobilegps))
+	{
+	    $mobilegpsContent = "";
+
+            foreach($configmobilegps as $mobilegpsSection=>$mobilegpsValues) {
                 // UnBreak special cases
                 $mobilegpsSection = str_replace("_", " ", $mobilegpsSection);
                 $mobilegpsContent .= "[".$mobilegpsSection."]\n";
                 // append the values
                 foreach($mobilegpsValues as $mobilegpsKey=>$mobilegpsValue) {
-                        $mobilegpsContent .= $mobilegpsKey."=".$mobilegpsValue."\n";
-                        }
-                        $mobilegpsContent .= "\n";
+                    $mobilegpsContent .= $mobilegpsKey."=".$mobilegpsValue."\n";
                 }
-        if (!$handleMOBILEGPSconfig = fopen('/tmp/zmh2nHP4qgkwgv.tmp', 'w')) {
+                $mobilegpsContent .= "\n";
+            }
+            if (!$handleMOBILEGPSconfig = fopen('/tmp/zmh2nHP4qgkwgv.tmp', 'w')) {
                 return false;
-        }
-        if (!is_writable('/tmp/zmh2nHP4qgkwgv.tmp')) {
-          echo "<br />\n";
-          echo "<table>\n";
-          echo "<tr><th>ERROR</th></tr>\n";
-          echo "<tr><td>Unable to write configuration file(s)...</td><tr>\n";
-          echo "<tr><td>Please wait a few seconds and retry...</td></tr>\n";
-          echo "</table>\n";
-          unset($_POST);
-          echo '<script type="text/javascript">setTimeout(function() { window.location=window.location;},5000);</script>';
-          die();
-        }
-        else {
+            }
+            if (!is_writable('/tmp/zmh2nHP4qgkwgv.tmp')) {
+		echo "<br />\n";
+		echo "<table>\n";
+		echo "<tr><th>ERROR</th></tr>\n";
+		echo "<tr><td>Unable to write configuration file(s)...</td><tr>\n";
+		echo "<tr><td>Please wait a few seconds and retry...</td></tr>\n";
+		echo "</table>\n";
+		unset($_POST);
+		echo '<script type="text/javascript">setTimeout(function() { window.location=window.location;},5000);</script>';
+		die();
+            }
+            else {
                 $success = fwrite($handleMOBILEGPSconfig, $mobilegpsContent);
                 fclose($handleMOBILEGPSconfig);
                 if (intval(exec('cat /tmp/zmh2nHP4qgkwgv.tmp | wc -l')) > 22 ) {
-                        exec('sudo mv /tmp/zmh2nHP4qgkwgv.tmp /etc/mobilegps');		// Move the file back
-                        exec('sudo chmod 644 /etc/mobilegps');				// Set the correct runtime permissions
-                        exec('sudo chown root:root /etc/mobilegps');			// Set the owner
+                    exec('sudo mv /tmp/zmh2nHP4qgkwgv.tmp /etc/mobilegps');		// Move the file back
+                    exec('sudo chmod 644 /etc/mobilegps');				// Set the correct runtime permissions
+                    exec('sudo chown root:root /etc/mobilegps');			// Set the owner
                 }
-        }
+            }
+	}
 
         // DAPNet Gateway Config file wragling
 	$dapnetContent = "";

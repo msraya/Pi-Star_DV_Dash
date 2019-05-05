@@ -138,13 +138,23 @@ if ($_SERVER["PHP_SELF"] == "/admin/config_backup.php") {
 			  }
 		  }
 	  }
-		$continue = strtolower($name[1]) == 'zip' ? true : false;
+		$continue = false;
+
+		if (isset($name))
+	        {
+		    $continue = strtolower($name[1]) == 'zip' ? true : false;
+		}
+	    
 	        if(!$continue) {
 		        $output .= "The file you are trying to upload is not a .zip file. Please try again.\n";
 	        }
-		$target_path = $target_dir.$filename;
-          
-		if(move_uploaded_file($source, $target_path)) {
+
+		if (isset($filename))
+		{
+		    $target_path = $target_dir.$filename;
+		}
+	  
+		if(isset($target_path) && move_uploaded_file($source, $target_path)) {
 			$zip = new ZipArchive();
 		        $x = $zip->open($target_path);
 		        if ($x === true) {
