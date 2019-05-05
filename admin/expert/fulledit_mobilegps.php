@@ -50,7 +50,7 @@ if(isset($_POST['data'])) {
         exec('sudo mount -o remount,ro /');
   
         // Reload the affected daemon
-	//exec('sudo systemctl restart mobilegps.service');		    // Reload the daemon
+	exec('sudo systemctl restart mobilegps.service');		    // Reload the daemon
 
         // Re-open the file and read it
         $fh = fopen($filepath, 'r');
