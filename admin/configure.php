@@ -2072,6 +2072,10 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 		if(!isset($confignxdngateway['aprs.fi']['Password'])) { $confignxdngateway['aprs.fi']['Password'] = "9999"; }
 		if(!isset($confignxdngateway['aprs.fi']['Description'])) { $confignxdngateway['aprs.fi']['Description'] = "APRS for NXDN Gateway"; }
 		if(!isset($confignxdngateway['aprs.fi']['Suffix'])) { $confignxdngateway['aprs.fi']['Suffix'] = "N"; }
+		// Mobile GPS stuff
+		if(!isset($confignxdngateway['Mobile GPS']['Enable'])) { $confignxdngateway['Mobile GPS']['Enable'] = "0"; }
+		if(!isset($confignxdngateway['Mobile GPS']['Address'])) { $confignxdngateway['Mobile GPS']['Address'] = "127.0.0.1"; }
+		if(!isset($confignxdngateway['Mobile GPS']['Port'])) { $confignxdngateway['Mobile GPS']['Port'] = "7834"; }
 	}
 	
 
