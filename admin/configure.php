@@ -440,6 +440,14 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  system($rollConfLon1);
 	  }
 
+	// Set Mobile GPS
+	if (isset($_POST['MobileGPS'])) {
+	   $mobilegpsEnabled = (escapeshellcmd($_POST['MobileGPS']) == 'ON' ) ? "1" : "0";
+	   $configmmdvm['Mobile GPS']['Enable'] = $mobilegpsEnabled;
+	   $configysfgateway['Mobile GPS']['Enable'] = $mobilegpsEnabled;
+	   $confignxdngateway['Mobile GPS']['Enable'] = $mobilegpsEnabled;
+	}
+
 	// Set the Town
 	if (empty($_POST['confDesc1']) != TRUE ) {
 	  $newConfDesc1 = preg_replace('/[^A-Za-z0-9\.\s\,\-]/', '', $_POST['confDesc1']);
@@ -2705,6 +2713,7 @@ else:
     <input type="hidden" name="MMDVMModeDMR2YSF" value="OFF" />
     <input type="hidden" name="MMDVMModeDMR2NXDN" value="OFF" />
     <input type="hidden" name="MMDVMModePOCSAG" value="OFF" />
+    <input type="hidden" name="MobileGPS" value="OFF" />
     <input type="hidden" name="pocsagWhitelist" value="<?php if (isset($configdapnetgw['General']['WhiteList'])) { echo $configdapnetgw['General']['WhiteList']; } else { echo ""; } ?>" />
     <input type="hidden" name="pocsagBlacklist" value="<?php if (isset($configdapnetgw['General']['BlackList'])) { echo $configdapnetgw['General']['BlackList']; } else { echo ""; } ?>" />
 	<div><b><?php echo $lang['mmdvmhost_config'];?></b></div>
@@ -2948,6 +2957,15 @@ else:
     <td align="left" colspan="2"><input type="text" id="confLongitude" name="confLongitude" size="13" maxlength="9" value="<?php echo $configs['longitude'] ?>" />degrees (positive value for East, negative for West)</td>
     </tr>
     <tr>
+    <td align="left"><a class="tooltip2" href="#">Mobile GPS:<span><b>Mobile GPS support</b>Read NMEA data from a serially connected GPS unit and then to make that data available for other programs.</span></a></td>
+    <td align="left" colspan="2">
+    <?php
+    // Enabled ??
+    if ($configmmdvm['Mobile GPS']['Enable'] == "1") { echo "<div class=\"switch\"><input id=\"toggle-MobileGPS\" class=\"toggle toggle-round-flat\" type=\"checkbox\" name=\"MobileGPS\" value=\"ON\" checked=\"checked\" /><label for=\"toggle-MobileGPS\"></label></div>\n"; }
+    else { echo "<div class=\"switch\"><input id=\"toggle-MobileGPS\" class=\"toggle toggle-round-flat\" type=\"checkbox\" name=\"MobileGPS\" value=\"ON\" /><label for=\"toggle-MobileGPS\"></label></div>\n"; } ?>
+    </td>
+    </tr>
+    <tr>
     <td align="left"><a class="tooltip2" href="#"><?php echo $lang['town'];?>:<span><b>Gateway Town</b>The town where the gateway is located</span></a></td>
     <td align="left" colspan="2"><input type="text" name="confDesc1" size="30" maxlength="30" value="<?php echo $configs['description1'] ?>" /></td>
     </tr>
@@ -3153,7 +3171,6 @@ else:
     else { echo "<div class=\"switch\"><input id=\"toggle-dmrGatewayNet2En\" class=\"toggle toggle-round-flat\" type=\"checkbox\" name=\"dmrGatewayNet2En\" value=\"ON\" /><label for=\"toggle-dmrGatewayNet2En\"></label></div>\n"; } ?>
     </td>
     </tr>
-<!-- RMB -->
     <tr>
     <td align="left"><a class="tooltip2" href="#"><?php echo $lang['dmr_plus_network'];?> Extended CCS7:<span><b>DMR+ Network Extented CCS7</b></span></a></td>
     <td align="left">
@@ -3164,7 +3181,6 @@ else:
     else { echo "<div class=\"switch\"><input id=\"toggle-dmrGatewayNet2CCS7Extra\" class=\"toggle toggle-round-flat\" type=\"checkbox\" name=\"dmrGatewayNet2CCS7Extra\" value=\"ON\" /><label for=\"toggle-dmrGatewayNet2CCS7Extra\"></label></div>\n"; } ?>
     </td>
     </tr>
-    
     <tr>
     <td align="left"><a class="tooltip2" href="#"><?php echo $lang['xlx_master'];?>:<span><b>XLX Master</b>Set your prefered XLX master here</span></a></td>
     <td style="text-align: left;"><select name="dmrMasterHost3">
