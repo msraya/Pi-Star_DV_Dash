@@ -19,13 +19,16 @@
     <a href="edit_ysfgateway.php" style="color: #ffffff;">YSF GW</a> |
     <a href="edit_p25gateway.php" style="color: #ffffff;">P25 GW</a> |
     <a href="edit_nxdngateway.php" style="color: #ffffff;">NXDN GW</a> |
-     DAPNet [<a href="edit_dapnetgateway.php" style="color: #ffffff;">GW</a>|<a href="edit_dapnetapi.php" style="color: #ffffff;">API</a>]<br /> 
+     DAPNet [<a href="edit_dapnetgateway.php" style="color: #ffffff;">GW</a>|<a href="edit_dapnetapi.php" style="color: #ffffff;">API</a>] |
+    <a href="edit_mobilegps.php" style="color: #ffffff;">GPS</a>
+    <br /> 
     <b>Full Edit:</b>
     <a href="fulledit_dmrgateway.php" style="color: #ffffff;">DMR GW</a> |
     <a href="fulledit_pistar-remote.php" style="color: #ffffff;">PiStar-Remote</a> |
     <a href="fulledit_wpaconfig.php" style="color: #ffffff;">WiFi</a> |
     <a href="fulledit_bmapikey.php" style="color: #ffffff;">BM API</a> |
      DAPNet [<a href="fulledit_dapnetgateway.php" style="color: #ffffff;">GW</a>|<a href="fulledit_dapnetapi.php" style="color: #ffffff;">API</a>] |
+    <a href="fulledit_mobilegps.php" style="color: #ffffff;">GPS</a> |
     <a href="fulledit_cron.php" style="color: #ffffff;">System Cron</a> |
     <a href="fulledit_rssidat.php" style="color: #ffffff;">RSSI Dat</a>
     &emsp;<b>Tools:</b>
