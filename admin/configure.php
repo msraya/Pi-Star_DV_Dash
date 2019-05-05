@@ -279,21 +279,23 @@ $MYCALL=strtoupper($callsign);
     <script type="text/javascript" src="/functions.js?version=1.6"></script>
 </head>
 <body onload="checkFrequency(); return false;">
-<div class="container">
-<div class="header">
-<div style="font-size: 8px; text-align: right; padding-right: 8px;">Pi-Star:<?php echo $configPistarRelease['Pi-Star']['Version']?> / <?php echo $lang['dashboard'].": ".$version; ?></div>
-<h1>Pi-Star <?php echo $lang['digital_voice']." - ".$lang['configuration'];?></h1>
-<p style="padding-right: 5px; text-align: right; color: #ffffff;">
- <a href="/" style="color: #ffffff;"><?php echo $lang['dashboard'];?></a> |
- <a href="/admin/" style="color: #ffffff;"><?php echo $lang['admin'];?></a> |
- <a href="/admin/expert/" style="color: #ffffff;">Expert</a> |
- <a href="/admin/power.php" style="color: #ffffff;"><?php echo $lang['power'];?></a> |
- <a href="/admin/update.php" style="color: #ffffff;"><?php echo $lang['update'];?></a> |
- <a href="/admin/config_backup.php" style="color: #ffffff;"><?php echo $lang['backup_restore'];?></a> |
- <a href="javascript:factoryReset();" style="color: #ffffff;"><?php echo $lang['factory_reset'];?></a>
-</p>
-</div>
-<div class="contentwide">
+    <div class="container">
+	<div class="header">
+	    <div style="font-size: 8px; text-align: right; padding-right: 8px;">Pi-Star:<?php echo $configPistarRelease['Pi-Star']['Version']?> / <?php echo $lang['dashboard'].": ".$version; ?></div>
+	    <h1>Pi-Star <?php echo $lang['digital_voice']." - ".$lang['configuration'];?></h1>
+	    <p>
+		<div class="navbar">
+		    <a href="javascript:factoryReset();"><?php echo $lang['factory_reset'];?></a>
+		    <a href="/admin/config_backup.php"><?php echo $lang['backup_restore'];?></a>
+		    <a href="/admin/update.php"><?php echo $lang['update'];?></a>
+		    <a href="/admin/power.php"><?php echo $lang['power'];?></a>
+		    <a href="/admin/expert/">Expert</a>
+		    <a href="/admin/"><?php echo $lang['admin'];?></a>
+		    <a href="/"><?php echo $lang['dashboard'];?></a>
+		</div>
+	    </p>
+	</div>
+	<div class="contentwide">
 <?php
 // Hardware Detail
 if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {

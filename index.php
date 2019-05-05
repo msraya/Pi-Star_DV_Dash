@@ -49,26 +49,29 @@ $configPistarRelease = parse_ini_file($pistarReleaseConfig, true);
     <script src="/featherlight.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
-<div class="container">
-<div class="header">
-<div style="font-size: 8px; text-align: left; padding-left: 8px; float: left;">Hostname: <?php echo exec('cat /etc/hostname'); ?></div><div style="font-size: 8px; text-align: right; padding-right: 8px;">Pi-Star:<?php echo $configPistarRelease['Pi-Star']['Version']?> / <?php echo $lang['dashboard'].": ".$version; ?></div>
-<h1>Pi-Star <?php echo $lang['digital_voice']." ".$lang['dashboard_for']." ".$MYCALL; ?></h1>
-<p style="padding-right: 5px; text-align: right; color: #ffffff;">
- <a href="/" style="color: #ffffff;"><?php echo $lang['dashboard'];?></a> |
- <a href="/admin/" style="color: #ffffff;"><?php echo $lang['admin'];?></a> |
-<?php if ($_SERVER["PHP_SELF"] == "/admin/index.php") {
-  echo ' <a href="/admin/live_modem_log.php" style="color: #ffffff;">'.$lang['live_logs'].'</a> |'."\n";
-  echo ' <a href="/admin/power.php" style="color: #ffffff;">'.$lang['power'].'</a> |'."\n";
-  echo ' <a href="/admin/update.php" style="color: #ffffff;">'.$lang['update'].'</a> |'."\n";
-  } ?>
- <a href="/admin/configure.php" style="color: #ffffff;"><?php echo $lang['configuration'];?></a>
-</p>
-</div>
-
+    <div class="container">
+	<div class="header">
+	    <div style="font-size: 8px; text-align: left; padding-left: 8px; float: left;">Hostname: <?php echo exec('cat /etc/hostname'); ?></div><div style="font-size: 8px; text-align: right; padding-right: 8px;">Pi-Star:<?php echo $configPistarRelease['Pi-Star']['Version']?> / <?php echo $lang['dashboard'].": ".$version; ?></div>
+	    <h1>Pi-Star <?php echo $lang['digital_voice']." ".$lang['dashboard_for']." ".$MYCALL; ?></h1>
+	    
+	    <p>
+		<div class="navbar">
+		    <a href="/admin/configure.php"><?php echo $lang['configuration'];?></a>
+		    <?php if ($_SERVER["PHP_SELF"] == "/admin/index.php") {
+			echo ' <a href="/admin/update.php">'.$lang['update'].'</a>'."\n";
+			echo ' <a href="/admin/power.php"">'.$lang['power'].'</a>'."\n";
+			echo ' <a href="/admin/live_modem_log.php">'.$lang['live_logs'].'</a>'."\n";
+		    } ?>
+		    <a href="/admin/"><?php echo $lang['admin'];?></a>
+		    <a href="/"><?php echo $lang['dashboard'];?></a>
+		</div> 
+	    </p>
+	</div>
+	
 <?php
 // Output some default features
 if ($_SERVER["PHP_SELF"] == "/admin/index.php") {
-	echo '<div class="contentwide">'."\n";
+    echo '<div class="contentwide">'."\n";
 	echo '<script type="text/javascript">'."\n";
 	echo 'function reloadSysInfo(){'."\n";
 	echo '  $("#sysInfo").load("/dstarrepeater/system.php",function(){ setTimeout(reloadSysInfo,15000) });'."\n";
