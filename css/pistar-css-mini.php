@@ -365,3 +365,88 @@ input.toggle-round-flat:checked + label:after {
     margin-left: 14px;
     background-color: #<?php echo $backgroundBanners; ?>;
 }
+
+ /* put the same color as in left vertical status */
+.navbar {
+    overflow: hidden;
+    background-color: #333;
+}
+
+/* Links inside the navbar */
+.navbar a {
+    float: right;
+    font-family : verdana, arial, sans-serif;
+    font-size: 14px;
+    color: white;
+    text-align: center;
+    padding: 5px 8px;
+    text-decoration: none;
+}
+`
+.dropdown {
+    float: left;
+    overflow: hidden;
+}
+
+.dropdown .dropbutton {
+    font-size: 14px;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 5px 8px;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0;
+}
+
+
+.navbar a:hover, .dropdown:hover .dropbutton {
+    background-color: red;
+}
+
+ /* put the same color as in left vertical status */
+.lnavbar {
+    overflow: hidden;
+    background-color: #333;
+}
+
+.lnavbar button {
+    float: left;
+    font-family : verdana, arial, sans-serif;
+    font-size: 14px;
+    color: white;
+    text-align: center;
+    padding: 5px 8px;
+    text-decoration: none;
+}
+
+.lnavbar button:hover {
+    background-color: red;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    float: none;
+    font-size: 14px;
+    color: black;
+    padding: 8px 10px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
