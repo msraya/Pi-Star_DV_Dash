@@ -73,6 +73,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/update.php") {
     <meta http-equiv="Expires" content="0" />
     <title>Pi-Star - <?php echo $lang['digital_voice']." ".$lang['dashboard']." - ".$lang['update'];?></title>
     <link rel="stylesheet" type="text/css" href="/css/pistar-css.php" />
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome-4.7.0/css/font-awesome.min.css" />
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
     <script type="text/javascript" src="http://creativecouple.github.com/jquery-timing/jquery-timing.min.js"></script>
     <script type="text/javascript">
@@ -97,11 +98,11 @@ if ($_SERVER["PHP_SELF"] == "/admin/update.php") {
 	      <h1>Pi-Star - <?php echo $lang['digital_voice']." ".$lang['dashboard']." - ".$lang['update'];?></h1>
 	      <p>
 		  <div class="navbar">
-		      <a href="/admin/configure.php"><?php echo $lang['configuration'];?></a>
-		      <a href="/admin/config_backup.php"><?php echo $lang['backup_restore'];?></a>
-		      <a href="/admin/power.php"><?php echo $lang['power'];?></a>
-		      <a href="/admin/"><?php echo $lang['admin'];?></a>
-		      <a href="/"><?php echo $lang['dashboard'];?></a>
+		      <a class="menuconfig" href="/admin/configure.php"><?php echo $lang['configuration'];?></a>
+		      <a class="menubackup" href="/admin/config_backup.php"><?php echo $lang['backup_restore'];?></a>
+		      <a class="menupower" href="/admin/power.php"><?php echo $lang['power'];?></a>
+		      <a class="menuadmin" href="/admin/"><?php echo $lang['admin'];?></a>
+		      <a class="menudashboard" href="/"><?php echo $lang['dashboard'];?></a>
 		  </div>
 	      </p>
 	  </div>

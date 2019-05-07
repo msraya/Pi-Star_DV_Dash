@@ -29,6 +29,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/config_backup.php") {
 <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
     <meta http-equiv="Expires" content="0" />
     <title>Pi-Star - <?php echo $lang['digital_voice']." ".$lang['dashboard']." - ".$lang['backup_restore'];?></title>
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome-4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="/css/pistar-css.php" />
   </head>
   <body>
@@ -38,11 +39,11 @@ if ($_SERVER["PHP_SELF"] == "/admin/config_backup.php") {
 	      <h1>Pi-Star <?php echo $lang['digital_voice']." - ".$lang['backup_restore'];?></h1>
 	      <p>
 		  <div class="navbar">
-		      <a href="/admin/configure.php"><?php echo $lang['configuration'];?></a>
-		      <a href="/admin/update.php"><?php echo $lang['update'];?></a>
-		      <a href="/admin/power.php"><?php echo $lang['power'];?></a>
-		      <a href="/admin/"><?php echo $lang['admin'];?></a>
-		      <a href="/"><?php echo $lang['dashboard'];?></a>
+		      <a class="menuconfig" href="/admin/configure.php"><?php echo $lang['configuration'];?></a>
+		      <a class="menuupdate" href="/admin/update.php"><?php echo $lang['update'];?></a>
+		      <a class="menupower" href="/admin/power.php"><?php echo $lang['power'];?></a>
+		      <a class="menuadmin" href="/admin/"><?php echo $lang['admin'];?></a>
+		      <a class="menudashboard" href="/"><?php echo $lang['dashboard'];?></a>
 		  </div>
 	      </p>
 	  </div>

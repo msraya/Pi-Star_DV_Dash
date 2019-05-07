@@ -3,17 +3,17 @@
     <h1>Pi-Star Digital Voice - Expert Editors</h1>
     <p>
 	<div class="navbar">
-	    <a href="/admin/configure.php"><?php echo $lang['configuration'];?></a>
-	    <a href="/admin/config_backup.php"><?php echo $lang['backup_restore'];?></a>
-	    <a href="/admin/expert/upgrade.php">Upgrade</a>
-	    <a href="/admin/update.php"><?php echo $lang['update'];?></a>
-	    <a href="/admin/"><?php echo $lang['admin'];?></a>
-	    <a href="/"><?php echo $lang['dashboard'];?></a>
+	    <a class="menuconfig" href="/admin/configure.php"><?php echo $lang['configuration'];?></a>
+	    <a class="menubackup" href="/admin/config_backup.php"><?php echo $lang['backup_restore'];?></a>
+	    <a class="menuupgrade" href="/admin/expert/upgrade.php">Upgrade</a>
+	    <a class="menuupdate" href="/admin/update.php"><?php echo $lang['update'];?></a>
+	    <a class="menuadmin" href="/admin/"><?php echo $lang['admin'];?></a>
+	    <a class="menudashboard" href="/"><?php echo $lang['dashboard'];?></a>
 	</div>
 	<div class="lnavbar">
 	    <div class="dropdown">
 		<button class="dropbutton">Quick Editors
-		    <i class="fa fa-caret-down"></i>
+		    <i class="fa fa-angle-down"></i>
 		    <div class="dropdown-content">
 			<a href="edit_dstarrepeater.php">DStarRepeater</a>
 			<a href="edit_ircddbgateway.php">ircDDB Gateway</a>
@@ -31,7 +31,7 @@
 	    </div>
 	    <div class="dropdown">
 		<button class="dropbutton">Full Editors
-		    <i class="fa fa-caret-down"></i>
+		    <i class="fa fa-angle-down"></i>
 		    <div class="dropdown-content">
 			<a href="fulledit_dmrgateway.php">DMR Gateway</a>
 			<a href="fulledit_pistar-remote.php">PiStar-Remote</a>
@@ -47,7 +47,7 @@
 	    </div>
 	    <div class="dropdown">
 		<button class="dropbutton">Tools
-		    <i class="fa fa-caret-down"></i>
+		    <i class="fa fa-angle-down"></i>
 		    <div class="dropdown-content">
 			<a href="edit_dashboard.php">CSS Tool</a>
 			<a href="ssh_access.php">SSH Access</a>

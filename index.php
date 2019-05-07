@@ -57,14 +57,14 @@ $configPistarRelease = parse_ini_file($pistarReleaseConfig, true);
 	    
 	    <p>
 		<div class="navbar">
-		    <a href="/admin/configure.php"><?php echo $lang['configuration'];?></a>
+		    <a class="menuconfig" href="/admin/configure.php"><?php echo $lang['configuration'];?></a>
 		    <?php if ($_SERVER["PHP_SELF"] == "/admin/index.php") {
-			echo ' <a href="/admin/update.php">'.$lang['update'].'</a>'."\n";
-			echo ' <a href="/admin/power.php"">'.$lang['power'].'</a>'."\n";
-			echo ' <a href="/admin/live_modem_log.php">'.$lang['live_logs'].'</a>'."\n";
+			echo ' <a class="menuupdate" href="/admin/update.php">'.$lang['update'].'</a>'."\n";
+			echo ' <a class="menupower" href="/admin/power.php"">'.$lang['power'].'</a>'."\n";
+			echo ' <a class="menulogs" href="/admin/live_modem_log.php">'.$lang['live_logs'].'</a>'."\n";
 		    } ?>
-		    <a href="/admin/"><?php echo $lang['admin'];?></a>
-		    <a href="/"><?php echo $lang['dashboard'];?></a>
+		    <a class="menuadmin" href="/admin/"><?php echo $lang['admin'];?></a>
+		    <a class="menudashboard" href="/"><?php echo $lang['dashboard'];?></a>
 		</div> 
 	    </p>
 	</div>

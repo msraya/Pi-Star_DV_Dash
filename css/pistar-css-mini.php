@@ -450,3 +450,97 @@ input.toggle-round-flat:checked + label:after {
 .dropdown:hover .dropdown-content {
     display: block;
 }
+
+.menuconfig .menuadmin .menudashboard {
+    position: relative;
+}
+
+.menuconfig:before {
+    content: "\f1de";
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    padding-right: 0.2em;
+}
+
+.menuadmin:before {
+    content: "\f2bd";
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    padding-right: 0.2em;
+}
+
+.menuupdate:before {
+    content: "\f021";
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    padding-right: 0.2em;
+}
+
+.menuupgrade:before {
+    content: "\f1b8";
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    padding-right: 0.2em;
+}
+
+.menupower:before {
+    content: "\f011";
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    padding-right: 0.2em;
+}
+
+.menulogs:before {
+    content: "\f06e";
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    padding-right: 0.2em;
+}
+
+.menudashboard:before {
+    content: "\f0e4";
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    padding-right: 0.2em;
+}
+
+.menubackup:before {
+    content: "\f187";
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    padding-right: 0.2em;
+}
+
+.menuexpert:before {
+    content: "\f0a3";
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    padding-right: 0.2em;
+}
+
+.menureset:before {
+    content: "\f1cd";
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    padding-right: 0.2em;
+}
