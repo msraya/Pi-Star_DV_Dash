@@ -85,11 +85,11 @@ require_once('../config/version.php');
 		<?php
 		if (!file_exists('/etc/pistar-css.ini')) {
 		    //The source file does not exist, lets create it....
-		    $outFile = fopen("/tmp/bW1kd4jg6b3N0DQo.tmp", "w") or die("Unable to open file!");
-		    $fileContent = "[Background]\nPageColor=edf0f5\nContentColor=ffffff\nBannersColor=dd4b39\n\n";
-		    $fileContent .= "[Text]\nBannersColor=ffffff\nBannersDropColor=303030\n\n";
-		    $fileContent .= "[Tables]\nHeadDropColor=8b0000\nBgEvenColor=f7f7f7\nBgOddColor=d0d0d0\n\n";
-		    $fileContent .= "[Content]\nTextColor=000000\n\n";
+		    $outFile = fopen("/tmp/bW1kd4jg6b3N0DQo.tmp", "w") or die("Unable to open file!"); //#bf0707
+		    $fileContent = "[Background]\nPageColor=#edf0f5\nContentColor=#ffffff\nBannersColor=#dd4b39\nNavbarColor=#242d31\nNavbarHoverColor=#a60000\nDropdownColor=#f9f9f9\nDropdownHoverColor=#d0d0d0\n\n";
+		    $fileContent .= "[Text]\nBannersColor=#ffffff\nBannersDropColor=#303030\nNavbarColor=#ffffff\nNavbarHoverColor=#ffffff\nDropdownColor=#000000\n\n";
+		    $fileContent .= "[Tables]\nHeadDropColor=#8b0000\nBgEvenColor=#f7f7f7\nBgOddColor=#d0d0d0\n\n";
+		    $fileContent .= "[Content]\nTextColor=#000000\n\n";
 		    $fileContent .= "[BannerH2]\nEnabled=0\nText=Some Text\n\n";
 		    $fileContent .= "[BannerExtText]\nEnabled=0\nText=Some long text entry\n";
 		    fwrite($outFile, $fileContent);
