@@ -10,15 +10,15 @@ if (file_exists('/etc/pistar-css.ini')) {
 	if (fopen($piStarCssFile,'r')) { $piStarCss = parse_ini_file($piStarCssFile, true); }
     
     // Set the Values from the config file
-    $backgroundPage = $piStarCss['Background']['Page'];		// usually off-white
-    $backgroundContent = $piStarCss['Background']['Content'];   // The White background in the content section
-    $backgroundBanners = $piStarCss['Background']['Banners'];   // The ubiquitous Pi-Star Red
-    $textBanners = $piStarCss['Text']['Banners'];            	// Usually white
-    $bannerDropShaddows = $piStarCss['Text']['BannersDrop'];    // Banner drop shaddow colour
-    $tableHeadDropShaddow = $piStarCss['Tables']['HeadDrop'];   // Table Headder drop shaddows
-    $textContent = $piStarCss['Content']['Text'];            	// Used for the section titles
-    $tableRowEvenBg = $piStarCss['Tables']['BgEven']; 		// Table Row BG Colour (Even)
-    $tableRowOddBg = $piStarCss['Tables']['BgOdd'];		// Table Row BG Colour (Odd)
+    $backgroundPage = $piStarCss['Background']['PageColor'];		// usually off-white
+    $backgroundContent = $piStarCss['Background']['ContentColor'];      // The White background in the content section
+    $backgroundBanners = $piStarCss['Background']['BannersColor'];      // The ubiquitous Pi-Star Red
+    $textBanners = $piStarCss['Text']['BannersColor'];            	// Usually white
+    $bannerDropShaddows = $piStarCss['Text']['BannersDropColor'];       // Banner drop shaddow colour
+    $tableHeadDropShaddow = $piStarCss['Tables']['HeadDropColor'];      // Table Headder drop shaddows
+    $textContent = $piStarCss['Content']['TextColor'];            	// Used for the section titles
+    $tableRowEvenBg = $piStarCss['Tables']['BgEvenColor']; 		// Table Row BG Colour (Even)
+    $tableRowOddBg = $piStarCss['Tables']['BgOddColor'];		// Table Row BG Colour (Odd)
     
 } else {
     // Default values
@@ -34,7 +34,7 @@ if (file_exists('/etc/pistar-css.ini')) {
 }
 ?>
 body {
-	background-color: #<?php echo $backgroundBanners; ?>;
+	background-color: <?php echo $backgroundBanners; ?>;
 }
 
 .red {
@@ -50,7 +50,7 @@ body {
 	text-align:left;
         padding-top:5px;
         padding-left:5px;
-	background-color: #<?php echo $tableRowOddBg; ?>;
+	background-color: <?php echo $tableRowOddBg; ?>;
 }
 
 .tableft {
@@ -86,14 +86,14 @@ input[type=button],input[type=submit] {
 }
 
 .infobox {
-	background-color: #<?php echo $backgroundBanners; ?>;
+	background-color: <?php echo $backgroundBanners; ?>;
 	font-weight: bold;
 	width:100%;
 }
 
 .intinfo {
-	background-color: #<?php echo $tableRowOddBg; ?>;
-	color: #<?php echo $textContent; ?>;
+	background-color: <?php echo $tableRowOddBg; ?>;
+	color: <?php echo $textContent; ?>;
 	width: 398px;
 	text-align: left;
 	border-right: 1px solid;
@@ -103,8 +103,8 @@ input[type=button],input[type=submit] {
 }
 
 .wifiinfo {
-	background-color: #<?php echo $tableRowOddBg; ?>;
-	color: #<?php echo $textContent; ?>;
+	background-color: <?php echo $tableRowOddBg; ?>;
+	color: <?php echo $textContent; ?>;
 	margin: 0 0 0 400px;
 	border-right: 1px solid;
 	text-align: left;
@@ -112,16 +112,16 @@ input[type=button],input[type=submit] {
 }
 
 .intheader {
-	background-color: #<?php echo $backgroundBanners; ?>;
-	color: #<?php echo $textBanners; ?>;
+	background-color: <?php echo $backgroundBanners; ?>;
+	color: <?php echo $textBanners; ?>;
 	text-align:center;
 	width:100%;
 	font-weight: bold;
 }
 
 .intfooter {
-	background-color: #<?php echo $backgroundBanners; ?>;
-	color: #<?php echo $textBanners; ?>;
+	background-color: <?php echo $backgroundBanners; ?>;
+	color: <?php echo $textBanners; ?>;
 	width:100%;
 	border-top:1px solid;
 	float:left;
@@ -129,7 +129,7 @@ input[type=button],input[type=submit] {
 }
 
 .tail {
-	background-color: #<?php echo $backgroundBanners; ?>;
-	color: #<?php echo $backgroundBanners; ?>;
+	background-color: <?php echo $backgroundBanners; ?>;
+	color: <?php echo $backgroundBanners; ?>;
 	width:100%;
 }

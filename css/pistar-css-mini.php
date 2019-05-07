@@ -12,15 +12,15 @@ if (file_exists('/etc/pistar-css.ini')) {
 	if (fopen($piStarCssFile,'r')) { $piStarCss = parse_ini_file($piStarCssFile, true); }
     
     // Set the Values from the config file
-    $backgroundPage = $piStarCss['Background']['Page'];		// usually off-white
-    $backgroundContent = $piStarCss['Background']['Content'];   // The White background in the content section
-    $backgroundBanners = $piStarCss['Background']['Banners'];   // The ubiquitous Pi-Star Red
-    $textBanners = $piStarCss['Text']['Banners'];            	// Usually white
-    $bannerDropShaddows = $piStarCss['Text']['BannersDrop'];    // Banner drop shaddow colour
-    $tableHeadDropShaddow = $piStarCss['Tables']['HeadDrop'];   // Table Headder drop shaddows
-    $textContent = $piStarCss['Content']['Text'];            	// Used for the section titles
-    $tableRowEvenBg = $piStarCss['Tables']['BgEven']; 		// Table Row BG Colour (Even)
-    $tableRowOddBg = $piStarCss['Tables']['BgOdd'];		// Table Row BG Colour (Odd)
+    $backgroundPage = $piStarCss['Background']['PageColor'];		// usually off-white
+    $backgroundContent = $piStarCss['Background']['ContentColor'];      // The White background in the content section
+    $backgroundBanners = $piStarCss['Background']['BannersColor'];      // The ubiquitous Pi-Star Red
+    $textBanners = $piStarCss['Text']['BannersColor'];            	// Usually white
+    $bannerDropShaddows = $piStarCss['Text']['BannersDropColor'];       // Banner drop shaddow colour
+    $tableHeadDropShaddow = $piStarCss['Tables']['HeadDropColor'];      // Table Headder drop shaddows
+    $textContent = $piStarCss['Content']['TextColor'];            	// Used for the section titles
+    $tableRowEvenBg = $piStarCss['Tables']['BgEvenColor']; 		// Table Row BG Colour (Even)
+    $tableRowOddBg = $piStarCss['Tables']['BgOddColor'];		// Table Row BG Colour (Odd)
     
 } else {
     // Default values
@@ -47,9 +47,9 @@ body, font {
 }
 
 .header {
-    background : #<?php echo $backgroundBanners; ?>;
+    background : <?php echo $backgroundBanners; ?>;
     text-decoration : none;
-    color : #<?php echo $textBanners; ?>;
+    color : <?php echo $textBanners; ?>;
     font-family : verdana, arial, sans-serif;
     text-align : left;
     padding : 5px 0px 5px 0px;
@@ -69,24 +69,24 @@ body, font {
 
 .content {
     padding : 5px 5px 5px 5px;
-    color : #<?php echo $textContent; ?>;
-    background : #<?php echo $backgroundContent; ?>;
+    color : <?php echo $textContent; ?>;
+    background : <?php echo $backgroundContent; ?>;
     text-align: center;
     font-size: 1.4em;
 }
 
 .contentwide {
     padding: 5px 5px 5px 5px;
-    color: #<?php echo $textContent; ?>;
-    background: #<?php echo $backgroundContent; ?>;
+    color: <?php echo $textContent; ?>;
+    background: <?php echo $backgroundContent; ?>;
     text-align: center;
     font-size: 1.4em;
 }
 
 .footer {
-    background : #<?php echo $backgroundBanners; ?>;
+    background : <?php echo $backgroundBanners; ?>;
     text-decoration : none;
-    color : #<?php echo $textBanners; ?>;
+    color : <?php echo $textBanners; ?>;
     font-family : verdana, arial, sans-serif;
     font-size : 9px;
     text-align : center;
@@ -127,18 +127,18 @@ table {
 
 table th {
     font-family: "Lucidia Console",Monaco,monospace;
-    text-shadow: 1px 1px #<?php echo $tableHeadDropShaddow; ?>;
+    text-shadow: 1px 1px <?php echo $tableHeadDropShaddow; ?>;
     text-decoration: none;
-    background: #<?php echo $backgroundBanners; ?>;
+    background: <?php echo $backgroundBanners; ?>;
     border: 1px solid #c0c0c0;
 }
 
 table tr:nth-child(even) {
-    background: #<?php echo $tableRowEvenBg; ?>;
+    background: <?php echo $tableRowEvenBg; ?>;
 }
 
 table tr:nth-child(odd) {
-    background: #<?php echo $tableRowOddBg; ?>;
+    background: <?php echo $tableRowOddBg; ?>;
 }
 
 table td {
@@ -150,7 +150,7 @@ table td {
 }
 
 body {
-    background: #<?php echo $backgroundPage; ?>;
+    background: <?php echo $backgroundPage; ?>;
     color: #000000;
 }
 
@@ -303,7 +303,7 @@ ul.mmenu li a.current span, ul.mmenu li a:hover span {
 }
 
 h1 {
-    text-shadow: 2px 2px #<?php echo $bannerDropShaddows; ?>;
+    text-shadow: 2px 2px <?php echo $bannerDropShaddows; ?>;
     text-align: center;
 }
 
@@ -358,12 +358,12 @@ input.toggle-round-flat + label:after {
 }
 
 input.toggle-round-flat:checked + label {
-    background-color: #<?php echo $backgroundBanners; ?>;
+    background-color: <?php echo $backgroundBanners; ?>;
 }
 
 input.toggle-round-flat:checked + label:after {
     margin-left: 14px;
-    background-color: #<?php echo $backgroundBanners; ?>;
+    background-color: <?php echo $backgroundBanners; ?>;
 }
 
  /* put the same color as in left vertical status */
