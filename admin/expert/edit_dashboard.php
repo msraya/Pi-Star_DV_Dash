@@ -193,8 +193,8 @@ require_once('../config/version.php');
 		echo '<form action="" method="post">'."\n";
 
 		// Colorpicker
-		echo '<div style="position: fixed; pointer-events: none; transform: translateX(280%);" >'."\n";
-		echo '<div id="colorpicker" style="float: right; margin: 10px; pointer-events: auto;"></div>'."\n";
+		echo '<div style="position: fixed; pointer-events: none; transform: translateX(230%);" >'."\n";
+		echo '<div id="colorpicker" style="float: right; margin: 20px; pointer-events: auto;"></div>'."\n";
 		echo '</div>'."\n";
 		
 		foreach($parsed_ini as $section=>$values) {
