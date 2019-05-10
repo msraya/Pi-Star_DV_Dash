@@ -430,45 +430,137 @@ input.toggle-round-flat:checked + label:after {
     background-color: <?php echo $backgroundNavbar; ?>;
 }
 
-.lnavbar button {
+/* Expert menus */
+.mainnav {
+    display: inline-block;
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    width: 100%;
+    background: <?php echo $backgroundNavbar; ?>;
+    overflow: hidden;
+}
+
+.dropdown {
+    position: absolute;
+    width: 170px;
+    opacity: 0;
+    visibility: hidden;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.mainnav ul {
+    padding: 0;
+    list-style: none;
+}
+
+.mainnav li {
+    display: block;
     float: left;
+    font-size: 0;
+    margin: 0;
+    background: <?php echo $backgroundNavbar; ?>;
+}
+
+.mainnav li a {
+    list-style: none;
+    padding: 0;
+    display: inline-block;
+    padding: 1px 10px;
     font-family : verdana, arial, sans-serif;
     font-size: 14px;
+    
     color: <?php echo $textNavbar; ?>;
     text-align: center;
-    padding: 5px 8px;
     text-decoration: none;
 }
 
-.lnavbar button:hover {
+.mainnav .has-subs a:after {
+    content: "\f107";
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    padding-left: 1em;
+}
+
+.mainnav .has-subs .dropdown .subs a:after {
+    content: "";
+}
+
+.mainnav li:hover {
+    background: <?php echo $backgroundNavbarHover; ?>;
+}
+
+.mainnav li:hover a {
+    color: <?php echo $textNavbarHover; ?>;
     background-color: <?php echo $backgroundNavbarHover; ?>;
 }
 
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: <?php echo $backgroundDropdown; ?>;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
+/* First Level */
+.subs {
+    position: relative;
+    top: 14px;
+    width: 170px;
 }
 
-.dropdown-content a {
-    float: none;
-    font-size: 14px;
+.has-subs:hover .dropdown,
+.has-subs .has-subs:hover .dropdown {
+    opacity: 1;
+    visibility: visible;
+}
+
+.mainnav ul li,
+.mainav ul li ul li  a {
     color: <?php echo $textDropdown; ?>;
-    padding: 8px 10px;
-    text-decoration: none;
-    display: block;
-    text-align: left;
+    background-color: <?php echo $backgroundDropdown; ?>;
 }
 
-.dropdown-content a:hover {
+.mainnav li:hover ul a,
+.mainnav li:hover ul li ul li a {
+    color: <?php echo $textDropdown; ?>;
+    background-color: <?php echo $backgroundDropdown; ?>;
+}
+
+.mainnav li ul li:hover,
+.mainnav li ul li ul li:hover {
     background-color: <?php echo $backgroundDropdownHover; ?>;
 }
 
-.dropdown:hover .dropdown-content {
-    display: block;
+.mainnav li ul li:hover a,
+.mainnav li ul li ul li:hover a {
+    color: <?php echo $textDropdownHover; ?>;
+    background-color: <?php echo $backgroundDropdownHover; ?>;
+}
+
+.mainnav .has-subs .dropdown .has-subs a:after {
+    content: "\f105";
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    padding-left: 1em;
+}
+
+/* Second Level */
+.has-subs .has-subs .dropdown .subs {
+    position: relative;
+    top: -10px;
+    width: 170px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.has-subs .has-subs .dropdown .subs a:after {
+    content:"";
+}
+
+.has-subs .has-subs .dropdown {
+    position: absolute;
+    width: 170px;
+    left: 170px;
+    top: 0px;
+    opacity: 0;
+    visibility: hidden;
 }
 
 .menuconfig .menuadmin .menudashboard .menuupdate .menuupgrade .menupower .menulogs .menubackup .menuexpert .menureset {
@@ -564,3 +656,4 @@ input.toggle-round-flat:checked + label:after {
     text-decoration: inherit;
     padding-right: 0.2em;
 }
+

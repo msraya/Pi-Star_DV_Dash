@@ -10,50 +10,87 @@
 	    <a class="menuadmin" href="/admin/"><?php echo $lang['admin'];?></a>
 	    <a class="menudashboard" href="/"><?php echo $lang['dashboard'];?></a>
 	</div>
+
 	<div class="lnavbar">
-	    <div class="dropdown">
-		<button class="dropbutton">Quick Editors
-		    <i class="fa fa-angle-down"></i>
-		    <div class="dropdown-content">
-			<a href="edit_dstarrepeater.php">DStarRepeater</a>
-			<a href="edit_ircddbgateway.php">ircDDB Gateway</a>
-			<a href="edit_timeserver.php">TimeServer</a>
-			<a href="edit_mmdvmhost.php">MMDVMHost</a>
-			<a href="edit_dmrgateway.php">DMR Gateway</a>
-			<a href="edit_ysfgateway.php">YSF Gateway</a>
-			<a href="edit_p25gateway.php">P25 Gateway</a>
-			<a href="edit_nxdngateway.php">NXDN Gateway</a>
-			<a href="edit_dapnetgateway.php">DAPNet Gateway</a>
-			<a href="edit_dapnetapi.php">DAPNet API</a>
-			<a href="edit_mobilegps.php">MobileGPS</a>
-		    </div>
-		</button>		
-	    </div>
-	    <div class="dropdown">
-		<button class="dropbutton">Full Editors
-		    <i class="fa fa-angle-down"></i>
-		    <div class="dropdown-content">
-			<a href="fulledit_dmrgateway.php">DMR Gateway</a>
-			<a href="fulledit_pistar-remote.php">PiStar-Remote</a>
-			<a href="fulledit_wpaconfig.php">WiFi</a>
-			<a href="fulledit_bmapikey.php">Brandmeister API</a>
-			<a href="fulledit_dapnetgateway.php">DAPNet Gateway</a>
-			<a href="fulledit_dapnetapi.php">DAPNet API</a>
-			<a href="fulledit_mobilegps.php">MobileGPS</a>
-			<a href="fulledit_cron.php">System Cron</a>
-			<a href="fulledit_rssidat.php">RSSI Data</a>
-		    </div>
-		</button>
-	    </div>
-	    <div class="dropdown">
-		<button class="dropbutton">Tools
-		    <i class="fa fa-angle-down"></i>
-		    <div class="dropdown-content">
-			<a href="edit_dashboard.php">CSS Tool</a>
-			<a href="ssh_access.php">SSH Access</a>
-		    </div>
-		</button>
-	    </div>
+            <ul class="mainnav">
+		<li class="has-subs"><a href="#">Quick Editors</a>
+		    <ul class="dropdown">
+			<!-- DStar Sub -->
+			<li class="subs has-subs"><a href="#">DStar</a>
+			    <ul class="dropdown">
+				<li class="subs"><a href="edit_dstarrepeater.php">DStarRepeater</a></li>
+				<li class="subs"><a href="edit_ircddbgateway.php">ircDDB Gateway</a></li>
+				<li class="subs"><a href="edit_timeserver.php">TimeServer</a></li>
+			    </ul>
+			</li>
+			<!-- DMR Sub -->
+			<li class="subs has-subs"><a href="#">DMR</a>
+			    <ul class="dropdown">
+				<li class="subs"><a href="edit_mmdvmhost.php">MMDVMHost</a></li>
+				<li class="subs"><a href="edit_dmrgateway.php">DMR Gateway</a></li>
+				<li class="subs"><a href="#">DMR to YSF</a></li>
+				<li class="subs"><a href="#">DMR to NXDN</a></li>
+			    </ul>
+			</li>
+			<!-- SystemFusion Sub -->
+			<li class="subs has-subs"><a href="#">SystemFusion</a>
+			    <ul class="dropdown">
+				<li class="subs"><a href="edit_ysfgateway.php">YSF Gateway</a></li>
+				<li class="subs"><a href="#">YSF to DMR</a></li>
+				<li class="subs"><a href="#">YSF to P25</a></li>
+				<li class="subs"><a href="#">YSF to NXDN</a></li>
+			    </ul>
+			</li>
+			<li class="subs"><a href="edit_p25gateway.php">P25 Gateway</a></li>
+			<li class="subs"><a href="edit_nxdngateway.php">NXDN Gateway</a></li>
+			<!-- DAPNet Sub -->
+			<li class="subs has-subs"><a href="#">DAPNet</a>
+			    <ul class="dropdown">
+				<li class="subs"><a href="edit_dapnetgateway.php">DAPNet Gateway</a></li>
+				<li class="subs"><a href="edit_dapnetapi.php">DAPNet API</a></li>
+			    </ul>
+			</li>
+			<li class="subs"><a href="edit_mobilegps.php">MobileGPS</a></li>
+		    </ul>
+		</li>
+
+		<li class="has-subs"><a href="#">Full Editors</a>
+		    <ul class="dropdown">
+			<li class="subs"><a href="fulledit_pistar-remote.php">PiStar-Remote</a></li>
+			<!-- DMR Sub -->
+			<li class="subs has-subs"><a href="#">DMR</a>
+			    <ul class="dropdown">
+				<li class="subs"><a href="fulledit_dmrgateway.php">DMR Gateway</a></li>
+				<li class="subs"><a href="fulledit_bmapikey.php">Brandmeister API</a></li>
+			    </ul>
+			</li>
+			<!-- SystemFusion Sub -->
+			<li class="subs has-subs"><a href="#">SystemFusion</a>
+			    <ul class="dropdown">
+				<li class="subs"><a href="edit_ysfgateway.php">YSF Gateway</a></li>
+			    </ul>
+			</li>
+			<!-- DAPNet Sub -->
+			<li class="subs has-subs"><a href="#">DAPNet</a>
+			    <ul class="dropdown">
+				<li class="subs"><a href="fulledit_dapnetgateway.php">DAPNet Gateway</a></li>
+				<li class="subs"><a href="fulledit_dapnetapi.php">DAPNet API</a></li>
+			    </ul>
+			</li>
+			<li class="subs"><a href="fulledit_mobilegps.php">MobileGPS</a></li>
+			<li class="subs"><a href="fulledit_wpaconfig.php">WiFi</a></li>
+			<li class="subs"><a href="fulledit_cron.php">System Cron</a></li>
+			<li class="subs"><a href="fulledit_rssidat.php">RSSI Data</a></li>
+		    </ul>
+		</li>
+		
+		<li class="has-subs"><a href="#">Tools</a>
+		    <ul class="dropdown">
+			<li class="subs"><a href="edit_dashboard.php">CSS Tool</a></li>
+			<li class="subs"><a href="ssh_access.php">SSH Access</a></li>
+		    </ul>
+		</li>
+	    </ul>
 	</div>
     </p>
 </div>
