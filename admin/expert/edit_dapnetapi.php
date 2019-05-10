@@ -9,6 +9,13 @@ if (! file_exists('/etc/dapnetapi.key')) {
     exec('echo "PASS=" >> /tmp/jsADGHwf9sj294.tmp');
     exec('echo "TRXAREA=" >> /tmp/jsADGHwf9sj294.tmp');
     exec('echo "MY_RIC=" >> /tmp/jsADGHwf9sj294.tmp');
+    exec('sudo chmod 664 /tmp/jsADGHwf9sj294.tmp');
+
+    exec('sudo mount -o remount,rw /');
+    exec('sudo mv /tmp/jsADGHwf9sj294.tmp /etc/dapnetapi.key');
+    exec('sudo chmod 644 /etc/dapnetapi.key');
+    exec('sudo chown root:root /etc/dapnetapi.key');
+    exec('sudo mount -o remount,ro /');
 }
 
 $configfile = '/etc/dapnetapi.key';
