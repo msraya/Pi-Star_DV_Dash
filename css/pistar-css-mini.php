@@ -5,6 +5,26 @@
 // Output CSS and not plain text
 header("Content-type: text/css");
 
+// Default values
+$backgroundPage = "#edf0f5";         // usually off-white
+$backgroundContent = "#ffffff";      // The White background in the content section
+$backgroundBanners = "#dd4b39";      // The ubiquitous Pi-Star Red
+$backgroundNavbar = "#242d31";        // Navbar background color
+$backgroundNavbarHover = "#a60000"; // Navbar hover color
+$backgroundDropdown = "#f9f9f9";    // Dropdown menu background color
+$backgroundDropdownHover = "#d0d0d0"; // Dropdown hover background color
+
+$textBanners = "#ffffff";            // Usually white
+$textNavbar = "#ffffff";           	// Navbar text color
+$textNavbarHover = "#ffffff";       // Navbar hover color
+$textDropdown = "#000000";          // Dropdown menu text color
+$textDropdownHover = "#000000";     // Dropdown hover menu text color
+$bannerDropShaddows = "#303030";     // Banner drop shaddow colour
+$tableHeadDropShaddow = "#8b0000";   // Table Headder drop shaddows
+$textContent = "#000000";            // Used for the section titles
+$tableRowEvenBg = "#f7f7f7";		// Table Row BG Colour (Even)
+$tableRowOddBg = "#d0d0d0";		// Table Row BG Colour (Odd)
+
 // Check if the config file exists
 if (file_exists('/etc/pistar-css.ini')) {
     // Use the values from the file
@@ -24,6 +44,7 @@ if (file_exists('/etc/pistar-css.ini')) {
     $textNavbar = $piStarCss['Text']['NavbarColor'];            	// Navbar text color
     $textNavbarHover = $piStarCss['Text']['NavbarHoverColor'];          // Navbar hover color
     $textDropdown = $piStarCss['Text']['DropdownColor'];            	// Dropdown menu text color
+    $textDropdownHover = $piStarCss['Text']['DropdownHoverColor'];    	// Dropdown hover menu text color
     $bannerDropShaddows = $piStarCss['Text']['BannersDropColor'];       // Banner drop shaddow colour
 
     $tableHeadDropShaddow = $piStarCss['Tables']['HeadDropColor'];      // Table Headder drop shaddows
@@ -31,25 +52,6 @@ if (file_exists('/etc/pistar-css.ini')) {
     $tableRowOddBg = $piStarCss['Tables']['BgOddColor'];		// Table Row BG Colour (Odd)
 
     $textContent = $piStarCss['Content']['TextColor'];            	// Used for the section titles
-} else {
-    // Default values
-    $backgroundPage = "#edf0f5";         // usually off-white
-    $backgroundContent = "#ffffff";      // The White background in the content section
-    $backgroundBanners = "#dd4b39";      // The ubiquitous Pi-Star Red
-    $backgroundNavbar = "#242d31";        // Navbar background color
-    $backgroundNavbarHover = "#a60000"; // Navbar hover color
-    $backgroundDropdown = "#f9f9f9";    // Dropdown menu background color
-    $backgroundDropdownHover = "#d0d0d0"; // Dropdown hover background color
-
-    $textBanners = "#ffffff";            // Usually white
-    $textNavbar = "#ffffff";           	// Navbar text color
-    $textNavbarHover = "#ffffff";       // Navbar hover color
-    $textDropdown = "#000000";          // Dropdown menu text color
-    $bannerDropShaddows = "#303030";     // Banner drop shaddow colour
-    $tableHeadDropShaddow = "#8b0000";   // Table Headder drop shaddows
-    $textContent = "#000000";            // Used for the section titles
-    $tableRowEvenBg = "#f7f7f7";		// Table Row BG Colour (Even)
-    $tableRowOddBg = "#d0d0d0";		// Table Row BG Colour (Odd)
 }
 ?>
 .container {
@@ -526,7 +528,7 @@ input.toggle-round-flat:checked + label:after {
 
 .mainnav li ul li:hover a,
 .mainnav li ul li ul li:hover a {
-    color: <?php echo $textDropdown; ?>;
+    color: <?php echo $textDropdownHover; ?>;
     background-color: <?php echo $backgroundDropdownHover; ?>;
 }
 

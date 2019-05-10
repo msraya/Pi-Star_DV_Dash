@@ -42,10 +42,10 @@ require_once('../config/version.php');
 	 }
 	</style>
 	<script type="text/javascript">
-	 function factoryReset()
+	 function cssReset()
 	 {
-	     if (confirm('WARNING: This will set these settings back to factory defaults.\n\nAre you SURE you want to do this?\n\nPress OK to restore the factory configuration\nPress Cancel to go back.')) {
-		 document.getElementById("factoryReset").submit();
+	     if (confirm('WARNING: This will set these settings back to factory defaults.\n\nAre you SURE you want to do this?\n\nPress OK to restore the factory CSS configuration\nPress Cancel to go back.')) {
+		 document.getElementById("cssReset").submit();
 	     } else {
 		 return false;
 	     }
@@ -83,11 +83,27 @@ require_once('../config/version.php');
 	    <div class="contentwide">
 		
 		<?php
+
+		// Check if we are using the new CSS configuration syntax
+		if (file_exists('/etc/pistar-css.ini')) {
+		    $dataContent = file_get_contents('/etc/pistar-css.ini');
+		    
+		    if (! preg_match('/PageColor/', $dataContent))
+		    {
+			// Reset CSS configuration
+			exec('sudo mount -o remount,rw /');                             // Make rootfs writable
+			exec('sudo rm -rf /etc/pistar-css.ini');                        // Delete the Config
+			exec('sudo mount -o remount,ro /');                             // Make rootfs read-only
+			echo '<script type="text/javascript">setTimeout(function() { window.location=window.location;},0);</script>';
+			die();
+		    }
+		}
+
 		if (!file_exists('/etc/pistar-css.ini')) {
 		    //The source file does not exist, lets create it....
 		    $outFile = fopen("/tmp/bW1kd4jg6b3N0DQo.tmp", "w") or die("Unable to open file!"); //#bf0707
 		    $fileContent = "[Background]\nPageColor=#edf0f5\nContentColor=#ffffff\nBannersColor=#dd4b39\nNavbarColor=#242d31\nNavbarHoverColor=#a60000\nDropdownColor=#f9f9f9\nDropdownHoverColor=#d0d0d0\n\n";
-		    $fileContent .= "[Text]\nBannersColor=#ffffff\nBannersDropColor=#303030\nNavbarColor=#ffffff\nNavbarHoverColor=#ffffff\nDropdownColor=#000000\n\n";
+		    $fileContent .= "[Text]\nBannersColor=#ffffff\nBannersDropColor=#303030\nNavbarColor=#ffffff\nNavbarHoverColor=#ffffff\nDropdownColor=#000000\nDropdownHoverColor=#000000\n\n";
 		    $fileContent .= "[Tables]\nHeadDropColor=#8b0000\nBgEvenColor=#f7f7f7\nBgOddColor=#d0d0d0\n\n";
 		    $fileContent .= "[Content]\nTextColor=#000000\n\n";
 		    $fileContent .= "[BannerH2]\nEnabled=0\nText=Some Text\n\n";
@@ -114,11 +130,11 @@ require_once('../config/version.php');
 		//after the form submit
 		if($_POST) {
 		    $data = $_POST;
-		    // Factory Reset Handler Here
-		    if (empty($_POST['factoryReset']) != TRUE ) {
+		    // CSS Factory Reset Handler Here
+		    if (empty($_POST['cssReset']) != TRUE) {
 			echo "<br />\n";
 			echo "<table>\n";
-			echo "<tr><th>Factory Reset Config</th></tr>\n";
+			echo "<tr><th>CSS Reset Config</th></tr>\n";
 			echo "<tr><td>Loading fresh configuration file(s)...</td><tr>\n";
 			echo "</table>\n";
 			unset($_POST);
@@ -218,11 +234,11 @@ require_once('../config/version.php');
 		}
 		echo "</form>";
 		echo "<br /><br />\n";
-		echo 'if you took it all too far and now it makes you feel sick, click below to reset.'."\n";
-		echo '<form id="factoryReset" action="" method="post">'."\n";
-		echo '  <div><input type="hidden" name="factoryReset" value="1" /></div>'."\n";
+		echo 'If you took it all too far and now it makes you feel sick, click below to reset the values to default.'."\n";
+		echo '<form id="cssReset" action="" method="post">'."\n";
+		echo '  <div><input type="hidden" name="cssReset" value="1" /></div>'."\n";
 		echo '</form>'."\n";
-		echo '<input type="button" onclick="javascript:factoryReset();" value="'.$lang['factory_reset'].'" />'."\n";
+		echo '<input type="button" onclick="javascript:cssReset();" value="CSS '.$lang['factory_reset'].'" />'."\n";
 		?>
 	    </div>
 	    
