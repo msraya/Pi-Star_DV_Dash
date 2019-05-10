@@ -529,7 +529,7 @@ input.toggle-round-flat:checked + label:after {
 
 .mainnav li ul li:hover a,
 .mainnav li ul li ul li:hover a {
-    color: <?php echo $textDropdownHover; ?>;
+    color: <?php echo $textDropdown; ?>;
     background-color: <?php echo $backgroundDropdownHover; ?>;
 }
 
