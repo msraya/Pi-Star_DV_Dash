@@ -36,9 +36,9 @@
 			<li class="subs has-subs"><a href="#">SystemFusion</a>
 			    <ul class="dropdown">
 				<li class="subs"><a href="edit_ysfgateway.php">YSF Gateway</a></li>
-				<li class="subs"><a href="#">YSF to DMR</a></li>
-				<li class="subs"><a href="#">YSF to P25</a></li>
-				<li class="subs"><a href="#">YSF to NXDN</a></li>
+				<li class="subs"><a href="edit_ysf2dmr.php">YSF to DMR</a></li>
+				<li class="subs"><a href="edit_ysf2p25.php">YSF to P25</a></li>
+				<li class="subs"><a href="edit_ysf2nxdn.php">YSF to NXDN</a></li>
 			    </ul>
 			</li>
 			<li class="subs"><a href="edit_p25gateway.php">P25 Gateway</a></li>
@@ -64,12 +64,7 @@
 				<li class="subs"><a href="fulledit_bmapikey.php">Brandmeister API</a></li>
 			    </ul>
 			</li>
-			<!-- SystemFusion Sub -->
-			<li class="subs has-subs"><a href="#">SystemFusion</a>
-			    <ul class="dropdown">
-				<li class="subs"><a href="edit_ysfgateway.php">YSF Gateway</a></li>
-			    </ul>
-			</li>
+			<li class="subs"><a href="edit_ysfgateway.php">YSF Gateway</a></li>
 			<!-- DAPNet Sub -->
 			<li class="subs has-subs"><a href="#">DAPNet</a>
 			    <ul class="dropdown">
