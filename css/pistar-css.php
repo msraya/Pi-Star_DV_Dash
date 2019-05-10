@@ -545,9 +545,8 @@ input.toggle-round-flat:checked + label:after {
 /* Second Level */
 .has-subs .has-subs .dropdown .subs {
     position: relative;
-    top: -10px;
+    top: 0px;
     width: 170px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
 
 .has-subs .has-subs .dropdown .subs a:after {
@@ -558,9 +557,10 @@ input.toggle-round-flat:checked + label:after {
     position: absolute;
     width: 170px;
     left: 170px;
-    top: 0px;
+    top: -10px;
     opacity: 0;
     visibility: hidden;
+    box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.2);
 }
 
 .menuconfig .menuadmin .menudashboard .menuupdate .menuupgrade .menupower .menulogs .menubackup .menuexpert .menureset {
