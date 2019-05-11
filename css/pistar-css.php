@@ -564,7 +564,7 @@ input.toggle-round-flat:checked + label:after {
     box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.2);
 }
 
-.menuconfig .menuadmin .menudashboard .menuupdate .menuupgrade .menupower .menulogs .menubackup .menuexpert .menureset {
+.menuconfig .menuadmin .menudashboard .menuupdate .menuupgrade .menupower .menulogs .menubackup .menuexpert .menureset .menusysinfo {
     position: relative;
 }
 
@@ -651,6 +651,15 @@ input.toggle-round-flat:checked + label:after {
 
 .menureset:before {
     content: "\f1cd";
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    padding-right: 0.2em;
+}
+
+.menusysinfo:before {
+    content: "\f05a";
     font-family: FontAwesome;
     font-style: normal;
     font-weight: normal;
