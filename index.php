@@ -60,7 +60,7 @@ $configPistarRelease = parse_ini_file($pistarReleaseConfig, true);
 		    <a class="menuconfig" href="/admin/configure.php"><?php echo $lang['configuration'];?></a>
 		    <?php if ($_SERVER["PHP_SELF"] == "/admin/index.php") {
 			echo ' <a class="menuupdate" href="/admin/update.php">'.$lang['update'].'</a>'."\n";
-			echo ' <a class="menupower" href="/admin/power.php"">'.$lang['power'].'</a>'."\n";
+			echo ' <a class="menupower" href="/admin/power.php">'.$lang['power'].'</a>'."\n";
 			echo ' <a class="menulogs" href="/admin/live_modem_log.php">'.$lang['live_logs'].'</a>'."\n";
 		    } ?>
 		    <a class="menuadmin" href="/admin/"><?php echo $lang['admin'];?></a>
