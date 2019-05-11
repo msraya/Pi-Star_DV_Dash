@@ -15,6 +15,7 @@
             <ul class="mainnav">
 		<li class="has-subs"><a href="#">Quick Editors</a>
 		    <ul class="dropdown">
+		    	<li class="subs"><a href="edit_mmdvmhost.php">MMDVMHost</a></li>
 			<!-- DStar Sub -->
 			<li class="subs has-subs"><a href="#">DStar</a>
 			    <ul class="dropdown">
@@ -26,7 +27,6 @@
 			<!-- DMR Sub -->
 			<li class="subs has-subs"><a href="#">DMR</a>
 			    <ul class="dropdown">
-				<li class="subs"><a href="edit_mmdvmhost.php">MMDVMHost</a></li>
 				<li class="subs"><a href="edit_dmrgateway.php">DMR Gateway</a></li>
 				<li class="subs"><a href="edit_dmr2ysf.php">DMR to YSF</a></li>
 				<li class="subs"><a href="edit_dmr2nxdn.php">DMR to NXDN</a></li>
