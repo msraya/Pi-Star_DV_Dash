@@ -117,20 +117,8 @@ function listDAPNETGWMessages($logLinesDAPNETGateway, $tillMYRIC) {
 if (strcmp($origin, "admin") == 0) {
     $myRIC = getConfigItem("DAPNETAPI", "MY_RIC", getDAPNETAPIConfig());
     
-<<<<<<< HEAD
     // Display personnal messages only if RIC has been defined, and some personnal messages are available
     if ($myRIC && (array_search('<MY_RIC>', $logLinesDAPNETGateway) != FALSE)) {
-=======
-      // Decode Skyper Messages
-      if ( ($pocsag_ric == "0004520") || ($pocsag_ric == "0004512") || ($pocsag_ric == "0002504") ) {
-        $pocsag_msg = un_skyper($pocsag_msg, $pocsag_ric);
-      } 
-   
-      // Formatting long messages without spaces
-      if (strpos($pocsag_msg, ' ') == 0 && strlen($pocsag_msg) >= 45) {
-        $pocsag_msg = wordwrap($pocsag_msg, 45, ' ', true);
-      }
->>>>>>> upstream/master
 ?>
     
     <input type="hidden" name="pocsag-autorefresh" value="OFF" />
