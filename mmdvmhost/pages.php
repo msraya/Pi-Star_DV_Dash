@@ -1,5 +1,6 @@
 <?php
 // Most of the work here contributed by geeks4hire (Ben Horan)
+// Skyper decode by Andy Taylor (MW0MWZ)
 
 include_once $_SERVER['DOCUMENT_ROOT'].'/config/config.php';          // MMDVMDash Config
 include_once $_SERVER['DOCUMENT_ROOT'].'/mmdvmhost/tools.php';        // MMDVMDash Tools
@@ -9,6 +10,31 @@ include_once $_SERVER['DOCUMENT_ROOT'].'/config/language.php';        // Transla
 // Get origin of the page loading
 $origin = (isset($_GET['origin']) ? $_GET['origin'] : (isset($myOrigin) ? $myOrigin : "unknown"));
 
+// Function to reverse the ROT1 used for Skyper
+function un_skyper($message) {
+    $output = "";
+    $messageTextArray = str_split($message);
+    $skyperRIC = ord($messageTextArray[0]) - 31;
+    unset($messageTextArray[0]);
+    
+    if (count($messageTextArray) >= 1) {
+	$skyperSlot = ord($messageTextArray[1]) - 32;
+	unset($messageTextArray[1]);
+	
+	foreach($messageTextArray as $asciiChar) {
+	    $asciiAsInt = ord($asciiChar);
+	    $convretedAsciiAsInt = $asciiAsInt -1;
+	    $convertedAsciiChar = chr($convretedAsciiAsInt);
+	    $output .= $convertedAsciiChar;
+	}
+	
+	$output = "[Skyper] RIC:$skyperRIC Slot:$skyperSlot - ".$output;
+	return $output;
+    }
+
+    $output = "[Skyper] RIC:$skyperRIC - No Message";
+    return $output;
+}
 //
 // Fill table entries with DAPNETGW messages, stops to <MY_RIC> marker if tillMYRIC is true
 //
@@ -38,6 +64,11 @@ function listDAPNETGWMessages($logLinesDAPNETGateway, $tillMYRIC) {
 	$len = strlen($dapnetMessageLine);
 	$pocsag_msg = substr($dapnetMessageLine, ($pos - $len) + 1, ($len - $pos) - 2);
 	
+	// Decode Skyper Messages
+	if ($pocsag_ric == "0004520") {
+            $pocsag_msg = un_skyper($pocsag_msg);
+	} 
+
 	// Formatting long messages without spaces
 	if (strpos($pocsag_msg, ' ') == 0 && strlen($pocsag_msg) >= 45) {
 	    $pocsag_msg = wordwrap($pocsag_msg, 45, ' ', true);
@@ -131,7 +162,6 @@ if (strcmp($origin, "admin") == 0) {
                         } // $found
                     } // foreach
 ?>
-
 		</tbody>
 	    </table>
 	    
