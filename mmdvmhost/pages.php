@@ -11,30 +11,60 @@ include_once $_SERVER['DOCUMENT_ROOT'].'/config/language.php';        // Transla
 $origin = (isset($_GET['origin']) ? $_GET['origin'] : (isset($myOrigin) ? $myOrigin : "unknown"));
 
 // Function to reverse the ROT1 used for Skyper
-function un_skyper($message) {
-    $output = "";
-    $messageTextArray = str_split($message);
-    $skyperRIC = ord($messageTextArray[0]) - 31;
-    unset($messageTextArray[0]);
-    
-    if (count($messageTextArray) >= 1) {
-	$skyperSlot = ord($messageTextArray[1]) - 32;
-	unset($messageTextArray[1]);
-	
-	foreach($messageTextArray as $asciiChar) {
-	    $asciiAsInt = ord($asciiChar);
-	    $convretedAsciiAsInt = $asciiAsInt -1;
-	    $convertedAsciiChar = chr($convretedAsciiAsInt);
-	    $output .= $convertedAsciiChar;
-	}
-	
-	$output = "[Skyper] RIC:$skyperRIC Slot:$skyperSlot - ".$output;
-	return $output;
-    }
+function un_skyper($message, $pocsagric) {
+  $output = "";
+  $messageTextArray = str_split($message);
 
-    $output = "[Skyper] RIC:$skyperRIC - No Message";
+  if ($pocsagric == "0002504") {                  // Skyper OTA TimeSync Messages
+    $output = "[Skyper OTA Time] ".$message;
     return $output;
+  }
+  else {                                          // All other Skyper Messages
+    if ($pocsagric == "0002504") {                // Skyper Rubric Index
+      $skyperRIC = ord($messageTextArray[0]) - 31;
+      $skyperRIC .= ord($messageTextArray[1]) - 31;
+      $skyperMsgNr = ord($messageTextArray[2]) - 32;
+      unset($messageTextArray[0]);
+      unset($messageTextArray[1]);
+      unset($messageTextArray[2]);
+      if (count($messageTextArray) >= 1) {        // Make sure the array is large enough
+        $skyperMsgNr = ord($messageTextArray[1]) - 32;
+        unset($messageTextArray[1]);
+        
+        foreach($messageTextArray as $asciiChar) {// Decode the message
+          $asciiAsInt = ord($asciiChar);
+          $convretedAsciiAsInt = $asciiAsInt -1;
+          $convertedAsciiChar = chr($convretedAsciiAsInt);
+          $output .= $convertedAsciiChar;
+        }
+        $output = "[Skyper] RIC:$skyperRIC Msg:$skyperMsgNr - ".$output;
+        return $output;
+      }
+    }
+    else {                                        // Normal Message
+      $skyperRIC = ord($messageTextArray[0]) - 31;
+      unset($messageTextArray[0]);
+      if (count($messageTextArray) >= 1) {        // Make sure the array is large enough
+        $skyperMsgNr = ord($messageTextArray[1]) - 32;
+        unset($messageTextArray[1]);
+        
+        foreach($messageTextArray as $asciiChar) {// Decode the message
+          $asciiAsInt = ord($asciiChar);
+          $convretedAsciiAsInt = $asciiAsInt -1;
+          $convertedAsciiChar = chr($convretedAsciiAsInt);
+          $output .= $convertedAsciiChar;
+        }
+        $output = "[Skyper] RIC:$skyperRIC Msg:$skyperMsgNr - ".$output;
+        return $output;
+      }
+      else {                                        // There was no message
+        $output = "[Skyper] RIC:$skyperRIC - No Message";
+        return $output;
+      }
+    }
+  }
 }
+
 //
 // Fill table entries with DAPNETGW messages, stops to <MY_RIC> marker if tillMYRIC is true
 //
@@ -65,10 +95,10 @@ function listDAPNETGWMessages($logLinesDAPNETGateway, $tillMYRIC) {
 	$pocsag_msg = substr($dapnetMessageLine, ($pos - $len) + 1, ($len - $pos) - 2);
 	
 	// Decode Skyper Messages
-	if ($pocsag_ric == "0004520") {
-            $pocsag_msg = un_skyper($pocsag_msg);
+	if ( ($pocsag_ric == "0004520") || ($pocsag_ric == "0004512") || ($pocsag_ric == "0002504") ) {
+            $pocsag_msg = un_skyper($pocsag_msg, $pocsag_ric);
 	} 
-
+	
 	// Formatting long messages without spaces
 	if (strpos($pocsag_msg, ' ') == 0 && strlen($pocsag_msg) >= 45) {
 	    $pocsag_msg = wordwrap($pocsag_msg, 45, ' ', true);
@@ -87,8 +117,20 @@ function listDAPNETGWMessages($logLinesDAPNETGateway, $tillMYRIC) {
 if (strcmp($origin, "admin") == 0) {
     $myRIC = getConfigItem("DAPNETAPI", "MY_RIC", getDAPNETAPIConfig());
     
+<<<<<<< HEAD
     // Display personnal messages only if RIC has been defined, and some personnal messages are available
     if ($myRIC && (array_search('<MY_RIC>', $logLinesDAPNETGateway) != FALSE)) {
+=======
+      // Decode Skyper Messages
+      if ( ($pocsag_ric == "0004520") || ($pocsag_ric == "0004512") || ($pocsag_ric == "0002504") ) {
+        $pocsag_msg = un_skyper($pocsag_msg, $pocsag_ric);
+      } 
+   
+      // Formatting long messages without spaces
+      if (strpos($pocsag_msg, ' ') == 0 && strlen($pocsag_msg) >= 45) {
+        $pocsag_msg = wordwrap($pocsag_msg, 45, ' ', true);
+      }
+>>>>>>> upstream/master
 ?>
     
     <input type="hidden" name="pocsag-autorefresh" value="OFF" />
