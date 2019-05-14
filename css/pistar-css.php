@@ -5,6 +5,7 @@
 // Output CSS and not plain text
 header("Content-type: text/css");
 
+// Default values
 $backgroundPage = "#edf0f5";         // usually off-white
 $backgroundContent = "#ffffff";      // The White background in the content section
 $backgroundBanners = "#dd4b39";      // The ubiquitous Pi-Star Red
@@ -12,12 +13,24 @@ $backgroundNavbar = "#242d31";        // Navbar background color
 $backgroundNavbarHover = "#a60000"; // Navbar hover color
 $backgroundDropdown = "#f9f9f9";    // Dropdown menu background color
 $backgroundDropdownHover = "#d0d0d0"; // Dropdown hover background color
+$backgroundServiceCellActiveColor = "#11DD11";
+$backgroundServiceCellInactiveColor = "#BB5555";
+$backgroundModeCellDisabledColor = "#606060";
+$backgroundModeCellActiveColor = "#00BB00";
+$backgroundModeCellInactiveColor = "#BB0000";
 
 $textBanners = "#ffffff";            // Usually white
 $textNavbar = "#ffffff";           	// Navbar text color
 $textNavbarHover = "#ffffff";       // Navbar hover color
 $textDropdown = "#000000";          // Dropdown menu text color
 $textDropdownHover = "#000000";     // Dropdown hover menu text color
+$textTableHeaderColor = "#ffffff"; //add to default
+$textServiceCellActiveColor = "#000000";
+$textServiceCellInactiveColor = "#000000";
+$textModeCellDisabledColor = "#b0b0b0";
+$textModeCellActiveColor = "#003300";
+$textModeCellInactiveColor = "#550000";
+
 $bannerDropShaddows = "#303030";     // Banner drop shaddow colour
 $tableHeadDropShaddow = "#8b0000";   // Table Headder drop shaddows
 $textContent = "#000000";            // Used for the section titles
@@ -38,12 +51,24 @@ if (file_exists('/etc/pistar-css.ini')) {
     $backgroundNavbarHover = $piStarCss['Background']['NavbarHoverColor']; // Navbar hover color
     $backgroundDropdown = $piStarCss['Background']['DropdownColor'];    // Dropdown menu background color
     $backgroundDropdownHover = $piStarCss['Background']['DropdownHoverColor']; // Dropdown hover background color
-
+    $backgroundServiceCellActiveColor = $piStarCss['Background']['ServiceCellActiveColor'];
+    $backgroundServiceCellInactiveColor = $piStarCss['Background']['ServiceCellInactiveColor'];
+    $backgroundModeCellDisabledColor = $piStarCss['Background']['ModeCellDisabledColor'];
+    $backgroundModeCellActiveColor = $piStarCss['Background']['ModeCellActiveColor'];
+    $backgroundModeCellInactiveColor = $piStarCss['Background']['ModeCellInactiveColor'];
+    
+    $textTableHeaderColor = $piStarCss['Text']['TableHeaderColor'];
     $textBanners = $piStarCss['Text']['BannersColor'];            	// Usually white
     $textNavbar = $piStarCss['Text']['NavbarColor'];            	// Navbar text color
     $textNavbarHover = $piStarCss['Text']['NavbarHoverColor'];          // Navbar hover color
     $textDropdown = $piStarCss['Text']['DropdownColor'];            	// Dropdown menu text color
     $textDropdownHover = $piStarCss['Text']['DropdownHoverColor'];    	// Dropdown hover menu text color
+    $textServiceCellActiveColor = $piStarCss['Text']['ServiceCellActiveColor'];
+    $textServiceCellInactiveColor = $piStarCss['Text']['ServiceCellInactiveColor'];
+    $textModeCellDisabledColor = $piStarCss['Text']['ModeCellDisabledColor'];
+    $textModeCellActiveColor = $piStarCss['Text']['ModeCellActiveColor'];
+    $textModeCellInactiveColor = $piStarCss['Text']['ModeCellInactiveColor'];
+    
     $bannerDropShaddows = $piStarCss['Text']['BannersDropColor'];       // Banner drop shaddow colour
 
     $tableHeadDropShaddow = $piStarCss['Tables']['HeadDropColor'];      // Table Headder drop shaddows
@@ -145,6 +170,7 @@ table th {
     font-family: "Lucidia Console",Monaco,monospace;
     text-shadow: 1px 1px <?php echo $tableHeadDropShaddow; ?>;
     text-decoration: none;
+    color : <?php echo $textBanners; ?>;
     background: <?php echo $backgroundBanners; ?>;
     border: 1px solid #c0c0c0;
 }
@@ -183,7 +209,7 @@ a:link, a:visited {
 a.tooltip, a.tooltip:link, a.tooltip:visited, a.tooltip:active  {
     text-decoration: none;
     position: relative;
-    color: #FFFFFF;
+    color: <?php echo $textTableHeaderColor; ?>;
 }
 
 a.tooltip:hover {
@@ -667,3 +693,27 @@ input.toggle-round-flat:checked + label:after {
     padding-right: 0.2em;
 }
 
+.active-service-cell {
+    color: <?php echo $textServiceCellActiveColor; ?>;
+    background: <?php echo $backgroundServiceCellActiveColor; ?>;
+}
+
+.inactive-service-cell {
+    color: <?php echo $textServiceCellInactiveColor; ?>;
+    background: <?php echo $backgroundServiceCellInactiveColor; ?>;
+}
+
+.disabled-mode-cell {
+    color: <?php echo $textModeCellDisabledColor; ?>;
+    background: <?php echo $backgroundModeCellDisabledColor; ?>;
+}
+
+.active-mode-cell {
+    color: <?php echo $textModeCellActiveColor; ?>;
+    background: <?php echo $backgroundModeCellActiveColor; ?>;
+}
+
+.inactive-mode-cell {
+    color: <?php echo $textModeCellInactiveColor; ?>;
+    background: <?php echo $backgroundModeCellInactiveColor; ?>;
+}

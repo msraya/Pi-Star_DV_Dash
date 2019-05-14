@@ -82,7 +82,8 @@ if (file_exists('/etc/dmr2nxdn')) {
   <tr><?php showMode("YSF2DMR Network", $mmdvmconfigs);?><?php showMode("NXDN Network", $mmdvmconfigs);?></tr>
   <tr><?php showMode("YSF2NXDN Network", $mmdvmconfigs);?><?php showMode("YSF2P25 Network", $mmdvmconfigs);?></tr>
   <tr><?php showMode("DMR2NXDN Network", $mmdvmconfigs);?><?php showMode("DMR2YSF Network", $mmdvmconfigs);?></tr>
-  <tr><!-- empty "cell": dummy but nicer --><td style="background:#606060; color:#b0b0b0;"></td><?php showMode("POCSAG Network", $mmdvmconfigs);?></tr>
+<!--  <tr><td style="background:#606060; color:#b0b0b0;"></td><?php showMode("POCSAG Network", $mmdvmconfigs);?></tr> -->
+  <tr><?php showMode("", $mmdvmconfigs);?></td><?php showMode("POCSAG Network", $mmdvmconfigs);?></tr>
 </table>
 <br />
 
@@ -213,11 +214,21 @@ echo "<tr><th colspan=\"2\">".$lang['dmr_repeater']."</th></tr>\n";
 echo "<tr><th>DMR ID</th><td style=\"background: #ffffff;\">".getConfigItem("General", "Id", $mmdvmconfigs)."</td></tr>\n";
 echo "<tr><th>DMR CC</th><td style=\"background: #ffffff;\">".getConfigItem("DMR", "ColorCode", $mmdvmconfigs)."</td></tr>\n";
 echo "<tr><th>TS1</th>";
-if (getConfigItem("DMR Network", "Slot1", $mmdvmconfigs) == 1) { echo "<td style=\"background:#0b0;\">enabled</td></tr>\n"; } else { echo "<td style=\"background:#606060; color:#b0b0b0;\">disabled</td></tr>\n"; }
-if (getConfigItem("DMR Network", "Slot1", $mmdvmconfigs) == 1) { echo "<tr><td style=\"background: #ffffff;\" colspan=\"2\">".substr(getActualLink($reverseLogLinesMMDVM, "DMR Slot 1"), -10)."/".substr(getActualReflector($reverseLogLinesMMDVM, "DMR Slot 1"), -10)."</td></tr>\n"; }
+    
+if (getConfigItem("DMR Network", "Slot1", $mmdvmconfigs) == 1) {
+    echo "<td class=\"active-mode-cell\">enabled</td></tr>\n";
+    echo "<tr><td style=\"background: #ffffff;\" colspan=\"2\">".substr(getActualLink($reverseLogLinesMMDVM, "DMR Slot 1"), -10)."/".substr(getActualReflector($reverseLogLinesMMDVM, "DMR Slot 1"), -10)."</td></tr>\n";    }
+else {
+    echo "<td class=\"inactive-mode-cell\">disabled</td></tr>\n";
+}
 echo "<tr><th>TS2</th>";
-if (getConfigItem("DMR Network", "Slot2", $mmdvmconfigs) == 1) { echo "<td style=\"background:#0b0;\">enabled</td></tr>\n"; } else { echo "<td style=\"background:#606060; color:#b0b0b0;\">disabled</td></tr>\n"; }
-if (getConfigItem("DMR Network", "Slot2", $mmdvmconfigs) == 1) { echo "<tr><td style=\"background: #ffffff;\" colspan=\"2\">".substr(getActualLink($reverseLogLinesMMDVM, "DMR Slot 2"), -10)."/".substr(getActualReflector($reverseLogLinesMMDVM, "DMR Slot 2"), -10)."</td></tr>\n"; }
+if (getConfigItem("DMR Network", "Slot2", $mmdvmconfigs) == 1) {
+    echo "<td class=\"active-mode-cell\">enabled</td></tr>\n";
+    echo "<tr><td style=\"background: #ffffff;\" colspan=\"2\">".substr(getActualLink($reverseLogLinesMMDVM, "DMR Slot 2"), -10)."/".substr(getActualReflector($reverseLogLinesMMDVM, "DMR Slot 2"), -10)."</td></tr>\n";
+}
+else {
+    echo "<td class=\"inactive-mode-cell\">disabled</td></tr>\n";
+}
 echo "<tr><th colspan=\"2\">".$lang['dmr_master']."</th></tr>\n";
 if (getEnabled("DMR Network", $mmdvmconfigs) == 1) {
 		if ($dmrMasterHost == '127.0.0.1') {

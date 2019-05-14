@@ -144,122 +144,75 @@ function isDAPNETGatewayConnected() {
     return true;
 }
 
+function getModeClass($status, $disabled = false) {
+    if ($status) {
+	echo '<td class="active-mode-cell" style="width:50%;">';
+    }
+    else {
+	if ($disabled)
+	    echo "<td class=\"disabled-mode-cell\">";
+	else
+	    echo '<td class="inactive-mode-cell" style="width:50%;">';
+    }
+}
+
 function showMode($mode, $mmdvmconfigs) {
-	// shows if mode is enabled or not.
-	if (getEnabled($mode, $mmdvmconfigs) == 1) {
-		if ($mode == "D-Star Network") {
-			if (isProcessRunning("ircddbgatewayd")) {
-				echo "<td style=\"background:#0b0; color:#030; width:50%;\">";
-			} else {
-				echo "<td style=\"background:#b00; color:#500; width:50%;\">";
-			}
-		}
-		elseif ($mode == "System Fusion Network") {
-			if (isProcessRunning("YSFGateway")) {
-				echo "<td style=\"background:#0b0; color:#030; width:50%;\">";
-			} else {
-				echo "<td style=\"background:#b00; color:#500; width:50%;\">";
-			}
-		}
-		elseif ($mode == "P25 Network") {
-			if (isProcessRunning("P25Gateway")) {
-				echo "<td style=\"background:#0b0; color:#030; width:50%;\">";
-			} else {
-				echo "<td style=\"background:#b00; color:#500; width:50%;\">";
-			}
-		}
-		elseif ($mode == "NXDN Network") {
-			if (isProcessRunning("NXDNGateway")) {
-				echo "<td style=\"background:#0b0; color:#030; width:50%;\">";
-			} else {
-				echo "<td style=\"background:#b00; color:#500; width:50%;\">";
-			}
-		}
-		elseif ($mode == "POCSAG Network") {
-			if (isProcessRunning("DAPNETGateway") && (isDAPNETGatewayConnected() == 1)) {
-				echo "<td style=\"background:#0b0; color:#030; width:50%;\">";
-			} else {
-				echo "<td style=\"background:#b00; color:#500; width:50%;\">";
-			}
-		}
-		elseif ($mode == "DMR Network") {
-			if (getConfigItem("DMR Network", "Address", $mmdvmconfigs) == '127.0.0.1') {
-				if (isProcessRunning("DMRGateway")) {
-					echo "<td style=\"background:#0b0; color:#030; width:50%;\">";
-				} else {
-					echo "<td style=\"background:#b00; color:#500; width:50%;\">";
-				}
-			}
-			else {
-				if (isProcessRunning("MMDVMHost")) {
-					echo "<td style=\"background:#0b0; color:#030; width:50%;\">";
-				} else {
-					echo "<td style=\"background:#b00; color:#500; width:50%;\">";
-				}
-			}
-		}
-		else {
-			if ($mode == "D-Star" || $mode == "DMR" || $mode == "System Fusion" || $mode == "P25" || $mode == "NXDN" || $mode == "POCSAG") {
-				if (isProcessRunning("MMDVMHost")) {
-					echo "<td style=\"background:#0b0; color:#030; width:50%;\">";
-				} else {
-					echo "<td style=\"background:#b00; color:#500; width:50%;\">";
-				}
-			}
-		}
+    // shows if mode is enabled or not.
+    if (getEnabled($mode, $mmdvmconfigs) == 1) {
+	if ($mode == "D-Star Network") {
+	    getModeClass(isProcessRunning("ircddbgatewayd"));
 	}
-	elseif ( ($mode == "YSF XMode") && (getEnabled("System Fusion", $mmdvmconfigs) == 1) ) {
-		if ( (isProcessRunning("MMDVMHost")) && (isProcessRunning("YSF2DMR") || isProcessRunning("YSF2NXDN") || isProcessRunning("YSF2P25")) ) {
-			echo "<td style=\"background:#0b0; color:#030; width:50%;\">";
-		} else {
-			echo "<td style=\"background:#606060; color:#b0b0b0;\">";
-		}
+	elseif ($mode == "System Fusion Network") {
+	    getModeClass(isProcessRunning("YSFGateway"));
 	}
-	elseif ( ($mode == "DMR XMode") && (getEnabled("DMR", $mmdvmconfigs) == 1) ) {
-		if ( (isProcessRunning("MMDVMHost")) && (isProcessRunning("DMR2YSF") || isProcessRunning("DMR2NXDN")) ) {
-			echo "<td style=\"background:#0b0; color:#030; width:50%;\">";
-		} else {
-			echo "<td style=\"background:#606060; color:#b0b0b0;\">";
-		}
+	elseif ($mode == "P25 Network") {
+	    getModeClass(isProcessRunning("P25Gateway"));
 	}
-	elseif ( ($mode == "YSF2DMR Network") && (getEnabled("System Fusion", $mmdvmconfigs) == 1) ) {
-		if (isProcessRunning("YSF2DMR")) {
-			echo "<td style=\"background:#0b0; color:#030; width:50%;\">";
-		} else {
-			echo "<td style=\"background:#606060; color:#b0b0b0;\">";
-		}
+	elseif ($mode == "NXDN Network") {
+	    getModeClass(isProcessRunning("NXDNGateway"));
 	}
-	elseif ( ($mode == "YSF2NXDN Network") && (getEnabled("System Fusion", $mmdvmconfigs) == 1) ) {
-		if (isProcessRunning("YSF2NXDN")) {
-			echo "<td style=\"background:#0b0; color:#030; width:50%;\">";
-		} else {
-			echo "<td style=\"background:#606060; color:#b0b0b0;\">";
-		}
+	elseif ($mode == "POCSAG Network") {
+	    getModeClass(isProcessRunning("DAPNETGateway") && (isDAPNETGatewayConnected() == 1));
 	}
-	elseif ( ($mode == "YSF2P25 Network") && (getEnabled("System Fusion", $mmdvmconfigs) == 1) ) {
-		if (isProcessRunning("YSF2P25")) {
-			echo "<td style=\"background:#0b0; color:#030; width:50%;\">";
-		} else {
-			echo "<td style=\"background:#606060; color:#b0b0b0;\">";
-		}
-	}
-	elseif ( ($mode == "DMR2NXDN Network") && (getEnabled("DMR", $mmdvmconfigs) == 1) ) {
-		if (isProcessRunning("DMR2NXDN")) {
-			echo "<td style=\"background:#0b0; color:#030; width:50%;\">";
-		} else {
-			echo "<td style=\"background:#606060; color:#b0b0b0;\">";
-		}
-	}
-	elseif ( ($mode == "DMR2YSF Network") && (getEnabled("DMR", $mmdvmconfigs) == 1) ) {
-		if (isProcessRunning("DMR2YSF")) {
-			echo "<td style=\"background:#0b0; color:#030; width:50%;\">";
-		} else {
-			echo "<td style=\"background:#606060; color:#b0b0b0;\">";
-		}
+	elseif ($mode == "DMR Network") {
+	    if (getConfigItem("DMR Network", "Address", $mmdvmconfigs) == '127.0.0.1') {
+		getModeClass(isProcessRunning("DMRGateway"));
+	    }
+	    else {
+		getModeClass(isProcessRunning("MMDVMHost"));
+	    }
 	}
 	else {
-		echo "<td style=\"background:#606060; color:#b0b0b0;\">";
+	    if ($mode == "D-Star" || $mode == "DMR" || $mode == "System Fusion" || $mode == "P25" || $mode == "NXDN" || $mode == "POCSAG") {
+		getModeClass(isProcessRunning("MMDVMHost"));
+	    }
+	}
     }
+    elseif ( ($mode == "YSF XMode") && (getEnabled("System Fusion", $mmdvmconfigs) == 1) ) {
+	getModeClass( (isProcessRunning("MMDVMHost")) && (isProcessRunning("YSF2DMR") || isProcessRunning("YSF2NXDN") || isProcessRunning("YSF2P25")), true);
+    }
+    elseif ( ($mode == "DMR XMode") && (getEnabled("DMR", $mmdvmconfigs) == 1) ) {
+	getModeClass( (isProcessRunning("MMDVMHost")) && (isProcessRunning("DMR2YSF") || isProcessRunning("DMR2NXDN")), true);
+    }
+    elseif ( ($mode == "YSF2DMR Network") && (getEnabled("System Fusion", $mmdvmconfigs) == 1) ) {
+	getModeClass(isProcessRunning("YSF2DMR"), true);
+    }
+    elseif ( ($mode == "YSF2NXDN Network") && (getEnabled("System Fusion", $mmdvmconfigs) == 1) ) {
+	getModeClass(isProcessRunning("YSF2NXDN"), true);
+    }
+    elseif ( ($mode == "YSF2P25 Network") && (getEnabled("System Fusion", $mmdvmconfigs) == 1) ) {
+	getModeClass(isProcessRunning("YSF2P25"), true);
+    }
+    elseif ( ($mode == "DMR2NXDN Network") && (getEnabled("DMR", $mmdvmconfigs) == 1) ) {
+	getModeClass(isProcessRunning("DMR2NXDN"), true);
+    }
+    elseif ( ($mode == "DMR2YSF Network") && (getEnabled("DMR", $mmdvmconfigs) == 1) ) {
+	getModeClass(isProcessRunning("DMR2YSF"), true);
+    }
+    else {
+	getModeClass(false, true);
+    }
+    
     $mode = str_replace("System Fusion", "YSF", $mode);
     $mode = str_replace("Network", "Net", $mode);
     if (strpos($mode, 'YSF2') > -1) { $mode = str_replace(" Net", "", $mode); }

@@ -24,6 +24,11 @@ $cpuTempF = round(+$cpuTempC * 9 / 5 + 32, 1);
 if ($cpuTempC < 50) { $cpuTempHTML = "<td style=\"background: #1d1\">".$cpuTempC."&deg;C / ".$cpuTempF."&deg;F</td>\n"; }
 if ($cpuTempC >= 50) { $cpuTempHTML = "<td style=\"background: #fa0\">".$cpuTempC."&deg;C / ".$cpuTempF."&deg;F</td>\n"; }
 if ($cpuTempC >= 69) { $cpuTempHTML = "<td style=\"background: #f00\">".$cpuTempC."&deg;C / ".$cpuTempF."&deg;F</td>\n"; }
+
+function getServiceStatusClass($active) {
+    echo (($active) ? 'active-service-cell' : 'inactive-service-cell');
+}
+
 ?>
 <b><?php echo $lang['hardware_info'];?></b>
 <table style="table-layout: fixed;">
@@ -45,22 +50,22 @@ if ($cpuTempC >= 69) { $cpuTempHTML = "<td style=\"background: #f00\">".$cpuTemp
     <th colspan="7"><?php echo $lang['service_status'];?></th>
   </tr>
   <tr>
-    <td style="background: #<?php if (isProcessRunning('MMDVMHost')) { echo "1d1"; } else { echo "b55"; } ?>">MMDVMHost</td>
-    <td style="background: #<?php if (isProcessRunning('DMRGateway')) { echo "1d1"; } else { echo "b55"; } ?>">DMRGateway</td>
-    <td style="background: #<?php if (isProcessRunning('YSFGateway')) { echo "1d1"; } else { echo "b55"; } ?>">YSFGateway</td>
-    <td style="background: #<?php if (isProcessRunning('YSFParrot')) { echo "1d1"; } else { echo "b55"; } ?>">YSFParrot</td>
-    <td style="background: #<?php if (isProcessRunning('P25Gateway')) { echo "1d1"; } else { echo "b55"; } ?>">P25Gateway</td>
-    <td style="background: #<?php if (isProcessRunning('P25Parrot')) { echo "1d1"; } else { echo "b55"; } ?>">P25Parrot</td>
-    <td style="background: #<?php if (isProcessRunning('DAPNETGateway')) { echo "1d1"; } else { echo "b55"; } ?>">DAPNETGateway</td>
+    <td class="<?php getServiceStatusClass(isProcessRunning('MMDVMHost')); ?>">MMDVMHost</td>
+    <td class="<?php getServiceStatusClass(isProcessRunning('DMRGateway')); ?>">DMRGateway</td>
+    <td class="<?php getServiceStatusClass(isProcessRunning('YSFGateway')); ?>">YSFGateway</td>
+    <td class="<?php getServiceStatusClass(isProcessRunning('YSFParrot')); ?>">YSFParrot</td>
+    <td class="<?php getServiceStatusClass(isProcessRunning('P25Gateway')); ?>">P25Gateway</td>
+    <td class="<?php getServiceStatusClass(isProcessRunning('P25Parrot')); ?>">P25Parrot</td>
+    <td class="<?php getServiceStatusClass(isProcessRunning('DAPNETGateway')); ?>">DAPNETGateway</td>
   </tr>
   <tr>
-    <td style="background: #<?php if (isProcessRunning('dstarrepeaterd')) { echo "1d1"; } else { echo "b55"; } ?>">DStarRepeater</td>
-    <td style="background: #<?php if (isProcessRunning('ircddbgatewayd')) { echo "1d1"; } else { echo "b55"; } ?>">ircDDBGateway</td>
-    <td style="background: #<?php if (isProcessRunning('timeserverd')) { echo "1d1"; } else { echo "b55"; } ?>">TimeServer</td>
-    <td style="background: #<?php if (isProcessRunning('/usr/local/sbin/pistar-watchdog',true)) { echo "1d1"; } else { echo "b55"; } ?>">PiStar-Watchdog</td>
-    <td style="background: #<?php if (isProcessRunning('/usr/local/sbin/pistar-remote',true)) { echo "1d1"; } else { echo "b55"; } ?>">PiStar-Remote</td>
-    <td style="background: #<?php if (isProcessRunning('/usr/local/sbin/pistar-keeper',true)) { echo "1d1"; } else { echo "b55"; } ?>">PiStar-Keeper</td>
-    <td style="background: #<?php if (isProcessRunning('MobileGPS')) { echo "1d1"; } else { echo "b55"; } ?>">MobileGPS</td>
+    <td class="<?php getServiceStatusClass(isProcessRunning('dstarrepeaterd')); ?>">DStarRepeater</td>
+    <td class="<?php getServiceStatusClass(isProcessRunning('ircddbgatewayd')); ?>">ircDDBGateway</td>
+    <td class="<?php getServiceStatusClass(isProcessRunning('timeserverd')); ?>">TimeServer</td>
+    <td class="<?php getServiceStatusClass(isProcessRunning('/usr/local/sbin/pistar-watchdog',true)); ?>">PiStar-Watchdog</td>
+    <td class="<?php getServiceStatusClass(isProcessRunning('/usr/local/sbin/pistar-remote',true)); ?>">PiStar-Remote</td>
+    <td class="<?php getServiceStatusClass(isProcessRunning('/usr/local/sbin/pistar-keeper',true)); ?>">PiStar-Keeper</td>
+    <td class="<?php getServiceStatusClass(isProcessRunning('MobileGPS')); ?>">MobileGPS</td>
   </tr>
 </table>
 <br />
