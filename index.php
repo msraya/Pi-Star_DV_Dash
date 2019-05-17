@@ -166,6 +166,17 @@ if (file_exists('/etc/dstar-radio.mmdvmhost')) {
 	if ($_SERVER["PHP_SELF"] == "/admin/index.php") {               // Admin Only Options
                 include 'mmdvmhost/bm_manager.php';                     // DMR Link Manager
         }
+
+	$testMMDVModeYSF = getConfigItem("System Fusion Network", "Enable", $mmdvmconfigs);
+        if ($testMMDVModeYSF == 1) {				// If YSF network is enabled, add these extra features.
+	    if ($_SERVER["PHP_SELF"] == "/admin/index.php") { 		// Admin Only Option
+		echo '<div id="ysfControl">'."\n";
+		include 'mmdvmhost/ysf_manager.php';
+		echo '</div>'."\n";
+		echo "<br />\n";
+	    }
+	}
+
 	echo '<script type="text/javascript">'."\n";
 	echo 'function reloadLocalTx(){'."\n";
 	echo '  $("#localTxs").load("/mmdvmhost/localtx.php",function(){ setTimeout(reloadLocalTx,1500) });'."\n";
