@@ -30,7 +30,6 @@ if (!empty($_POST) && isset($_POST["ysfHostSubmit"])):
 	    }
 	}
 	
-	// Update
         // ysfgateway config file wrangling
 	$ysfgwContent = "";
         foreach($configysfgateway as $ysfgwSection=>$ysfgwValues) {
@@ -48,6 +47,11 @@ if (!empty($_POST) && isset($_POST["ysfHostSubmit"])):
             return false;
         }
 	
+	system('sudo systemctl stop ysf2p25.service > /dev/null 2>/dev/null &');		// YSF2P25
+	system('sudo systemctl stop ysf2nxdn.service > /dev/null 2>/dev/null &');		// YSF2NXDN
+	system('sudo systemctl stop ysf2dmr.service > /dev/null 2>/dev/null &');		// YSF2DMR
+	system('sudo systemctl stop ysfgateway.service > /dev/null 2>/dev/null &');		// YSFGateway
+
 	if (!is_writable('/tmp/eXNmZ2F0ZXdheQ.tmp')) {
             echo "<br />\n";
             echo "<table>\n";
@@ -68,10 +72,17 @@ if (!empty($_POST) && isset($_POST["ysfHostSubmit"])):
 		exec('sudo chown root:root /etc/ysfgateway');				// Set the owner
 	    }
 
-	    system('sudo systemctl restart ysfgateway.service > /dev/null 2>/dev/null &');		// YSFGateway
+	    system('sudo systemctl start ysfgateway.service > /dev/null 2>/dev/null &');	// YSFGateway
+	    system('sudo systemctl start ysf2dmr.service > /dev/null 2>/dev/null &');		// YSF2DMR
+	    system('sudo systemctl start ysf2nxdn.service > /dev/null 2>/dev/null &');		// YSF2NXDN
+	    system('sudo systemctl start ysf2p25.service > /dev/null 2>/dev/null &');		// YSF2P25
 	}
     }
     unset($_POST);
+    echo '<b>Yaesu System Fusion Manager</b>'."\n";
+    echo '<table>\n<tr><th>Processing</th></tr>'."\n";
+    echo '<tr><td>Restarting YSF services...</td></tr>\n</table>'."\n";
+    echo "<br />\n";
     echo '<script type="text/javascript">setTimeout(function() { window.location=window.location;},2000);</script>';
 else: ?>
     <b>Yaesu System Fusion Manager</b>
