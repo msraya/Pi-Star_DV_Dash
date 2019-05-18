@@ -67,9 +67,11 @@ if (!empty($_POST) && isset($_POST["ysfHostSubmit"])):
 	    $success = fwrite($handleYSFGWconfig, $ysfgwContent);
 	    fclose($handleYSFGWconfig);
 	    if (intval(exec('cat /tmp/eXNmZ2F0ZXdheQ.tmp | wc -l')) > 35 ) {
+		exec('sudo mount -o remount,rw /');
 		exec('sudo mv /tmp/eXNmZ2F0ZXdheQ.tmp /etc/ysfgateway');		// Move the file back
 		exec('sudo chmod 644 /etc/ysfgateway');					// Set the correct runtime permissions
 		exec('sudo chown root:root /etc/ysfgateway');				// Set the owner
+		exec('sudo mount -o remount,ro /');
 	    }
 
 	    system('sudo systemctl start ysfgateway.service > /dev/null 2>/dev/null &');	// YSFGateway
