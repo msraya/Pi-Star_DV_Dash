@@ -81,11 +81,11 @@ if (!empty($_POST) && isset($_POST["ysfHostSubmit"])):
 	}
     }
     unset($_POST);
-    echo '<b>Yaesu System Fusion Manager</b>'."\n";
-    echo '<table>\n<tr><th>Processing</th></tr>'."\n";
-    echo '<tr><td>Restarting YSF services...</td></tr>\n</table>'."\n";
+    echo "<b>Yaesu System Fusion Manager</b>\n";
+    echo "<table>\n<tr><th>Processing</th></tr>\n";
+    echo "<tr><td>Restarting YSF services...</td></tr>\n</table>\n";
     echo "<br />\n";
-    echo '<script type="text/javascript">setTimeout(function() { window.location=window.location;},2000);</script>';
+    echo "<script type=\"text/javascript\">setTimeout(function() { window.location=window.location;},2000);</script>\n";
 else: ?>
     <b>Yaesu System Fusion Manager</b>
     <form action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>" method="post">

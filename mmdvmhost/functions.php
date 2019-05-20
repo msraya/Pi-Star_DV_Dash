@@ -735,18 +735,13 @@ function getLastHeard($logLines) {
 	$lastHeard = array();
 	$heardCalls = array();
 	$heardList = getHeardList($logLines);
-	$counter = 0;
 	foreach ($heardList as $listElem) {
 		if ( ($listElem[1] == "D-Star") || ($listElem[1] == "YSF") || ($listElem[1] == "P25") || ($listElem[1] == "NXDN") || ($listElem[1] == "POCSAG") || (startsWith($listElem[1], "DMR")) ) {
 			$callUuid = $listElem[2]."#".$listElem[1].$listElem[3].$listElem[5];
 			if(!(array_search($callUuid, $heardCalls) > -1)) {
 				array_push($heardCalls, $callUuid);
 				array_push($lastHeard, $listElem);
-				$counter++;
-			}/*
-			if ($counter == LHLINES) {
-				return $lastHeard;
-			}*/
+			}
 		}
 	}
 	return $lastHeard;
