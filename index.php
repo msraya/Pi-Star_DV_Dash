@@ -178,14 +178,23 @@ if (file_exists('/etc/dstar-radio.mmdvmhost')) {
 	}
 
 	echo '<script type="text/javascript">'."\n";
+	echo 'var lhto;'."\n";	
 	echo 'function reloadLocalTx(){'."\n";
 	echo '  $("#localTxs").load("/mmdvmhost/localtx.php",function(){ setTimeout(reloadLocalTx,1500) });'."\n";
 	echo '}'."\n";
 	echo 'setTimeout(reloadLocalTx,1500);'."\n";
 	echo 'function reloadLastHerd(){'."\n";
-	echo '  $("#lastHerd").load("/mmdvmhost/lh.php",function(){ setTimeout(reloadLastHerd,1500) });'."\n";
+	echo '  $("#lastHerd").load("/mmdvmhost/lh.php",function(){ lhto = setTimeout(reloadLastHerd,1500) });'."\n";
 	echo '}'."\n";
-	echo 'setTimeout(reloadLastHerd,1500);'."\n";
+    	echo 'function setLHAutorefresh(obj) {'."\n";
+    	echo '    if (obj.checked) {'."\n";
+    	echo '        lhto = setTimeout(reloadLastHerd,1500);'."\n";
+    	echo '    }'."\n";
+    	echo '    else {'."\n";
+    	echo '        clearTimeout(lhto);'."\n";
+    	echo '    }'."\n";
+    	echo '}'."\n";
+	echo 'lhto = setTimeout(reloadLastHerd,1500);'."\n";
 	echo '$(window).trigger(\'resize\');'."\n";
 	echo '</script>'."\n";
 	echo '<div id="lastHerd">'."\n";
@@ -208,19 +217,19 @@ if (file_exists('/etc/dstar-radio.mmdvmhost')) {
 		$myOrigin = ($_SERVER["PHP_SELF"] == "/admin/index.php" ? "admin" : "other");
 
 		echo '<script type="text/javascript">'."\n";
-		echo 'var to;'."\n";
-		echo 'function setAutorefresh(obj) {'."\n";
+		echo 'var pagesto;'."\n";
+		echo 'function setPagesAutorefresh(obj) {'."\n";
 	        echo '    if (obj.checked) {'."\n";
-	        echo '        to = setTimeout(reloadPages, 5000, "?origin='.$myOrigin.'");'."\n";
+	        echo '        pagesto = setTimeout(reloadPages, 5000, "?origin='.$myOrigin.'");'."\n";
 	        echo '    }'."\n";
 	        echo '    else {'."\n";
-	        echo '        clearTimeout(to);'."\n";
+	        echo '        clearTimeout(pagesto);'."\n";
 	        echo '    }'."\n";
                 echo '}'."\n";
 		echo 'function reloadPages(OptStr){'."\n";
-		echo '    $("#Pages").load("/mmdvmhost/pages.php"+OptStr, function(){ to = setTimeout(reloadPages, 5000, "?origin='.$myOrigin.'") });'."\n";
+		echo '    $("#Pages").load("/mmdvmhost/pages.php"+OptStr, function(){ pagesto = setTimeout(reloadPages, 5000, "?origin='.$myOrigin.'") });'."\n";
 		echo '}'."\n";
-		echo 'to = setTimeout(reloadPages, 5000, "?origin='.$myOrigin.'");'."\n";
+		echo 'pagesto = setTimeout(reloadPages, 5000, "?origin='.$myOrigin.'");'."\n";
 		echo '$(window).trigger(\'resize\');'."\n";
 		echo '</script>'."\n";
 		echo "<br />\n";

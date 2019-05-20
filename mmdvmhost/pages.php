@@ -239,18 +239,8 @@ if (strcmp($origin, "admin") == 0) {
 	
 	<div style="max-height:190px; overflow-y:auto;" >
 	    <table>
-		<thread>
-		    <tr>
-			<th></th>
-			<th></th>
-			<th></th>
-			<th></th>
-		    </tr>
-		</thread>
 		<tbody>
-		    
 		    <?php listDAPNETGWMessages($logLinesDAPNETGateway, true); ?>
-		    
 		</tbody>
 	    </table>
 	    
@@ -263,7 +253,7 @@ if (strcmp($origin, "admin") == 0) {
 	    <div class="grid-item" style="padding-top: 3px;" >POCSAG Auto Refresh
 	    </div>
 	    <div class="grid-item" >
-		<div> <input id="toggle-pocsag-autorefresh" class="toggle toggle-round-flat" type="checkbox" name="pocsag-autorefresh" value="ON" checked="checked" aria-checked="true" aria-label="POCSAG Auto Refresh" onchange="setAutorefresh(this)" /><label for="toggle-pocsag-autorefresh" ></label>
+		<div> <input id="toggle-pocsag-autorefresh" class="toggle toggle-round-flat" type="checkbox" name="pocsag-autorefresh" value="ON" checked="checked" aria-checked="true" aria-label="POCSAG Auto Refresh" onchange="setPagesAutorefresh(this)" /><label for="toggle-pocsag-autorefresh" ></label>
 		</div>
 	    </div>
 	</div>

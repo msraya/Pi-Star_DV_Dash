@@ -6,17 +6,17 @@
 //
 $lang = array (
   // Banner texts
-  "digital_voice"               =>  "Relais numérique",
-  "configuration"               =>  "Configuration",
+  "digital_voice"               =>  "Relais Numérique",
+  "configuration"               =>  "Configurat°",
   "dashboard_for"               =>  "Console pour",
   // Banner links
   "dashboard"                   =>  "Console",
-  "admin"                       =>  "Administration",
-  "power"                       =>  "Arr&ecirc;t/Red&eacute;marrage",
+  "admin"                       =>  "Administrat°",
+  "power"                       =>  "Syst&egrave;me",
   "update"                      =>  "Mise &agrave; jour",
-  "backup_restore"              =>  "Sauvegarde/Restauration",
-  "factory_reset"               =>  "R&eacute;initialisation Usine",
-  "live_logs"                   =>  "Surveillance des Logs",
+  "backup_restore"              =>  "Sauvegarde/Restaurat°",
+  "factory_reset"               =>  "R&eacute;glages Usine",
+  "live_logs"                   =>  "Livre de bord",
   // Config page section headdings
   "hardware_info"               =>  "Informations mat&eacute;rielles de la passerelle",
   "control_software"            =>  "Contr&ocirc;le logiciel",
@@ -119,9 +119,9 @@ $lang = array (
   "mode"                        =>  "Mode",
   "callsign"                    =>  "Indicatif ",
   "target"                      =>  "Cible",
-  "src"                         =>  "Source ",        // Short version of "Source"
-  "dur"                         =>  "Dur&eacute;e ",        // Short version of "Duration"
-  "loss"                        =>  "Pertes",
+  "src"                         =>  "Src ",        // Short version of "Source"
+  "dur"                         =>  "Dur",        // Short version of "Duration"
+  "loss"                        =>  "Pertes",     // short version of "Loss"
   "ber"                         =>  "BER",        // Short version of "Bit Error Rate"
   // POCSAG Specific
   "pocsag_list"                 =>  "Activit&eacute; Passerelle DAPNET",
