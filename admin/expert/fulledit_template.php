@@ -51,8 +51,11 @@ require_once('../config/version.php');
 		    exec('sudo mount -o remount,ro /');
 		    
 		    // Reload the affected daemon
-		    if (empty($servicename) != TRUE)
-			exec('sudo systemctl restart '.$servicename); // Reload the daemon
+		    if (isset($servicenames) && (count($servicenames) > 0)) {
+			foreach($servicenames as $servicename) {
+			    exec('sudo systemctl restart '.$servicename); // Reload the daemon
+			}
+		    }
 		    else
 		    {
 			exec('echo "NO SERVICE for '.$configfile.'" > /tmp/trace.txt');

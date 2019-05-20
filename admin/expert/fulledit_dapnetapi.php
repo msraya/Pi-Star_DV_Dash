@@ -2,7 +2,7 @@
 
 $configfile = '/etc/dapnetapi.key';
 $tempfile = '/tmp/jsADGHwf9sj294.tmp';
-$servicename = 'dapnetgateway.service';
+$servicenames = array('dapnetgateway.service');
 
 // Make the bare config if we dont have one
 if (! file_exists('/etc/dapnetapi.key')) {
