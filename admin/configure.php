@@ -1139,7 +1139,8 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 		// DMR Gateway
 		if ($dmrMasterHostArr[0] == '127.0.0.1' && $dmrMasterHostArr[2] == '62031') {
 			unset ($configmmdvm['DMR Network']['Options']);
-			unset ($configdmrgateway['DMR Network 2']['Options']);
+			// F1RMB: don't erase DMR Network 2::Options
+			//unset ($configdmrgateway['DMR Network 2']['Options']);
 			$configmmdvm['DMR Network']['Local'] = "62032";
 			unset ($configysf2dmr['DMR Network']['Options']);
 			$configysf2dmr['DMR Network']['Local'] = "62032";
@@ -1186,8 +1187,14 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 		}
 	}
 	if (empty($_POST['dmrMasterHost']) == TRUE ) {
-		unset ($configmmdvm['DMR Network']['Options']);
-		unset ($configdmrgateway['DMR Network 2']['Options']);
+	    unset ($configmmdvm['DMR Network']['Options']);
+
+	    // F1RMB: Keep DMR Network2::Options, if any
+	    //unset ($configdmrgateway['DMR Network 2']['Options']);
+	    if (empty($configdmrgateway['DMR Network 2']['Options']) == FALSE) {
+		$dmrOptionsLineStripped = str_replace('"', "", $configdmrgateway['DMR Network 2']['Options']);
+		$configdmrgateway['DMR Network 2']['Options'] = '"'.$dmrOptionsLineStripped.'"';
+	    }
 	}
 	if (empty($_POST['dmrMasterHost1']) != TRUE ) {
 	  $dmrMasterHostArr1 = explode(',', escapeshellcmd($_POST['dmrMasterHost1']));
@@ -1212,7 +1219,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  }
 	  else {
 		unset ($configdmrgateway['DMR Network 2']['Options']);
-	       }
+	  }
 	}
 	if (empty($_POST['dmrMasterHost3']) != TRUE ) {
 	  $dmrMasterHostArr3 = explode(',', escapeshellcmd($_POST['dmrMasterHost3']));
