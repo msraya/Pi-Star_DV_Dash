@@ -13,10 +13,10 @@ This, and other required Pi-Star modules, are my personal forks, **DO NOT** repo
 >ssh pi-star@pi-star.local
 * Grab the script that permits you to toggle between official repositories and my personnal ones.
 > sudo su
-rpi-rw
-cd
-wget http://tinyurl.com/f1rmb-pistar
-chmod +x f1rmb-pistar
+> rpi-rw
+> cd
+> wget http://tinyurl.com/f1rmb-pistar
+> chmod +x f1rmb-pistar
 * Now you can execute this script with some arguments. For a complete list,  use '-h' or '--help'
 The easiest way:
 	* To install these fork repositories:
