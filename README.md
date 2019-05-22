@@ -10,21 +10,29 @@ This, and other required Pi-Star modules, are my personal forks, **DO NOT** repo
 
 * **MAKE A BACKUP OF YOUR Pi-Star CONFIGURATION**
 * Connect you Pi-Star
->ssh pi-star@pi-star.local
+```shell
+ssh pi-star@pi-star.local
+```
 * Grab the script that permits you to toggle between official repositories and my personnal ones.
-> sudo su
+```shell
+sudo su
 rpi-rw
 cd
 wget http://tinyurl.com/f1rmb-pistar
 chmod +x f1rmb-pistar
+```
 * Now you can execute this script with some arguments. For a complete list,  use '-h' or '--help'
 The easiest way:
 	* To install these fork repositories:
-	> ./f1rmb-pistar -ia
+	```shell
+	./f1rmb-pistar -ia
+	```
 	* To switch back to the official ones:
-	> ./f1rmb-pistar -ra
+	```shell
+	./f1rmb-pistar -ra
+	```
 
-
+***
 
 1. Once you have installed this fork, you need to go in menu "**Configuration**" -> "**Expert**" -> "**Tools**" and select "**CSS Tool**" 
 This will reset all the colors to their default value.
@@ -32,7 +40,7 @@ This will reset all the colors to their default value.
 
 ***
 
-** What features this fork offers**
+**What features this fork offers**
 
 * An enhanced POCSAG support. A service and network status indicators are there, You can send pages from the **Admin** web page. When you receive personnal pages, they are extracted from the **Activity** and displayed in a dedicated table. You can send a page to multiple callsigns and/or transmitter groups, separated with comma:
 ![POCSAG](images/Dapnet_Messenger.png  "POCSAG")
