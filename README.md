@@ -9,7 +9,7 @@ This, and other required Pi-Star modules, are my personal forks, **DO NOT** repo
 * You need a working Pi-Star, from [here](http://www.pistar.uk/downloads/). Pi-Star 3 and 4-RC are supported.
 
 * **MAKE A BACKUP OF YOUR Pi-Star CONFIGURATION**
-* Connect you Pi-Star
+* Connect your Pi-Star
 ```shell
 ssh pi-star@pi-star.local
 ```
@@ -21,9 +21,9 @@ cd
 wget http://tinyurl.com/f1rmb-pistar
 chmod +x f1rmb-pistar
 ```
-* Now you can execute this script with some arguments. For a complete list,  use '-h' or '--help'
+* Now you can execute this script with some arguments. For a complete list, use '-h' or '--help'
 The easiest way:
-	* To install these fork repositories:
+	* To install these forks repositories:
 	```shell
 	./f1rmb-pistar -ia
 	```
