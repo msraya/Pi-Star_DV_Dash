@@ -56,10 +56,6 @@ require_once('../config/version.php');
 			    exec('sudo systemctl restart '.$servicename); // Reload the daemon
 			}
 		    }
-		    else
-		    {
-			exec('echo "NO SERVICE for '.$configfile.'" > /tmp/trace.txt');
-		    }
 		    
 		    // Re-open the file and read it
 		    $fh = fopen($filepath, 'r');
