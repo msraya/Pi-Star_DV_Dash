@@ -17,11 +17,24 @@ if (file_exists('/etc/pistar-css.ini')) {
     $backgroundNavbarHover = $piStarCss['Background']['NavbarHoverColor']; // Navbar hover color
     $backgroundDropdown = $piStarCss['Background']['DropdownColor'];    // Dropdown menu background color
     $backgroundDropdownHover = $piStarCss['Background']['DropdownHoverColor']; // Dropdown hover background color
-
+    $backgroundServiceCellActiveColor = $piStarCss['Background']['ServiceCellActiveColor'];
+    $backgroundServiceCellInactiveColor = $piStarCss['Background']['ServiceCellInactiveColor'];
+    $backgroundModeCellDisabledColor = $piStarCss['Background']['ModeCellDisabledColor'];
+    $backgroundModeCellActiveColor = $piStarCss['Background']['ModeCellActiveColor'];
+    $backgroundModeCellInactiveColor = $piStarCss['Background']['ModeCellInactiveColor'];
+    
+    $textTableHeaderColor = $piStarCss['Text']['TableHeaderColor'];
     $textBanners = $piStarCss['Text']['BannersColor'];            	// Usually white
     $textNavbar = $piStarCss['Text']['NavbarColor'];            	// Navbar text color
     $textNavbarHover = $piStarCss['Text']['NavbarHoverColor'];          // Navbar hover color
     $textDropdown = $piStarCss['Text']['DropdownColor'];            	// Dropdown menu text color
+    $textDropdownHover = $piStarCss['Text']['DropdownHoverColor'];    	// Dropdown hover menu text color
+    $textServiceCellActiveColor = $piStarCss['Text']['ServiceCellActiveColor'];
+    $textServiceCellInactiveColor = $piStarCss['Text']['ServiceCellInactiveColor'];
+    $textModeCellDisabledColor = $piStarCss['Text']['ModeCellDisabledColor'];
+    $textModeCellActiveColor = $piStarCss['Text']['ModeCellActiveColor'];
+    $textModeCellInactiveColor = $piStarCss['Text']['ModeCellInactiveColor'];
+    
     $bannerDropShaddows = $piStarCss['Text']['BannersDropColor'];       // Banner drop shaddow colour
 
     $tableHeadDropShaddow = $piStarCss['Tables']['HeadDropColor'];      // Table Headder drop shaddows
@@ -39,10 +52,24 @@ if (file_exists('/etc/pistar-css.ini')) {
     $backgroundDropdown = "#f9f9f9";    // Dropdown menu background color
     $backgroundDropdownHover = "#d0d0d0"; // Dropdown hover background color
 
+    $backgroundServiceCellActiveColor = "#11DD11";
+    $backgroundServiceCellInactiveColor = "#BB5555";
+    $backgroundModeCellDisabledColor = "#606060";
+    $backgroundModeCellActiveColor = "#00BB00";
+    $backgroundModeCellInactiveColor = "#BB0000";
+    
     $textBanners = "#ffffff";            // Usually white
     $textNavbar = "#ffffff";           	// Navbar text color
     $textNavbarHover = "#ffffff";       // Navbar hover color
     $textDropdown = "#000000";          // Dropdown menu text color
+    $textDropdownHover = "#000000";     // Dropdown hover menu text color
+    $textTableHeaderColor = "#ffffff"; //add to default
+    $textServiceCellActiveColor = "#000000";
+    $textServiceCellInactiveColor = "#000000";
+    $textModeCellDisabledColor = "#b0b0b0";
+    $textModeCellActiveColor = "#003300";
+    $textModeCellInactiveColor = "#550000";
+    
     $bannerDropShaddows = "#303030";     // Banner drop shaddow colour
     $tableHeadDropShaddow = "#8b0000";   // Table Headder drop shaddows
     $textContent = "#000000";            // Used for the section titles

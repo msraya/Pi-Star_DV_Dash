@@ -4,25 +4,34 @@ include_once $_SERVER['DOCUMENT_ROOT'].'/mmdvmhost/tools.php';        // MMDVMDa
 include_once $_SERVER['DOCUMENT_ROOT'].'/mmdvmhost/functions.php';    // MMDVMDash Functions
 include_once $_SERVER['DOCUMENT_ROOT'].'/config/language.php';	      // Translation Code
 ?>
+<script type="text/javascript" >
+ $(function(){
+     $('table.lh-table').floatThead({
+	 position: 'fixed',
+	 scrollContainer: function($table){
+	     return $table.closest('.table-container');
+	 }
+     });
+ });
+</script>
+
 <input type="hidden" name="lh-autorefresh" value="OFF" />
 <b><?php echo $lang['last_heard_list'];?></b>
 <div>
-    <div>
-	<table>
-	    <tr>
-		<th style="width: 126px;"><a class="tooltip" href="#"><?php echo $lang['time'];?> (<?php echo date('T')?>)<span><b>Time in <?php echo date('T')?> time zone</b></span></a></th>
-		<th style="width: 73px;"><a class="tooltip" href="#"><?php echo $lang['mode'];?><span><b>Transmitted Mode</b></span></a></th>
-		<th style="width: 90px;"><a class="tooltip" href="#"><?php echo $lang['callsign'];?><span><b>Callsign</b></span></a></th>
-		<th style="width: 150px;"><a class="tooltip" href="#"><?php echo $lang['target'];?><span><b>Target, D-Star Reflector, DMR Talk Group etc</b></span></a></th>
-		<th style="width: 30px;"><a class="tooltip" href="#"><?php echo $lang['src'];?><span><b>Received from source</b></span></a></th>
-		<th style="width: 50px;"><a class="tooltip" href="#"><?php echo $lang['dur'];?>(s)<span><b>Duration in Seconds</b></span></a></th>
-		<th style="width: 40px;"><a class="tooltip" href="#"><?php echo $lang['loss'];?><span><b>Packet Loss</b></span></a></th>
-		<th style="width: max-content;"><a class="tooltip" href="#"><?php echo $lang['ber'];?><span><b>Bit Error Rate</b></span></a></th>
-	    </tr>
-	</table>
-    </div>
-    <div style="max-height:255px; overflow-y:auto;">
-	<table>
+    <div class="table-container">
+	<table class="table lh-table">
+	    <thead>
+		<tr>
+		    <th><a class="tooltip" href="#"><?php echo $lang['time'];?> (<?php echo date('T')?>)<span><b>Time in <?php echo date('T')?> time zone</b></span></a></th>
+		    <th><a class="tooltip" href="#"><?php echo $lang['mode'];?><span><b>Transmitted Mode</b></span></a></th>
+		    <th><a class="tooltip" href="#"><?php echo $lang['callsign'];?><span><b>Callsign</b></span></a></th>
+		    <th><a class="tooltip" href="#"><?php echo $lang['target'];?><span><b>Target, D-Star Reflector, DMR Talk Group etc</b></span></a></th>
+		    <th><a class="tooltip" href="#"><?php echo $lang['src'];?><span><b>Received from source</b></span></a></th>
+		    <th><a class="tooltip" href="#"><?php echo $lang['dur'];?>(s)<span><b>Duration in Seconds</b></span></a></th>
+		    <th><a class="tooltip" href="#"><?php echo $lang['loss'];?><span><b>Packet Loss</b></span></a></th>
+		    <th><a class="tooltip" href="#"><?php echo $lang['ber'];?><span><b>Bit Error Rate</b></span></a></th>
+		</tr>
+	    </thead>
 	    <tbody>
 <?php
 $i = 0;
@@ -37,65 +46,65 @@ for ($i = 0; $i < $maxCount; $i++) {
         $dt->setTimeZone($local_tz);
         $local_time = $dt->format('H:i:s M jS');
 	echo"<tr>";
-	echo"<td align=\"left\" style=\"width: 126px;\">$local_time</td>"; // Time
-	echo"<td align=\"left\" style=\"width: 73px;\">$listElem[1]</td>"; // Mode
+	echo"<td align=\"left\">$local_time</td>"; // Time
+	echo"<td align=\"left\">$listElem[1]</td>"; // Mode
 	// Callsign
 	if (is_numeric($listElem[2]) || strpos($listElem[2], "openSPOT") !== FALSE) {
-	    echo "<td align=\"left\" style=\"width: 90px;\">$listElem[2]</td>";
+	    echo "<td align=\"left\">$listElem[2]</td>";
 	} elseif (!preg_match('/[A-Za-z].*[0-9]|[0-9].*[A-Za-z]/', $listElem[2])) {
-            echo "<td align=\"left\" style=\"width: 90px;\">$listElem[2]</td>";
+            echo "<td align=\"left\">$listElem[2]</td>";
 	} else {
 	    if (strpos($listElem[2],"-") > 0) { $listElem[2] = substr($listElem[2], 0, strpos($listElem[2],"-")); }
 	    if ( $listElem[3] && $listElem[3] != '    ' ) {
 		//echo "<td align=\"left\"><a href=\"http://www.qrz.com/db/$listElem[2]\" data-featherlight=\"iframe\" data-featherlight-iframe-min-width=\"90%\" data-featherlight-iframe-max-width=\"90%\" data-featherlight-iframe-width=\"2000\" data-featherlight-iframe-height=\"2000\">$listElem[2]</a>/$listElem[3]</td>";
-		echo "<td align=\"left\" style=\"width: 90px;\"><a href=\"http://www.qrz.com/db/$listElem[2]\" target=\"_blank\">$listElem[2]</a>/$listElem[3]</td>";
+		echo "<td align=\"left\"><a href=\"http://www.qrz.com/db/$listElem[2]\" target=\"_blank\">$listElem[2]</a>/$listElem[3]</td>";
 	    } else {
 		//echo "<td align=\"left\"><a href=\"http://www.qrz.com/db/$listElem[2]\" data-featherlight=\"iframe\" data-featherlight-iframe-min-width=\"90%\" data-featherlight-iframe-max-width=\"90%\" data-featherlight-iframe-width=\"2000\" data-featherlight-iframe-height=\"2000\">$listElem[2]</a></td>";
-		echo "<td align=\"left\" style=\"width: 90px;\"><a href=\"http://www.qrz.com/db/$listElem[2]\" target=\"_blank\">$listElem[2]</a></td>";
+		echo "<td align=\"left\"><a href=\"http://www.qrz.com/db/$listElem[2]\" target=\"_blank\">$listElem[2]</a></td>";
 	    }
 	}
 	
 	// Target
 	if (substr($listElem[4], 0, 6) === 'CQCQCQ' ) {
-	    echo "<td align=\"left\" style=\"width: 150px;\">$listElem[4]</td>";
+	    echo "<td align=\"left\">$listElem[4]</td>";
 	} else {
-	    echo "<td align=\"left\" style=\"width: 150px;\">".str_replace(" ","&nbsp;", $listElem[4])."</td>";
+	    echo "<td align=\"left\">".str_replace(" ","&nbsp;", $listElem[4])."</td>";
 	}
 	
 	// Src
 	if ($listElem[5] == "RF"){
-	    echo "<td style=\"background:#1d1; width: 30px;\">RF</td>";
+	    echo "<td style=\"background:#1d1;\">RF</td>";
 	} else {
-	    echo "<td style=\"width: 30px;\">$listElem[5]</td>";
+	    echo "<td>$listElem[5]</td>";
 	}
 	// Duration
 	if ($listElem[6] == null) {
-	    echo "<td style=\"background:#f33; width: 50px;\">TX</td><td style=\"width: 40px;\"></td><td style=\"width: max-content;\"></td>";
+	    echo "<td style=\"background:#f33;\">TX</td><td></td><td></td>";
 	} else if ($listElem[6] == "SMS") {
-	    echo "<td style=\"background:#1d1; width: 50px;\">SMS</td><td style=\"width: 40px;\"></td><td style=\"width: max-content;\"></td>";
+	    echo "<td style=\"background:#1d1;\">SMS</td><td></td><td></td>";
 	} else {
-	    echo "<td style=\"width: 50px;\">$listElem[6]</td>";
+	    echo "<td>$listElem[6]</td>";
 	    
 	    // Colour the Loss Field
 	    if (floatval($listElem[7]) < 1) {
-		echo "<td style=\"width: 40px;\">$listElem[7]</td>"; }
+		echo "<td>$listElem[7]</td>"; }
 	    elseif (floatval($listElem[7]) == 1) {
-		echo "<td style=\"background:#1d1; width: 40px;\">$listElem[7]</td>"; }
+		echo "<td style=\"background:#1d1;\">$listElem[7]</td>"; }
 	    elseif (floatval($listElem[7]) > 1 && floatval($listElem[7]) <= 3) {
-		echo "<td style=\"background:#fa0; width: 40px;\">$listElem[7]</td>"; }
+		echo "<td style=\"background:#fa0;\">$listElem[7]</td>"; }
 	    else {
-		echo "<td style=\"background:#f33; width: 40px;\">$listElem[7]</td>";
+		echo "<td style=\"background:#f33;\">$listElem[7]</td>";
 	    }
 	    
 	    // Colour the BER Field
 	    if (floatval($listElem[8]) == 0) {
-		echo "<td style=\"width: max-content;\">$listElem[8]</td>"; }
+		echo "<td>$listElem[8]</td>"; }
 	    elseif (floatval($listElem[8]) >= 0.0 && floatval($listElem[8]) <= 1.9) {
-		echo "<td style=\"background:#1d1; width: max-content;\">$listElem[8]</td>"; }
+		echo "<td style=\"background:#1d1;\">$listElem[8]</td>"; }
 	    elseif (floatval($listElem[8]) >= 2.0 && floatval($listElem[8]) <= 4.9) {
-		echo "<td style=\"background:#fa0; width: max-content;\">$listElem[8]</td>"; }
+		echo "<td style=\"background:#fa0;\">$listElem[8]</td>"; }
 	    else {
-		echo "<td style=\"background:#f33; width: max-content;\">$listElem[8]</td>";
+		echo "<td style=\"background:#f33;\">$listElem[8]</td>";
 	    }
 	}
 	echo"</tr>\n";

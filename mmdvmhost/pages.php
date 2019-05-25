@@ -7,6 +7,25 @@ include_once $_SERVER['DOCUMENT_ROOT'].'/mmdvmhost/tools.php';        // MMDVMDa
 include_once $_SERVER['DOCUMENT_ROOT'].'/mmdvmhost/functions.php';    // MMDVMDash Functions
 include_once $_SERVER['DOCUMENT_ROOT'].'/config/language.php';        // Translation Code
 
+?>
+<script type="text/javascript" >
+ $(function(){
+     $('table.perso-poc-table').floatThead({
+	 position: 'fixed',
+	 scrollContainer: function($table){
+	     return $table.closest('.table-container');
+	 }
+     });
+     $('table.poc-lh-table').floatThead({
+	 position: 'fixed',
+	 scrollContainer: function($table){
+	     return $table.closest('.table-container');
+	 }
+     });
+ });
+</script>
+<?php
+
 // Get origin of the page loading
 $origin = (isset($_GET['origin']) ? $_GET['origin'] : (isset($myOrigin) ? $myOrigin : "unknown"));
 
@@ -139,26 +158,14 @@ if (strcmp($origin, "admin") == 0) {
 	<!-- Personnal messages-->
 	<div>
 	    <b><?php echo $lang['pocsag_persolist'];?></b>
-	    <div>
-		<table>
-		    <thread>
+	    <div class="table-container">
+		<table class="table poc-lh-table">
+		    <thead>
 			<tr>
 			    <th style="width: 140px;" ><a class="tooltip" href="#"><?php echo $lang['time'];?> (<?php echo date('T')?>)<span><b>Time in <?php echo date('T')?> time zone</b></span></a></th>
 			    <th style="width: max-content;" ><a class="tooltip" href="#"><?php echo $lang['pocsag_msg'];?><span><b>Message contents</b></span></a></th>
 			</tr>
-		    </thread>
-		</table>
-	    </div>
-	    
-	    <div style="max-height:190px; overflow-y:auto;" >
-		<table>
-		    <thread>
-			<tr>
-			    <th></th>
-			    <th></th>
-			</tr>
-		    </thread>
-		    
+		    </thead>
 		    <tbody>
 			<?php
 			$found = false;
@@ -211,21 +218,16 @@ if (strcmp($origin, "admin") == 0) {
     <div>
 	<!-- Activity -->
 	<b><?php echo $lang['pocsag_list'];?></b>	
-	<div>
-	    <table>
-		<thread>
+	<div class="table-container">
+	    <table class="table poc-lh-table">
+		<thead>
 		    <tr>
 			<th style="width: 140px;" ><a class="tooltip" href="#"><?php echo $lang['time'];?> (<?php echo date('T')?>)<span><b>Time in <?php echo date('T')?> time zone</b></span></a></th>
 			<th style="width: 70px;" ><a class="tooltip" href="#"><?php echo $lang['pocsag_timeslot'];?><span><b>Message Mode</b></span></a></th>
 			<th style="width: 90px;" ><a class="tooltip" href="#"><?php echo $lang['target'];?><span><b>RIC / CapCode of the receiving Pager</b></span></a></th>
 			<th style="width: max-content;" ><a class="tooltip" href="#"><?php echo $lang['pocsag_msg'];?><span><b>Message contents</b></span></a></th>
 		    </tr>
-		</thread>
-	    </table>
-	</div>
-	
-	<div style="max-height:198px; overflow-y:auto;" >
-	    <table>
+		</thead>
 		<tbody>
 		    <?php listDAPNETGWMessages($logLinesDAPNETGateway, ((strcmp($origin, "admin") == 0) ? true : false)); ?>
 		</tbody>

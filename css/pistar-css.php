@@ -13,6 +13,7 @@ $backgroundNavbar = "#242d31";        // Navbar background color
 $backgroundNavbarHover = "#a60000"; // Navbar hover color
 $backgroundDropdown = "#f9f9f9";    // Dropdown menu background color
 $backgroundDropdownHover = "#d0d0d0"; // Dropdown hover background color
+
 $backgroundServiceCellActiveColor = "#11DD11";
 $backgroundServiceCellInactiveColor = "#BB5555";
 $backgroundModeCellDisabledColor = "#606060";
@@ -429,11 +430,6 @@ input.toggle-round-flat:checked + label:after {
     padding: 5px 8px;
     text-decoration: none;
 }
-`
-.dropdown {
-    float: left;
-    overflow: hidden;
-}
 
 .dropdown .dropbutton {
     font-size: 14px;
@@ -716,4 +712,10 @@ input.toggle-round-flat:checked + label:after {
 .inactive-mode-cell {
     color: <?php echo $textModeCellInactiveColor; ?>;
     background: <?php echo $backgroundModeCellInactiveColor; ?>;
+}
+
+.table-container {
+    position: relative;
+    overflow: auto;
+    max-height: 255px;
 }

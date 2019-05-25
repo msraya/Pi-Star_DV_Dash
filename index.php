@@ -33,6 +33,7 @@ $configPistarRelease = parse_ini_file($pistarReleaseConfig, true);
     <meta name="Author" content="Hans-J. Barthen (DL5DI), Kim Huebel (DV9VH) and Andy Taylor (MW0MWZ)" />
     <meta name="Description" content="Pi-Star Dashboard" />
     <meta name="KeyWords" content="MW0MWZ,MMDVMHost,ircDDBGateway,D-Star,ircDDB,Pi-Star,Blackwood,Wales,DL5DI,DG9VH" />
+    <meta http-equiv="X-UA-Compatible" content="IE=10; IE=9; IE=8; IE=7; IE=EDGE" />
     <meta http-equiv="cache-control" content="max-age=0" />
     <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="expires" content="0" />
@@ -42,6 +43,7 @@ $configPistarRelease = parse_ini_file($pistarReleaseConfig, true);
     <link rel="stylesheet" type="text/css" href="/css/font-awesome-4.7.0/css/font-awesome.min.css" />
 <?php include_once "config/browserdetect.php"; ?>
     <script type="text/javascript" src="/jquery.min.js"></script>
+    <script type="text/javascript" src="/jquery-floatThead.min.js"></script>
     <script type="text/javascript" src="/functions.js"></script>
     <script type="text/javascript">
       $.ajaxSetup({ cache: false });
@@ -178,29 +180,44 @@ if (file_exists('/etc/dstar-radio.mmdvmhost')) {
 	}
 
 	echo '<script type="text/javascript">'."\n";
-	echo 'var lhto;'."\n";	
-	echo 'function reloadLocalTx(){'."\n";
-	echo '  $("#localTxs").load("/mmdvmhost/localtx.php",function(){ setTimeout(reloadLocalTx,1500) });'."\n";
+	echo 'var lhto;'."\n";
+	echo 'var ltxto'."\n";
+
+	echo 'function reloadLastHeard(){'."\n";
+	echo '  $("#lastHeard").load("/mmdvmhost/lh.php",function(){ lhto = setTimeout(reloadLastHeard,1500) });'."\n";
 	echo '}'."\n";
-	echo 'setTimeout(reloadLocalTx,1500);'."\n";
-	echo 'function reloadLastHerd(){'."\n";
-	echo '  $("#lastHerd").load("/mmdvmhost/lh.php",function(){ lhto = setTimeout(reloadLastHerd,1500) });'."\n";
+
+	echo 'function reloadLocalTX(){'."\n";
+	echo '  $("#localTxs").load("/mmdvmhost/localtx.php",function(){ ltxto = setTimeout(reloadLocalTX,1500) });'."\n";
 	echo '}'."\n";
+
     	echo 'function setLHAutorefresh(obj) {'."\n";
     	echo '    if (obj.checked) {'."\n";
-    	echo '        lhto = setTimeout(reloadLastHerd,1500);'."\n";
+    	echo '        lhto = setTimeout(reloadLastHeard,1500);'."\n";
     	echo '    }'."\n";
     	echo '    else {'."\n";
     	echo '        clearTimeout(lhto);'."\n";
     	echo '    }'."\n";
     	echo '}'."\n";
-	echo 'lhto = setTimeout(reloadLastHerd,1500);'."\n";
+
+	echo 'function setLocalTXAutorefresh(obj) {'."\n";
+    	echo '    if (obj.checked) {'."\n";
+    	echo '        ltxto = setTimeout(reloadLocalTX,1500);'."\n";
+    	echo '    }'."\n";
+    	echo '    else {'."\n";
+    	echo '        clearTimeout(ltxto);'."\n";
+    	echo '    }'."\n";
+    	echo '}'."\n";
+	
+	echo 'lhto = setTimeout(reloadLastHeard,1500);'."\n";
+	echo 'ltxto = setTimeout(reloadLocalTX,1500);'."\n";
 	echo '$(window).trigger(\'resize\');'."\n";
 	echo '</script>'."\n";
-	echo '<div id="lastHerd">'."\n";
+	echo '<div id="lastHeard">'."\n";
 	include 'mmdvmhost/lh.php';					// MMDVMDash Last Herd
 	echo '</div>'."\n";
 	echo "<br />\n";
+
 	echo '<div id="localTxs">'."\n";
 	include 'mmdvmhost/localtx.php';				// MMDVMDash Local Trasmissions
 	echo '</div>'."\n";
@@ -274,13 +291,13 @@ if (file_exists('/etc/dstar-radio.mmdvmhost')) {
 	echo '  $("#localTx").load("/dstarrepeater/local_tx.php",function(){ setTimeout(reloadLocalTx,3000) });'."\n";
 	echo '}'."\n";
 	echo 'setTimeout(reloadLocalTx,3000);'."\n";
-	echo 'function reloadLastHerd(){'."\n";
-	echo '  $("#lh").load("/dstarrepeater/last_herd.php",function(){ setTimeout(reloadLastHerd,3000) });'."\n";
+	echo 'function reloadLastHeard(){'."\n";
+	echo '  $("#lhdstar").load("/dstarrepeater/last_herd.php",function(){ setTimeout(reloadLastHeard,3000) });'."\n";
 	echo '}'."\n";
-	echo 'setTimeout(reloadLastHerd,3000);'."\n";
+	echo 'setTimeout(reloadLastHeard,3000);'."\n";
 	echo '$(window).trigger(\'resize\');'."\n";
 	echo '</script>'."\n";
-	echo '<div id="lh">'."\n";
+	echo '<div id="lhdstar">'."\n";
 	include 'dstarrepeater/last_herd.php';				//dstarrepeater Last Herd
         echo '</div>'."\n";
 	echo "<br />\n";

@@ -426,11 +426,6 @@ input.toggle-round-flat:checked + label:after {
     padding: 5px 8px;
     text-decoration: none;
 }
-`
-.dropdown {
-    float: left;
-    overflow: hidden;
-}
 
 .dropdown .dropbutton {
     font-size: 14px;
@@ -713,4 +708,10 @@ input.toggle-round-flat:checked + label:after {
 .inactive-mode-cell {
     color: <?php echo $textModeCellInactiveColor; ?>;
     background: <?php echo $backgroundModeCellInactiveColor; ?>;
+}
+
+.table-container {
+    position: relative;
+    overflow: auto;
+    height: 200px;
 }
