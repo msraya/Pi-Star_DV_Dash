@@ -12,9 +12,9 @@ function update_ini_file($data, $filepath) {
     $parsed_ini = parse_ini_file($filepath, true);
     
     foreach($data as $section=>$values) {
-	$section = str_replace("_", " ", $section);
-	$section = str_replace(".", " ", $section);
-	
+	// UnBreak special cases
+	if (strpos($section, 'aprs') !== false) { $section = str_replace("_", ".", $section); }
+	else { $section = str_replace("_", " ", $section); $section = str_replace(".", " ", $section); }
 	$content .= "[".$section."]\n";
 	//append the values
 	foreach($values as $key=>$value) {
