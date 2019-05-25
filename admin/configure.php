@@ -1003,7 +1003,17 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  $configysf2dmr['DMR Network']['Address'] = $ysf2dmrMasterHostArr[0];
 	  $configysf2dmr['DMR Network']['Password'] = '"'.$ysf2dmrMasterHostArr[1].'"';
 	  $configysf2dmr['DMR Network']['Port'] = $ysf2dmrMasterHostArr[2];
-	  if (empty($_POST['bmHSSecurity']) != TRUE ) {
+
+	  // Set the YSF2DMR Options
+	  if (empty($_POST['ysf2dmrNetworkOptions']) != TRUE ) {
+	     $ysf2dmrOptionsLineStripped = str_replace('"', "", $_POST['ysf2dmrNetworkOptions']);
+	     $configysf2dmr['DMR Network']['Options'] = '"'.$ysf2dmrOptionsLineStripped.'"';
+	  }
+	  else {
+	     unset ($configysf2dmr['DMR Network']['Options']);
+	  }
+
+	    if (empty($_POST['bmHSSecurity']) != TRUE ) {
 	    $configysf2dmr['DMR Network']['Password'] = '"'.escapeshellcmd($_POST['bmHSSecurity']).'"';
 	  }
 	}
@@ -2101,10 +2111,6 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	$configysf2dmr['Log']['DisplayLevel'] = "0";
 	$configysf2dmr['Log']['FileLevel'] = "0";
 	if (!isset($configysf2dmr['aprs.fi']['Enable'])) { $configysf2dmr['aprs.fi']['Enable'] = "0"; }
-	if (isset($configysf2dmr['DMR Network']['Options'])) {
-	   $ysf2dmrOptionsLineStripped = str_replace('"', "", $configysf2dmr['DMR Network']['Options']);
-	   $configysf2dmr['DMR Network']['Options'] = '"'.$ysf2dmrOptionsLineStripped.'"';
-	}
 
 	// Add missing options to YSF2NXDN
 	$configysf2nxdn['YSF Network']['LocalPort'] = $configysfgateway['YSF Network']['YSF2NXDNPort'];
@@ -3895,6 +3901,12 @@ $ysfHosts = fopen("/usr/local/etc/YSFHosts.txt", "r"); ?>
         fclose($dmrMasterFile);
         ?>
     </select></td>
+    </tr>
+    <tr>
+	<td align="left"><a class="tooltip2" href="#">DMR Options:<span><b>DMR Network</b>Set your Options= for the DMR master above</span></a></td>
+	<td align="left" colspan="2">
+	    Options=<input type="text" name="ysf2dmrNetworkOptions" size="65" maxlength="100" value="<?php if (isset($configysf2dmr['DMR Network']['Options'])) { echo $configysf2dmr['DMR Network']['Options']; } ?>" />
+	</td>
     </tr>
     <tr>
       <td align="left"><a class="tooltip2" href="#">Hotspot Security:<span><b>DMR Master Password</b>Override the Password for DMR with your own custom password, make sure you already configured this on your chosed DMR Master. Empty the field to use the default.</span></a></td>
