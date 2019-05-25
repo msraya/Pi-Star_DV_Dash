@@ -713,5 +713,5 @@ input.toggle-round-flat:checked + label:after {
 .table-container {
     position: relative;
     overflow: auto;
-    max-height: 200px;
+    max-height: 255px;
 }
