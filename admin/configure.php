@@ -3903,7 +3903,7 @@ $ysfHosts = fopen("/usr/local/etc/YSFHosts.txt", "r"); ?>
     </select></td>
     </tr>
     <tr>
-	<td align="left"><a class="tooltip2" href="#">DMR Options:<span><b>DMR Network</b>Set your Options= for the DMR master above</span></a></td>
+	<td align="left"><a class="tooltip2" href="#">DMR Options:<span><b>DMR Options (YSF2DMR)</b>Set your Options= for the DMR master above</span></a></td>
 	<td align="left" colspan="2">
 	    Options=<input type="text" name="ysf2dmrNetworkOptions" size="65" maxlength="100" value="<?php if (isset($configysf2dmr['DMR Network']['Options'])) { echo $configysf2dmr['DMR Network']['Options']; } ?>" />
 	</td>
