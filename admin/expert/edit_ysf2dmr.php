@@ -18,7 +18,9 @@ function update_ini_file($data, $filepath) {
 	$content .= "[".$section."]\n";
 	//append the values
 	foreach($values as $key=>$value) {
-	    if ($section == "DMR Network" && $key == "Options" && $value) {
+	    if ( (($section == "DMR Network" && $key == "Options") ||
+		  ($section == "Info" && (($key == "Location") || ($key == "Description"))))
+	      && $value) {
 		$value = str_replace('"', "", $value);
 		$content .= $key."=\"".$value."\"\n";
 	    }
