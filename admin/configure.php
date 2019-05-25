@@ -2101,6 +2101,10 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	$configysf2dmr['Log']['DisplayLevel'] = "0";
 	$configysf2dmr['Log']['FileLevel'] = "0";
 	if (!isset($configysf2dmr['aprs.fi']['Enable'])) { $configysf2dmr['aprs.fi']['Enable'] = "0"; }
+	if (isset($configysf2dmr['DMR Network']['Options'])) {
+	   $ysf2dmrOptionsLineStripped = str_replace('"', "", $configysf2dmr['DMR Network']['Options']);
+	   $configysf2dmr['DMR Network']['Options'] = '"'.$ysf2dmrOptionsLineStripped.'"';
+	}
 
 	// Add missing options to YSF2NXDN
 	$configysf2nxdn['YSF Network']['LocalPort'] = $configysfgateway['YSF Network']['YSF2NXDNPort'];
