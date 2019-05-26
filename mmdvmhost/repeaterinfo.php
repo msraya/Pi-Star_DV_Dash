@@ -270,33 +270,55 @@ echo "</table>\n";
 }
 
 $testMMDVModeYSF = getConfigItem("System Fusion Network", "Enable", $mmdvmconfigs);
-if ( isset($configdmr2ysf['Enabled']['Enabled']) ) { $testDMR2YSF = $configdmr2ysf['Enabled']['Enabled']; }
+if ( isset($configdmr2ysf['Enabled']['Enabled']) ) {
+    $testDMR2YSF = $configdmr2ysf['Enabled']['Enabled'];
+}
 if ( $testMMDVModeYSF == 1 || $testDMR2YSF ) { //Hide the YSF information when System Fusion Network mode not enabled.
-        $ysfLinkedTo = getActualLink($reverseLogLinesYSFGateway, "YSF");
-        if ($ysfLinkedTo == 'not linked' || $ysfLinkedTo == 'Service Not Started') {
-                $ysfLinkedToTxt = $ysfLinkedTo;
-        } else {
-                $ysfHostFile = fopen("/usr/local/etc/YSFHosts.txt", "r");
-                $ysfLinkedToTxt = "null";
-                while (!feof($ysfHostFile)) {
-                        $ysfHostFileLine = fgets($ysfHostFile);
-                        $ysfRoomTxtLine = preg_split('/;/', $ysfHostFileLine);
-                        if (empty($ysfRoomTxtLine[0]) || empty($ysfRoomTxtLine[1])) continue;
-                        if (($ysfRoomTxtLine[0] == $ysfLinkedTo) || ($ysfRoomTxtLine[1] == $ysfLinkedTo)) {
-                                $ysfLinkedToTxt = $ysfRoomTxtLine[1];
-                                break;
-                        }
-                }
-                if ($ysfLinkedToTxt != "null") { $ysfLinkedToTxt = "Room: ".$ysfLinkedToTxt; } else { $ysfLinkedToTxt = "Linked to: ".$ysfLinkedTo; }
-                $ysfLinkedToTxt = str_replace('_', ' ', $ysfLinkedToTxt);
+    $ysfLinkedTo = getActualLink($reverseLogLinesYSFGateway, "YSF");
+    
+    if ($ysfLinkedTo == 'not linked' || $ysfLinkedTo == 'Service Not Started') {
+        $ysfLinkedToTxt = $ysfLinkedTo;
+        $ysfLinkState = '';
+	$ysfLinkStateTooltip = $ysfLinkedTo;
+    }
+    else {
+        $ysfHostFile = fopen("/usr/local/etc/YSFHosts.txt", "r");
+        $ysfLinkedToTxt = "null";
+        while (!feof($ysfHostFile)) {
+            $ysfHostFileLine = fgets($ysfHostFile);
+            $ysfRoomTxtLine = preg_split('/;/', $ysfHostFileLine);
+	    
+            if (empty($ysfRoomTxtLine[0]) || empty($ysfRoomTxtLine[1]))
+		continue;
+
+            if (($ysfRoomTxtLine[0] == $ysfLinkedTo) || ($ysfRoomTxtLine[1] == $ysfLinkedTo)) {
+                $ysfLinkedToTxt = $ysfRoomTxtLine[1];
+                break;
+            }
         }
-        $ysfLinkedToTooltip = $ysfLinkedToTxt;
-        if (strlen($ysfLinkedToTxt) > 19) { $ysfLinkedToTxt = substr($ysfLinkedToTxt, 0, 17) . '..'; }
-        echo "<br />\n";
-        echo "<table>\n";
-        echo "<tr><th colspan=\"2\">".$lang['ysf_net']."</th></tr>\n";
-        echo "<tr><td colspan=\"2\"style=\"background: #ffffff;\" title=\"".$ysfLinkedToTooltip."\">".$ysfLinkedToTxt."</td></tr>\n";
-        echo "</table>\n";
+	
+        if ($ysfLinkedToTxt != "null") {
+	    //$ysfLinkedToTxt = "Room: ".$ysfLinkedToTxt;
+            $ysfLinkState = ' [Room]';
+	    $ysfLinkStateTooltip = 'Room: ';
+	}
+	else {
+	    //$ysfLinkedToTxt = "Linked to: ".$ysfLinkedTo;
+	    $ysfLinkedToTxt = $ysfLinkedTo;
+            $ysfLinkState = ' [Lnkd]';
+	    $ysfLinkStateTooltip = 'Linked to: ';
+	}
+	
+        $ysfLinkedToTxt = str_replace('_', ' ', $ysfLinkedToTxt);
+    }
+    
+    $ysfLinkedToTooltip = $ysfLinkStateTooltip.$ysfLinkedToTxt;
+    if (strlen($ysfLinkedToTxt) > 19) { $ysfLinkedToTxt = substr($ysfLinkedToTxt, 0, 17) . '..'; }
+    echo "<br />\n";
+    echo "<table>\n";
+    echo "<tr><th colspan=\"2\">".$lang['ysf_net']."".$ysfLinkState."</th></tr>\n";
+    echo "<tr><td colspan=\"2\"style=\"background: #ffffff;\" title=\"".$ysfLinkedToTooltip."\">".$ysfLinkedToTxt."</td></tr>\n";
+    echo "</table>\n";
 }
 
 if ( isset($configysf2dmr['Enabled']['Enabled']) ) { $testYSF2DMR = $configysf2dmr['Enabled']['Enabled']; }
