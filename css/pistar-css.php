@@ -391,6 +391,7 @@ input.toggle-round-flat + label:before {
     bottom: 1px;
     right: 1px;
     background-color: #fff;
+    background: <?php echo $backgroundContent; ?>;
     border-radius: 10px;
     transition: background 0.4s;
 }
