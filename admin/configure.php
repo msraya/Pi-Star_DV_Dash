@@ -2071,8 +2071,8 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	if (!isset($configysfgateway['General']['WiresXMakeUpper'])) { $configysfgateway['General']['WiresXMakeUpper'] = "1"; }
 	if (!isset($configysfgateway['Network']['Revert'])) { $configysfgateway['Network']['Revert'] = "0"; }
 	if (!isset($configysfgateway['Network']['Port'])) { $configysfgateway['Network']['Port'] = "42000"; }
-	if (!isset($configysfgateway['Network']['YSF2DMRAddress'])) { $configysfgateway['Network']['YSF2DMRAddress'] = "127.0.0.1"; }
-	if (!isset($configysfgateway['Network']['YSF2DMRPort'])) { $configysfgateway['Network']['YSF2DMRPort'] = "42013"; }
+	if (isset($configysfgateway['Network']['YSF2DMRAddress'])) { unset($configysfgateway['Network']['YSF2DMRAddress']); }
+	if (isset($configysfgateway['Network']['YSF2DMRPort'])) { unset($configysfgateway['Network']['YSF2DMRPort']); }
 	unset($configysfgateway['Network']['DataPort']);
 	unset($configysfgateway['Network']['StatusPort']);
 	if (!isset($configysfgateway['Mobile GPS']['Enable'])) { $configysfgateway['Mobile GPS']['Enable'] = "0"; }
@@ -3286,7 +3286,7 @@ else:
     <td align="left">
 <?php
 	if (isset($configdmrgateway['DMR Network 1']['Id'])) {
-		if (strlen($configdmrgateway['DMR Network 1']['Id']) == 9) {
+		if (strlen($configdmrgateway['DMR Network 1']['Id']) > strlen($configmmdvm['General']['Id'])) {
 			$brandMeisterESSID = substr($configdmrgateway['DMR Network 1']['Id'], -2);
 		} else {
 			$brandMeisterESSID = "None";
@@ -3359,7 +3359,7 @@ else:
     <td align="left">
 <?php
 	if (isset($configdmrgateway['DMR Network 2']['Id'])) {
-		if (strlen($configdmrgateway['DMR Network 2']['Id']) == 9) {
+		if (strlen($configdmrgateway['DMR Network 2']['Id']) > strlen($configmmdvm['General']['Id'])) {
 			$dmrPlusESSID = substr($configdmrgateway['DMR Network 2']['Id'], -2);
 		} else {
 			$dmrPlusESSID = "None";
@@ -3519,19 +3519,9 @@ else:
     <td align="left">
 <?php
 	if (isset($configmmdvm['DMR']['Id'])) {
-		if (strlen($configmmdvm['DMR']['Id']) == 8) {
-			$dmrESSID = substr($configmmdvm['DMR']['Id'], -1);
-		} elseif (strlen($configmmdvm['DMR']['Id']) == 9) {
-			$dmrESSID = substr($configmmdvm['DMR']['Id'], -2);
-		} else {
-			$dmrESSID = "None";
-		}
-	}
-	elseif (isset($configmmdvm['General']['Id'])) {
-		if (strlen($configmmdvm['General']['Id']) == 8) {
-			$dmrESSID = substr($configmmdvm['General']['Id'], -1);
-		} elseif (strlen($configmmdvm['General']['Id']) == 9) {
-			$dmrESSID = substr($configmmdvm['General']['Id'], -2);
+		if (strlen($configmmdvm['DMR']['Id']) > strlen($configmmdvm['General']['Id'])) {
+			$essidLen = strlen($configmmdvm['DMR']['Id']) - strlen($configmmdvm['General']['Id']);
+			$dmrESSID = substr($configmmdvm['DMR']['Id'], - $essidLen);
 		} else {
 			$dmrESSID = "None";
 		}
@@ -3862,8 +3852,9 @@ $ysfHosts = fopen("/usr/local/etc/YSFHosts.txt", "r"); ?>
     <td align="left" colspan="2">
 <?php
 	if (isset($configysf2dmr['DMR Network']['Id'])) {
-		if (strlen($configysf2dmr['DMR Network']['Id']) == 9) {
-			$ysf2dmrESSID = substr($configysf2dmr['DMR Network']['Id'], -2);
+		if (strlen($configysf2dmr['DMR Network']['Id']) > strlen($configmmdvm['General']['Id'])) {
+			$essidYSF2DMRLen = strlen($configysf2dmr['DMR Network']['Id']) - strlen($configmmdvm['General']['Id']);
+			$ysf2dmrESSID = substr($configysf2dmr['DMR Network']['Id'], -$essidYSF2DMRLen);
 		} else {
 			$ysf2dmrESSID = "None";
 		}
@@ -3871,10 +3862,10 @@ $ysfHosts = fopen("/usr/local/etc/YSFHosts.txt", "r"); ?>
 		$ysf2dmrESSID = "None";
 	}
 
-	echo substr($configmmdvm['General']['Id'], 0, 7);
-	$ysf2dmrIdBase = substr($configmmdvm['General']['Id'], 0, 7);
+	if (isset($configmmdvm['General']['Id'])) { if ($configmmdvm['General']['Id'] !== "1234567") { echo substr($configmmdvm['General']['Id'], 0, 7); } }
+	if (isset($configmmdvm['General']['Id'])) { $ysf2dmrIdBase = substr($configmmdvm['General']['Id'], 0, 7); } else { $ysf2dmrIdBase = "1234567"; }
 	echo "<select name=\"ysf2dmrId\">\n";
-	if ($ysf2dmrESSID == "None") { echo "      <option value=\"None\" selected=\"selected\">None</option>\n"; } else { echo "      <option value=\"None\">None</option>\n"; }
+	if ($ysf2dmrESSID == "None") { echo "      <option value=\"$ysf2dmrIdBase\" selected=\"selected\">None</option>\n"; } else { echo "      <option value=\"None\">None</option>\n"; }
 	for ($ysf2dmrESSIDInput = 1; $ysf2dmrESSIDInput <= 99; $ysf2dmrESSIDInput++) {
 		$ysf2dmrESSIDInput = str_pad($ysf2dmrESSIDInput, 2, "0", STR_PAD_LEFT);
 		if ($ysf2dmrESSID === $ysf2dmrESSIDInput) {
