@@ -496,7 +496,7 @@ input.toggle-round-flat:checked + label:after {
 }
 
 .mainnav .has-subs a:after {
-    content: "\f107";
+    content: "\f0d7";
     font-family: FontAwesome;
     font-style: normal;
     font-weight: normal;
@@ -554,12 +554,14 @@ input.toggle-round-flat:checked + label:after {
 }
 
 .mainnav .has-subs .dropdown .has-subs a:after {
-    content: "\f105";
+    content: "\f0da";
     font-family: FontAwesome;
     font-style: normal;
     font-weight: normal;
     text-decoration: inherit;
-    padding-left: 1em;
+    position: absolute;
+    top: 1px;
+    right: 9px;
 }
 
 /* Second Level */
