@@ -13,6 +13,7 @@ $backgroundNavbar = "#242d31";        // Navbar background color
 $backgroundNavbarHover = "#a60000"; // Navbar hover color
 $backgroundDropdown = "#f9f9f9";    // Dropdown menu background color
 $backgroundDropdownHover = "#d0d0d0"; // Dropdown hover background color
+$backgroundNavPanel = "#242d31";  // Background color of the nav panel
 $backgroundServiceCellActiveColor = "#11DD11";
 $backgroundServiceCellInactiveColor = "#BB5555";
 $backgroundModeCellDisabledColor = "#606060";
@@ -51,6 +52,7 @@ if (file_exists('/etc/pistar-css.ini')) {
     $backgroundNavbarHover = $piStarCss['Background']['NavbarHoverColor']; // Navbar hover color
     $backgroundDropdown = $piStarCss['Background']['DropdownColor'];    // Dropdown menu background color
     $backgroundDropdownHover = $piStarCss['Background']['DropdownHoverColor']; // Dropdown hover background color
+    $backgroundNavPanel = $piStarCss['Background']['NavPanelColor'];         // Background color of the nav panel
     $backgroundServiceCellActiveColor = $piStarCss['Background']['ServiceCellActiveColor'];
     $backgroundServiceCellInactiveColor = $piStarCss['Background']['ServiceCellInactiveColor'];
     $backgroundModeCellDisabledColor = $piStarCss['Background']['ModeCellDisabledColor'];
@@ -105,7 +107,7 @@ body, font {
     margin : 0;
     padding : 3px 3px 3px 3px;
     width : 160px;
-    background : #242d31;
+    background : <?php echo $backgroundNavPanel; ?>;
     font-weight : normal;
     min-height : 100%;
 }

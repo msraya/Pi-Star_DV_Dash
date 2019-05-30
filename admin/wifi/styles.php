@@ -17,6 +17,7 @@ if (file_exists('/etc/pistar-css.ini')) {
     $backgroundNavbarHover = $piStarCss['Background']['NavbarHoverColor']; // Navbar hover color
     $backgroundDropdown = $piStarCss['Background']['DropdownColor'];    // Dropdown menu background color
     $backgroundDropdownHover = $piStarCss['Background']['DropdownHoverColor']; // Dropdown hover background color
+    $backgroundNavPanel = $piStarCss['Background']['NavPanelColor'];         // Background color of the nav panel
     $backgroundServiceCellActiveColor = $piStarCss['Background']['ServiceCellActiveColor'];
     $backgroundServiceCellInactiveColor = $piStarCss['Background']['ServiceCellInactiveColor'];
     $backgroundModeCellDisabledColor = $piStarCss['Background']['ModeCellDisabledColor'];
@@ -51,6 +52,7 @@ if (file_exists('/etc/pistar-css.ini')) {
     $backgroundNavbarHover = "#a60000"; // Navbar hover color
     $backgroundDropdown = "#f9f9f9";    // Dropdown menu background color
     $backgroundDropdownHover = "#d0d0d0"; // Dropdown hover background color
+    $backgroundNavPanel = "#242d31";  // Background color of the nav panel
 
     $backgroundServiceCellActiveColor = "#11DD11";
     $backgroundServiceCellInactiveColor = "#BB5555";
