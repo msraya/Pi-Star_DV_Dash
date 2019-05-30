@@ -415,7 +415,7 @@ input.toggle-round-flat:checked + label:after {
     background-color: <?php echo $backgroundBanners; ?>;
 }
 
- /* put the same color as in left vertical status */
+/* put the same color as in left vertical status */
 .navbar {
     overflow: hidden;
     background-color: <?php echo $backgroundNavbar; ?>;
@@ -430,6 +430,11 @@ input.toggle-round-flat:checked + label:after {
     text-align: center;
     padding: 5px 8px;
     text-decoration: none;
+    -webkit-transition: all 0.25s ease-out;
+    -moz-transition: all 0.25s ease-out;
+    -ms-transition: all 0.25s ease-out;
+    -o-transition: all 0.25s ease-out;
+    transition: all 0.25s ease-out;
 }
 
 .dropdown .dropbutton {
@@ -467,6 +472,7 @@ input.toggle-round-flat:checked + label:after {
 
 .dropdown {
     position: absolute;
+    top: 123px;
     width: 170px;
     opacity: 0;
     visibility: hidden;
@@ -476,6 +482,11 @@ input.toggle-round-flat:checked + label:after {
 .mainnav ul {
     padding: 0;
     list-style: none;
+    -webkit-transition: all 0.25s ease-out;
+    -moz-transition: all 0.25s ease-out;
+    -ms-transition: all 0.25s ease-out;
+    -o-transition: all 0.25s ease-out;
+    transition: all 0.25s ease-out;
 }
 
 .mainnav li {
@@ -493,7 +504,6 @@ input.toggle-round-flat:checked + label:after {
     padding: 1px 10px;
     font-family : verdana, arial, sans-serif;
     font-size: 14px;
-    
     color: <?php echo $textNavbar; ?>;
     text-align: center;
     text-decoration: none;
@@ -524,7 +534,6 @@ input.toggle-round-flat:checked + label:after {
 /* First Level */
 .subs {
     position: relative;
-    top: 14px;
     width: 170px;
 }
 
@@ -571,8 +580,11 @@ input.toggle-round-flat:checked + label:after {
 /* Second Level */
 .has-subs .has-subs .dropdown .subs {
     position: relative;
-    top: 0px;
+    top: -133px;
     width: 170px;
+    border-style: none none none solid;
+    border-width: 1px;
+    border-color: <?php echo $backgroundDropdownHover; ?>;
 }
 
 .has-subs .has-subs .dropdown .subs a:after {
@@ -583,10 +595,9 @@ input.toggle-round-flat:checked + label:after {
     position: absolute;
     width: 170px;
     left: 170px;
-    top: -10px;
     opacity: 0;
     visibility: hidden;
-    box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px -123px 16px 0px rgba(0,0,0,0.2);
 }
 
 .menuconfig .menuadmin .menudashboard .menuupdate .menuupgrade .menupower .menulogs .menubackup .menuexpert .menureset .menusysinfo {
