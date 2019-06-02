@@ -46,11 +46,17 @@ input[type=button],input[type=submit] {
 	border-radius:5px;
 }
 
+input[type=button]:hover,input[type=submit]:hover {
+	color: <?php echo $textNavbarHover; ?>;
+	background-color: <?php echo $backgroundNavbarHover; ?>;
+}
+
 .infoheader {
 	width:100%;
 	text-align:center;
 	margin-top:10px;
 	border-bottom: 1px solid;
+	color : <?php echo $textBanners; ?>;
 }
 
 .infobox {
