@@ -186,14 +186,37 @@ echo '<br />
 		$ssid = array();
 		$psk = array();
 		foreach($return as $a) {
-			if(preg_match('/SSID/i',$a) && !preg_match('/scan_ssid/i',$a)) {
-				$arrssid = explode("=",$a);
-				$ssid[] = str_replace('"','',$arrssid[1]);
-			}
-			if(preg_match('/psk/i',$a)) {
-				$arrpsk = explode("=",$a);
-				$psk[] = str_replace('"','',$arrpsk[1]);
-			}
+			// Make sure we only put ONE SSID and matching PSK into the arrays
+                        if ( ( isset($curssidplain) || isset($curssidalt) ) && ( isset($curpskplain) || isset($curpskalt) ) ) {
+                                if (isset($curssidplain)) { $ssid[] = $curssidplain; unset($curssidplain); unset($curssidalt); }
+                                if (isset($curssidalt))   { $ssid[] = $curssidalt;   unset($curssidplain); unset($curssidalt); }
+                                if (isset($curpskplain))  { $psk[]  = $curpskplain;  unset($curpskplain);  unset($curpskalt);  }
+                                if (isset($curpskalt))    { $psk[]  = $curpskalt;    unset($curpskplain);  unset($curpskalt);  }
+                        }
+
+                        // Handle the case of the old file format, and the new...
+                        if(preg_match('/\#SSID=/i',$a) && !preg_match('/scan_ssid/i',$a)) {
+                                $arrssid = explode("=",$a);
+                                //$ssid[] = str_replace('"','',$arrssid[1]);
+                                $curssidplain = str_replace('"','',$arrssid[1]);
+                        }
+                        elseif(preg_match('/SSID="/i',$a) && !preg_match('/scan_ssid/i',$a)) {
+                                $arrssid = explode("=",$a);
+                                //$ssid[] = str_replace('"','',$arrssid[1]);
+                                if (!isset($curssidplain)) { $curssidalt = str_replace('"','',$arrssid[1]); }
+                        }
+                        if (isset($curssidplain) || isset($curssidalt)) {
+                                if(preg_match('/\#psk="/i',$a)) {
+                                        $arrpsk = explode("=",$a);
+                                        //$psk[] = str_replace('"','',$arrpsk[1]);
+                                        $curpskplain = str_replace('"','',$arrpsk[1]);
+                                }
+                                elseif(preg_match('/psk=/i',$a)) {
+                                        $arrpsk = explode("=",$a);
+                                        //$psk[] = str_replace('"','',$arrpsk[1]);
+                                        if (!isset($curpskplain)) { $curpskalt = str_replace('"','',$arrpsk[1]); }
+                                }
+                        }
 		}
 		$numSSIDs = count($ssid);
 		$output = '<form method="post" action="'.$_SERVER['PHP_SELF'].'?page=wpa_conf" id="wpa_conf_form">
@@ -231,7 +254,11 @@ echo '<br />
 			$priority = 100 - $x;
 			if ($ssid == "*" && !$psk) { $config .= "network={\n\t#ssid=\"$ssid\"\n\t#psk=\"\"\n\tkey_mgmt=NONE\n\tid_str=\"$x\"\n\tpriority=$priority\n}\n\n"; }
 			elseif ($ssid && !$psk) { $config .= "network={\n\tssid=\"$ssid\"\n\t#psk=\"\"\n\tkey_mgmt=NONE\n\tid_str=\"$x\"\n\tpriority=$priority\n}\n\n"; }
-			elseif ($ssid && $psk) { $config .= "network={\n\tssid=\"$ssid\"\n\tpsk=\"$psk\"\n\tid_str=\"$x\"\n\tpriority=$priority\n}\n\n"; }
+			elseif ($ssid && $psk) {
+				$pskSalted = hash_pbkdf2("sha1",$psk, $ssid, 4096, 64);
+				$ssidHex = exec('python -c \'print("'.$ssid.'".encode("hex"));\'');
+				$config .= "network={\n\t#ssid=\"$ssid\"\n\tssid=$ssidHex\n\t#psk=\"$psk\"\n\tpsk=$pskSalted\n\tid_str=\"$x\"\n\tpriority=$priority\n}\n\n";
+			}
 		}
 		file_put_contents('/tmp/wifidata', $config);
 		system('sudo mount -o remount,rw / && sudo cp -f /tmp/wifidata /etc/wpa_supplicant/wpa_supplicant.conf && sudo mount -o remount,ro /');
