@@ -1349,10 +1349,19 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	$rollMMDVMHostStartDelay = 'sudo sed -i "/OnStartupSec=/c\\OnStartupSec=30" /lib/systemd/system/mmdvmhost.timer';
 	// Turn on RPT1 Validation in DStarRepeater
 	$rollRpt1Validation = 'sudo sed -i "/rpt1Validation=/c\\rpt1Validation=1" /etc/dstarrepeater';
+	// Set Standard IP/Port for DStarRepeater/MMDVMHost
+	$rollRepeaterAddress1 = 'sudo sed -i "/repeaterAddress1=/c\\repeaterAddress1=127.0.0.1" /etc/ircddbgateway';
+	$rollRepeaterPort1 = 'sudo sed -i "/repeaterPort1=/c\\repeaterPort1=20011" /etc/ircddbgateway';
 
 	  if ( $confHardware == 'idrp2c' ) {
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=1" /etc/ircddbgateway';
+	    $rollRepeaterAddress1 = 'sudo sed -i "/repeaterAddress1=/c\\repeaterAddress1=172.16.0.1" /etc/ircddbgateway';
+	    $rollRepeaterPort1 = 'sudo sed -i "/repeaterPort1=/c\\repeaterPort1=20000" /etc/ircddbgateway';
 	    system($rollRepeaterType1);
+	    $testNeworkConfig = exec('grep "eth0:1" /etc/network/interfaces | wc -l');
+	    if (substr($testNeworkConfig, 0, 1) === '0') {
+	      system('sudo sed -i "$ a\ \\nauto eth0:1\\nallow-hotplug eth0:1\\niface eth0:1 inet static\\n    address 172.16.0.20\\n    netmask 255.255.255.0" /etc/network/interfaces');
+	    }
 	  }
 
 	  if ( $confHardware == 'icomTerminalAuto' ) {
@@ -1774,6 +1783,9 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  system($rollMMDVMHostStartDelay);
 	  // Turn on RPT1 validation on DStarRepeater
 	  system($rollRpt1Validation);
+	  // Set Standard IP/Port for ircDDBGateway
+	  system($rollRepeaterAddress1);
+	  system($rollRepeaterPort1);
 	}
 
 	// Set the Dashboard Public
