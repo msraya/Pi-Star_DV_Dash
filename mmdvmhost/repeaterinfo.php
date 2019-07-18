@@ -253,7 +253,7 @@ if (getEnabled("DMR Network", $mmdvmconfigs) == 1) {
 				//$xlxMasterHost1 = exec('grep \'XLX, Linking\|Unlinking\' /var/log/pi-star/DMRGateway-'.gmdate("Y-m-d").'.log | tail -1 | awk \'{print $5 " " $8 " " $9}\'');
 				if ( strpos($xlxMasterHost1, 'Linking') !== false ) { $xlxMasterHost1 = str_replace('Linking ', '', $xlxMasterHost1); }
 				else if ( strpos($xlxMasterHost1, 'Unlinking') !== false ) { $xlxMasterHost1 = "XLX Not Linked"; }
-				echo "<tr><td  style=\"background: #ffffff;\" colspan=\"2\" title=\"".$xlxMasterHost1Tooltip."\">".$xlxMasterHost1."</td></tr>\n";
+				echo "<tr><td  style=\"background: #ffffff;\" colspan=\"2\" title=\"".$xlxMasterHost1."\">".$xlxMasterHost1."</td></tr>\n";
                         }
 			if ($configdmrgateway['DMR Network 1']['Enabled'] == 1) {
 				echo "<tr><td  style=\"background: #ffffff;\" colspan=\"2\" title=\"".$dmrMasterHost1Tooltip."\">".$dmrMasterHost1."</td></tr>\n";
