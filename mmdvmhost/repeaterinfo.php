@@ -182,6 +182,8 @@ if ($dmrMasterHost == '127.0.0.1') {
 	$dmrMasterHost1 = $configdmrgateway['DMR Network 1']['Address'];
 	$dmrMasterHost2 = $configdmrgateway['DMR Network 2']['Address'];
 	$dmrMasterHost3 = str_replace('_', ' ', $configdmrgateway['DMR Network 3']['Name']);
+	if (isset($configdmrgateway['DMR Network 4']['Name'])) {$dmrMasterHost4 = str_replace('_', ' ', $configdmrgateway['DMR Network 4']['Name']);}
+	if (isset($configdmrgateway['DMR Network 5']['Name'])) {$dmrMasterHost5 = str_replace('_', ' ', $configdmrgateway['DMR Network 5']['Name']);}
 	while (!feof($dmrMasterFile)) {
 		$dmrMasterLine = fgets($dmrMasterFile);
                 $dmrMasterHostF = preg_split('/\s+/', $dmrMasterLine);
@@ -196,10 +198,14 @@ if ($dmrMasterHost == '127.0.0.1') {
         $dmrMasterHost1Tooltip = $dmrMasterHost1;
         $dmrMasterHost2Tooltip = $dmrMasterHost2;
         $dmrMasterHost3Tooltip = $dmrMasterHost3;
+	if (isset($dmrMasterHost4)) { $dmrMasterHost4Tooltip = $dmrMasterHost4; }
+	if (isset($dmrMasterHost5)) { $dmrMasterHost5Tooltip = $dmrMasterHost5; }
        if (strlen($xlxMasterHost1) > 19) { $xlxMasterHost1 = substr($xlxMasterHost1, 0, 17) . '..'; }
        if (strlen($dmrMasterHost1) > 19) { $dmrMasterHost1 = substr($dmrMasterHost1, 0, 17) . '..'; }
        if (strlen($dmrMasterHost2) > 19) { $dmrMasterHost2 = substr($dmrMasterHost2, 0, 17) . '..'; }
        if (strlen($dmrMasterHost3) > 19) { $dmrMasterHost3 = substr($dmrMasterHost3, 0, 17) . '..'; }
+       if (isset($dmrMasterHost4)) { if (strlen($dmrMasterHost4) > 19) { $dmrMasterHost4 = substr($dmrMasterHost4, 0, 17) . '..'; } }
+       if (isset($dmrMasterHost5)) { if (strlen($dmrMasterHost5) > 19) { $dmrMasterHost5 = substr($dmrMasterHost5, 0, 17) . '..'; } }
 }
 else {
 	while (!feof($dmrMasterFile)) {
@@ -258,6 +264,16 @@ if (getEnabled("DMR Network", $mmdvmconfigs) == 1) {
 			if ($configdmrgateway['DMR Network 3']['Enabled'] == 1) {
 				echo "<tr><td  style=\"background: #ffffff;\" colspan=\"2\" title=\"".$dmrMasterHost3Tooltip."\">".$dmrMasterHost3."</td></tr>\n";
 			}
+                        if (isset($configdmrgateway['DMR Network 4']['Enabled'])) {
+                                if ($configdmrgateway['DMR Network 4']['Enabled'] == 1) {
+                                        echo "<tr><td  style=\"background: #ffffff;\" colspan=\"2\" title=\"".$dmrMasterHost4Tooltip."\">".$dmrMasterHost4."</td></tr>\n";
+                                }
+                        }
+                        if (isset($configdmrgateway['DMR Network 5']['Enabled'])) {
+                                if ($configdmrgateway['DMR Network 5']['Enabled'] == 1) {
+                                        echo "<tr><td  style=\"background: #ffffff;\" colspan=\"2\" title=\"".$dmrMasterHost5Tooltip."\">".$dmrMasterHost5."</td></tr>\n";
+                                }
+                        }
 		}
 		else {
 			echo "<tr><td  style=\"background: #ffffff;\" colspan=\"2\" title=\"".$dmrMasterHostTooltip."\">".$dmrMasterHost."</td></tr>\n";
