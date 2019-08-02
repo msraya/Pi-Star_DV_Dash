@@ -28,8 +28,7 @@
 			<li class="subs has-subs"><a href="#">DMR</a>
 			    <ul class="dropdown">
 				<li class="subs"><a href="edit_dmrgateway.php">DMR Gateway</a></li>
-
-<li class="subs"><a href="edit_dmr2ysf.php">DMR to YSF</a></li>
+				<li class="subs"><a href="edit_dmr2ysf.php">DMR to YSF</a></li>
 				<li class="subs"><a href="edit_dmr2nxdn.php">DMR to NXDN</a></li>
 			    </ul>
 			</li>
@@ -82,6 +81,13 @@
 		
 		<li class="has-subs"><a href="#">Tools</a>
 		    <ul class="dropdown">
+			<!-- Services Sub -->
+			<li class="subs has-subs"><a href="#">Services</a>
+			    <ul class="dropdown">
+				<li class="subs"><a href="services.php?action=stop">Stop Services</a></li>
+				<li class="subs"><a href="services.php?action=restart">Restart Services</a></li>
+			    </ul>
+			</li>
 			<li class="subs"><a href="edit_dashboard.php">CSS Tool</a></li>
 			<li class="subs"><a href="ssh_access.php">SSH Access</a></li>
 		    </ul>
