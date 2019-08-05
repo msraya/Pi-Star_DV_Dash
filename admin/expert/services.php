@@ -53,7 +53,7 @@ require_once('../config/version.php');
 			echo '<script type="text/javascript">'."\n";
 			echo 'function loadServicesExec(optStr){'."\n";
 			echo '  $("#service_result").load("/admin/expert/services_exec.php"+optStr);'."\n";
-			echo '  setTimeout(function() { window.location="/admin/expert/index.php";}, 8000);'."\n";
+			echo '  setTimeout(function() { window.location="/admin/expert/index.php";}, 10000);'."\n";
 			echo '}'."\n";
 			echo 'setTimeout(loadServicesExec, 100, "?action='.$action.'");'."\n";
 			echo '$(window).trigger(\'resize\');'."\n";
