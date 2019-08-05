@@ -121,7 +121,7 @@ $lang = array (
   "target"                      =>  "Cible",
   "src"                         =>  "Src ",        // Short version of "Source"
   "dur"                         =>  "Dur",        // Short version of "Duration"
-  "loss"                        =>  "Pertes",     // short version of "Loss"
+  "loss"                        =>  "Perte",      // short version of "Loss"
   "ber"                         =>  "BER",        // Short version of "Bit Error Rate"
   // POCSAG Specific
   "pocsag_list"                 =>  "Activit&eacute; Passerelle DAPNET",
