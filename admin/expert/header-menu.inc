@@ -79,6 +79,18 @@
 		    </ul>
 		</li>
 		
+		<li class="has-subs"><a href="#">Hosts Files</a>
+		    <ul class="dropdown">
+			<li class="subs"><a href="fulledit_hosts_DCS_Hosts.php">DCS Hosts</a></li>
+			<li class="subs"><a href="fulledit_hosts_DExtra_Hosts.php">DExtra Hosts</a></li>
+			<li class="subs"><a href="fulledit_hosts_DPlus_Hosts.php">DPlus Hosts</a></li>
+			<li class="subs"><a href="fulledit_hosts_DMR_Hosts.php">DMR Hosts</a></li>
+			<li class="subs"><a href="fulledit_hosts_P25_Hosts.php">P25 Hosts</a></li>
+			<li class="subs"><a href="fulledit_hosts_NXDN_Hosts.php">NXDN Hosts</a></li>
+			<li class="subs"><a href="fulledit_hosts_XLX_Hosts.php">XLX Hosts</a></li>
+		    </ul>
+		</li>
+			
 		<li class="has-subs"><a href="#">Tools</a>
 		    <ul class="dropdown">
 			<!-- Services Sub -->
