@@ -289,7 +289,7 @@ $testMMDVModeYSF = getConfigItem("System Fusion Network", "Enable", $mmdvmconfig
 if ( isset($configdmr2ysf['Enabled']['Enabled']) ) {
     $testDMR2YSF = $configdmr2ysf['Enabled']['Enabled'];
 }
-if ( $testMMDVModeYSF == 1 || $testDMR2YSF ) { //Hide the YSF information when System Fusion Network mode not enabled.
+if ( $testMMDVModeYSF == 1 || (isset($testDMR2YSF) && $testDMR2YSF == 1) ) { //Hide the YSF information when System Fusion Network mode not enabled.
     $ysfLinkedTo = getActualLink($reverseLogLinesYSFGateway, "YSF");
     
     if ($ysfLinkedTo == 'not linked' || $ysfLinkedTo == 'Service Not Started') {
