@@ -126,7 +126,7 @@ if ( $testMMDVModeDMR == 1 ) {
         <th><a class=tooltip href="#">Action<span><b>Take Action</b></span></a></th>
       </tr>'."\n";
       echo '    <tr>';
-      echo '<td><input type="submit" value="Drop QSO" name="dropQso" /><input type="submit" value="Drop All Dynamic" name="dropDyn" /></td>';
+      echo '<td><input type="submit" value="Drop QSO" title="Drop current QSO" name="dropQso" /><input type="submit" value="Drop All Dyn." title="Drop all dynamic groups" name="dropDyn" /></td>';
       echo '<td><select name="reflectorNr">'."\n";
       if ( $bmReflectorActive == "None" || $bmReflectorActive == "REF0" ) { echo '        <option selected="selected" value="0">None</option>'."\n"; } else { echo '        <option value="0">None</option>'."\n"; }
         for ($refNrBase = 1; $refNrBase <= 999; $refNrBase++) {
