@@ -64,7 +64,7 @@
 				<li class="subs"><a href="fulledit_bmapikey.php">Brandmeister API</a></li>
 			    </ul>
 			</li>
-			<li class="subs"><a href="edit_ysfgateway.php">YSF Gateway</a></li>
+			<li class="subs"><a href="fulledit_ysfgateway.php">YSF Gateway</a></li>
 			<!-- DAPNet Sub -->
 			<li class="subs has-subs"><a href="#">DAPNet</a>
 			    <ul class="dropdown">
