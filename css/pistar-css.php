@@ -6,12 +6,11 @@ include_once('css-base.php');
     text-align: left;
     margin: auto;
     border-radius: 10px 10px 10px 10px;
-    -moz-border-radius: 10px 10px 10px 10px;
     -webkit-border-radius: 10px 10px 10px 10px; 
     -khtml-border-radius: 10px 10px 10px 10px;
     -ms-border-radius: 10px 10px 10px 10px;
     box-shadow: 3px 3px 3px #707070;
-    background : #<?php echo $backgroundContent; ?>;
+    background : <?php echo $backgroundContent; ?>;
 }
 
 body, font {
@@ -27,7 +26,6 @@ body, font {
     text-align : left;
     padding : 5px 0px 5px 0px;
     border-radius: 10px 10px 0 0;
-    -moz-border-radius: 10px 10px 0px 0px;
     -webkit-border-radius: 10px 10px 0px 0px; 
     -khtml-border-radius: 10px 10px 0px 0px;
     -ms-border-radius: 10px 10px 0px 0px;
@@ -67,7 +65,6 @@ body, font {
     text-align : center;
     padding : 10px 0 10px 0;
     border-radius: 0 0 10px 10px;
-    -moz-border-radius: 0px 0px 10px 10px;
     -webkit-border-radius: 0px 0px 10px 10px; 
     -khtml-border-radius: 0px 0px 10px 10px;
     -ms-border-radius: 0px 0px 10px 10px;
