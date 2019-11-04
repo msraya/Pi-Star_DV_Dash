@@ -20,12 +20,12 @@ $MYCALL=strtoupper($callsign);
     <tr>
     <th><a class="tooltip" href="#">Radio<span><b>Radio Module</b></span></a></th>
     <th><a class="tooltip" href="#">Default<span><b>Default Link Destination</b></span></a></th>
-    <th><a class="tooltip" href="#">Auto<span><b>AutoLink</b>- green: enabled<br />- red: disabled</span></a></th>
+    <th><a class="tooltip" href="#">Auto<span><b>Automatic Link Connection</b></span></a></th>
     <th><a class="tooltip" href="#">Timer<span><b>Reset/Restart Timer</b></span></a></th>
-    <th><a class="tooltip" href="#">Link<span><b>Link-Status</b>- green: enabled<br />- red: disabled</span></a></th>
+    <th><a class="tooltip" href="#">Link<span><b>Link Status</b></span></a></th>
     <th><a class="tooltip" href="#">Linked to<span><b>Linked Destination</b></span></a></th>
     <th><a class="tooltip" href="#">Mode<span><b>Mode or Protocol used</b></span></a></th>
-    <th><a class="tooltip" href="#">Direction<span><b>Direction</b>Incoming or Outgoing</span></a></th>
+    <th><a class="tooltip" href="#">Direction<span><b>Direction of Connection</b></span></a></th>
     <th><a class="tooltip" href="#">Last Change (<?php echo date('T')?>)<span><b>Timestamp of last change</b>Time of last change in <?php echo date('T')?> time zone</span></a></th>
     </tr>
 
@@ -48,7 +48,7 @@ $MYCALL=strtoupper($callsign);
 	    $param="reflector" . $i;
 	    if(isset($configs[$param])) { print "<td>".str_replace(' ', '&nbsp;', substr($configs[$param],0,8))."</td>"; } else { print "<td>&nbsp;</td>";}
 	    $param="atStartup" . $i;
-	    if($configs[$param] == 1){print "<td>Auto</td>"; } else { print "<td>No</td>"; }
+	    if($configs[$param] == 1){print "<td style=\"background:#1d1;\">Yes</td>"; } else { print "<td style=\"background:#f33;\">No</td>"; }
 	    $param="reconnect" . $i;
 	    if(isset($configs[$param])) { $t = $configs[$param]; } else { $t = 0; }
 	    if($t > 12){ $t = 12; }
@@ -58,6 +58,7 @@ $MYCALL=strtoupper($callsign);
 		while ($linkLine = fgets($linkLog)) {
 		    //$statimg = "<img src=\"images/20red.png\">";
 		    $statimg = "Down";
+		    $bkgcolor = "#f33";
                     $linkDate = "&nbsp;";
                     $protocol = "&nbsp;";
                     $linkType = "&nbsp;";
@@ -69,13 +70,14 @@ $MYCALL=strtoupper($callsign);
 // 2012-10-12 17:56:10: DCS link - Type: Repeater Rptr: DB0RPL B Refl: DCS015 B Dir: Outgoing
                     if(preg_match_all('/^(.{19}).*(D[A-Za-z]*).*Type: ([A-Za-z]*).*Rptr: (.{8}).*Refl: (.{8}).*Dir: Outgoing$/',$linkLine,$linx) > 0){
 			$statimg = "Up";
+			$bkgcolor = "#1d1";
 			$linkDate = date("d-M-Y H:i:s", strtotime(substr($linx[1][0],0,19)));
                         $protocol = $linx[2][0];
                         $linkType = $linx[3][0];
                         $linkRptr = $linx[4][0];
                         $linkRefl = $linx[5][0];
 			if($linkRptr == $rptrcall){
-			    print "<td>$statimg</td>";
+			    print "<td style=\"background:".$bkgcolor.";\">$statimg</td>";
 			    print "<td>".str_replace(' ', '&nbsp;', substr($linkRefl,0,8))."</td>";
 			    print "<td>$protocol</td>";
 			    print "<td>Outgoing</td>";
@@ -95,7 +97,7 @@ $MYCALL=strtoupper($callsign);
 	    }
 
 	    if ($tr == 1){
-		print"<td>Down</td><td>None</td><td>--</td><td>----</td><td>----</td></tr>\n";
+		print"<td style=\"background:#f33;\">Down</td><td>None</td><td>--</td><td>----</td><td>----</td></tr>\n";
 	    }
 // 00000000001111111111222222222233333333334444444444555555555566666666667777777777888888888899999999990000000000111111111122
 // 01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901
@@ -104,6 +106,7 @@ $MYCALL=strtoupper($callsign);
 	    if (file_exists($linkLogPath)  && ($linkLog = fopen($linkLogPath,'r'))) {
 		while ($linkLine = fgets($linkLog)) {
 		    $statimg = "Down";
+		    $bkgcolor = "#f33";
                     $linkDate = "&nbsp;";
                     $protocol = "&nbsp;";
                     $linkType = "&nbsp;";
@@ -111,6 +114,7 @@ $MYCALL=strtoupper($callsign);
                     $linkRefl = "&nbsp;";
                     if(preg_match_all('/^(.{19}).*(D[A-Za-z]*).*Type: ([A-Za-z]*).*Rptr: (.{8}).*Refl: (.{8}).*Dir: Incoming$/',$linkLine,$linx) > 0){
 			$statimg = "Up";
+			$bkgcolor = "#1d1";
 			$linkDate = date("d-M-Y H:i:s", strtotime(substr($linx[1][0],0,19)));
                         $protocol = $linx[2][0];
                         $linkType = $linx[3][0];
@@ -122,7 +126,7 @@ $MYCALL=strtoupper($callsign);
 			    print "<tr>";
 			    print "<td>".str_replace(' ', '&nbsp;', substr($rptrcall,0,8))."</td>";
 			    print "<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>";
-			    print "<td>$statimg</td>";
+			    print "<td style=\"background:".$bkgcolor.";\">$statimg</td>";
 			    print "<td>".str_replace(' ', '&nbsp;', substr($linkRefl,0,8))."</td>";
 			    print "<td>$protocol</td>";
 			    print "<td>Incoming</td>";
@@ -147,6 +151,7 @@ $MYCALL=strtoupper($callsign);
         if (file_exists($linkLogPath) && ($linkLog = fopen($linkLogPath,'r'))) {
                 while ($linkLine = fgets($linkLog)) {
                     $statimg = "Down";
+		    $bkgcolor = "#f33";
                     $linkDate = "&nbsp;";
                     $protocol = "&nbsp;";
                     $linkType = "&nbsp;";
@@ -154,6 +159,7 @@ $MYCALL=strtoupper($callsign);
                     $linkRefl = "&nbsp;";
                     if(preg_match_all('/^(.{19}).*(D[A-Za-z]*).*Type: ([A-Za-z]*).*User: (.[^\s]+).*Dir: Incoming$/',$linkLine,$linx) > 0){
                         $statimg = "Up";
+			$bkgcolor = "#1d1";
                         $linkDate = date("d-M-Y H:i:s", strtotime(substr($linx[1][0],0,19)));
                         $protocol = $linx[2][0];
                         $linkType = $linx[3][0];
@@ -163,7 +169,7 @@ $MYCALL=strtoupper($callsign);
 			    print "<tr>";
                             print "<td>".str_replace(' ', '&nbsp;', substr($rptrcall,0,8))."</td>";
                             print "<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>";
-                            print "<td>$statimg</td>";
+                            print "<td style=\"background:".$bkgcolor.";\">$statimg</td>";
                             print "<td>".str_replace(' ', '&nbsp;', substr($linkRptr,0,8))."</td>";
                             print "<td>$protocol</td>";
                             print "<td>Incoming</td>";
