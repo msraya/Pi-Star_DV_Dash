@@ -348,8 +348,9 @@ input.toggle-round-flat:checked + label:after {
 }
 
 input.toggle-round-flat:focus + label {
+    box-shadow: 0 0 2px <?php echo $backgroundBanners; ?>;
     padding: 1px;
-    border: 1px dotted black;
+    border: 1px solid <?php echo $backgroundBanners; ?>;
     z-index: 5;
 }
 
