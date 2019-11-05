@@ -290,7 +290,7 @@ h1 {
 .toggle {
     position: absolute;
     margin-left: -9999px;
-    visibility: hidden;
+    z-index: 0;
 }
 
 .toggle + label {
@@ -302,6 +302,7 @@ h1 {
 
 input.toggle-round-flat + label {
     padding: 1px;
+    border: 1px solid transparent;
     width: 33px;
     height: 18px;
     background-color: #dddddd;
@@ -344,6 +345,12 @@ input.toggle-round-flat:checked + label {
 input.toggle-round-flat:checked + label:after {
     margin-left: 14px;
     background-color: <?php echo $backgroundBanners; ?>;
+}
+
+input.toggle-round-flat:focus + label {
+    padding: 1px;
+    border: 1px dotted black;
+    z-index: 5;
 }
 
 /* put the same color as in left vertical status */
