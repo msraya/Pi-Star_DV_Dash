@@ -65,7 +65,6 @@ body, font {
     margin: 0px;
 }
 
-
 .footer {
     background : <?php echo $backgroundBanners; ?>;
     text-decoration : none;
