@@ -238,7 +238,7 @@ $MYCALL=strtoupper($callsign);
     <meta http-equiv="Expires" content="0" />
     <title><?php echo "$MYCALL"." - ".$lang['digital_voice']." ".$lang['dashboard']." - ".$lang['configuration'];?></title>
     <link rel="stylesheet" type="text/css" href="/css/font-awesome-4.7.0/css/font-awesome.min.css" />
-    <link rel="stylesheet" type="text/css" href="/css/pistar-css.php?version=0.92" />
+    <link rel="stylesheet" type="text/css" href="/css/pistar-css.php?version=0.94" />
     <script type="text/javascript">
 	function disablesubmitbuttons() {
 		var inputs = document.getElementsByTagName('input');
@@ -302,7 +302,7 @@ $MYCALL=strtoupper($callsign);
 if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 //HTML output starts here
 ?>
-    <b><?php echo $lang['hardware_info'];?></b>
+    <h2><?php echo $lang['hardware_info'];?></h2>
     <table style="table-layout: fixed;">
     <tr>
     <th><a class="tooltip" href="#"><?php echo $lang['hostname'];?><br /><span><b>System IP Address:<br /><?php echo str_replace(',', ',<br />', exec('hostname -I'));?></b></span></a></th>
@@ -2839,7 +2839,7 @@ else:
 </form>
 
 <form id="config" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-	<div><b><?php echo $lang['control_software'];?></b></div>
+	<h2><?php echo $lang['control_software'];?></h2>
     <table>
     <tr>
     <th width="200"><a class="tooltip" href="#"><?php echo $lang['setting'];?><span><b>Setting</b></span></a></th>
@@ -2887,7 +2887,7 @@ else:
     <input type="hidden" name="MobileGPS" value="OFF" />
     <input type="hidden" name="pocsagWhitelist" value="<?php if (isset($configdapnetgw['General']['WhiteList'])) { echo $configdapnetgw['General']['WhiteList']; } else { echo ""; } ?>" />
     <input type="hidden" name="pocsagBlacklist" value="<?php if (isset($configdapnetgw['General']['BlackList'])) { echo $configdapnetgw['General']['BlackList']; } else { echo ""; } ?>" />
-	<div><b><?php echo $lang['mmdvmhost_config'];?></b></div>
+	<h2><?php echo $lang['mmdvmhost_config'];?></h2>
     <table>
     <tr>
     <th width="200"><a class="tooltip" href="#"><?php echo $lang['setting'];?><span><b>Setting</b></span></a></th>
@@ -3078,7 +3078,7 @@ else:
     </table>
 	<div><input type="button" value="<?php echo $lang['apply'];?>" onclick="submitform()" /><br /><br /></div>
     <?php } ?>
-	<div><b><?php echo $lang['general_config'];?></b></div>
+	<h2><?php echo $lang['general_config'];?></h2>
     <table>
     <tr>
     <th width="200"><a class="tooltip" href="#"><?php echo $lang['setting'];?><span><b>Setting</b></span></a></th>
@@ -3265,7 +3265,7 @@ else:
 	<div><input type="button" value="<?php echo $lang['apply'];?>" onclick="submitform()" /><br /><br /></div>
     <?php if (file_exists('/etc/dstar-radio.mmdvmhost') && $configmmdvm['DMR']['Enable'] == 1) {
     $dmrMasterFile = fopen("/usr/local/etc/DMR_Hosts.txt", "r"); ?>
-	<div><b><?php echo $lang['dmr_config'];?></b></div>
+	<h2><?php echo $lang['dmr_config'];?></h2>
     <input type="hidden" name="dmrEmbeddedLCOnly" value="OFF" />
     <input type="hidden" name="dmrDumpTAData" value="OFF" />
     <input type="hidden" name="dmrGatewayXlxEn" value="OFF" />
@@ -3614,7 +3614,7 @@ else:
 <?php } ?>
 
 <?php if (file_exists('/etc/dstar-radio.dstarrepeater') || $configmmdvm['D-Star']['Enable'] == 1) { ?>
-	<div><b><?php echo $lang['dstar_config'];?></b></div>
+	<h2><?php echo $lang['dstar_config'];?></h2>
 	<input type="hidden" name="confTimeAnnounce" value="OFF" />
 	<input type="hidden" name="confHostFilesNoDExtra" value="OFF" />
     <table>
@@ -3789,7 +3789,7 @@ fclose($dextraFile);
 $ysfHosts = fopen("/usr/local/etc/YSFHosts.txt", "r"); ?>
 	<input type="hidden" name="confHostFilesYSFUpper" value="OFF" />
 	<input type="hidden" name="wiresXCommandPassthrough" value="OFF" />
-	<div><b><?php echo $lang['ysf_config'];?></b></div>
+	<h2><?php echo $lang['ysf_config'];?></h2>
     <table>
     <tr>
     <th width="200"><a class="tooltip" href="#"><?php echo $lang['setting'];?><span><b>Setting</b></span></a></th>
@@ -4043,7 +4043,7 @@ $ysfHosts = fopen("/usr/local/etc/YSFHosts.txt", "r"); ?>
 <?php if (file_exists('/etc/dstar-radio.mmdvmhost') && $configmmdvm['P25 Network']['Enable'] == 1) {
 $p25Hosts = fopen("/usr/local/etc/P25Hosts.txt", "r");
 	?>
-	<div><b><?php echo $lang['p25_config'];?></b></div>
+	<h2><?php echo $lang['p25_config'];?></h2>
     <table>
     <tr>
     <th width="200"><a class="tooltip" href="#"><?php echo $lang['setting'];?><span><b>Setting</b></span></a></th>
@@ -4093,7 +4093,7 @@ $p25Hosts = fopen("/usr/local/etc/P25Hosts.txt", "r");
 <?php } ?>
 	
 <?php if (file_exists('/etc/dstar-radio.mmdvmhost') && ($configmmdvm['NXDN Network']['Enable'] == 1 || $configdmr2nxdn['Enabled']['Enabled'] == 1) ) { ?>
-	<div><b><?php echo $lang['nxdn_config'];?></b></div>
+	<h2><?php echo $lang['nxdn_config'];?></h2>
     <table>
       <tr>
         <th width="200"><a class="tooltip" href="#"><?php echo $lang['setting'];?><span><b>Setting</b></span></a></th>
@@ -4202,7 +4202,7 @@ $p25Hosts = fopen("/usr/local/etc/P25Hosts.txt", "r");
 <!-- Mobile GPS-->
 
 <?php if ( $configmmdvm['POCSAG']['Enable'] == 1 ) { ?>
-	<div><b><?php echo $lang['pocsag_config'];?></b></div>
+	<h2><?php echo $lang['pocsag_config'];?></h2>
     <table>
       <tr>
         <th width="200"><a class="tooltip" href="#"><?php echo $lang['setting'];?><span><b>Setting</b></span></a></th>
@@ -4257,7 +4257,7 @@ $p25Hosts = fopen("/usr/local/etc/P25Hosts.txt", "r");
 	<div><input type="button" value="<?php echo $lang['apply'];?>" onclick="submitform()" /><br /><br /></div>
 <?php } ?>	
 
-	<div><b><?php echo $lang['fw_config'];?></b></div>
+	<h2><?php echo $lang['fw_config'];?></h2>
     <table>
     <tr>
     <th width="200"><a class="tooltip" href="#"><?php echo $lang['setting'];?><span><b>Setting</b></span></a></th>
@@ -4346,13 +4346,13 @@ $p25Hosts = fopen("/usr/local/etc/P25Hosts.txt", "r");
 	if ( file_exists('/sys/class/net/wlan0') || file_exists('/sys/class/net/wlan1') || file_exists('/sys/class/net/wlan0_ap') ) {
 echo '
 <br />
-    <b>'.$lang['wifi_config'].'</b>
+    <h2>'.$lang['wifi_config'].'</h2>
     <table><tr><td>
     <iframe frameborder="0" scrolling="auto" name="wifi" src="wifi.php?page=wlan0_info" width="100%" onload="javascript:resizeIframe(this);">If you can see this message, your browser does not support iFrames, however if you would like to see the content please click <a href="wifi.php?page=wlan0_info">here</a>.</iframe>
     </td></tr></table>'; } ?>
 
 <br />
-	<div><b><?php echo $lang['remote_access_pw'];?></b></div>
+	<h2><?php echo $lang['remote_access_pw'];?></h2>
     <form id="adminPassForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
     <table>
     <tr><th width="200"><?php echo $lang['user'];?></th><th colspan="3"><?php echo $lang['password'];?></th></tr>
