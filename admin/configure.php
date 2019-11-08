@@ -4150,7 +4150,7 @@ $p25Hosts = fopen("/usr/local/etc/P25Hosts.txt", "r");
 <!-- Mobile GPS-->
 <!-- TRANSLAGE -->
 <?php if ( $configmmdvm['Mobile GPS']['Enable'] == 1 ) { ?>
-	<div><b>Mobile GPS Configuration</b></div>
+	<h2>Mobile GPS Configuration</h2>
     <table>
       <tr>
         <th width="200"><a class="tooltip" href="#"><?php echo $lang['setting'];?><span><b>Setting</b></span></a></th>
