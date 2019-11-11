@@ -65,6 +65,7 @@ for ($i = 0; $i < $maxCount; $i++) {
 	}
 	
 	// Target
+	if (strlen($listElem[4]) == 1) { $listElem[4] = str_pad($listElem[4], 8, " ", STR_PAD_LEFT); }
 	if (substr($listElem[4], 0, 6) === 'CQCQCQ' ) {
 	    echo "<td align=\"left\">$listElem[4]</td>";
 	} else {
