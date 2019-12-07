@@ -172,11 +172,20 @@ Signal Level : ' . $strSignalLevel . '<br />
 <br />';
 if ($strTxPower) { echo 'Transmit Power : ' . $strTxPower .'<br />'."\n"; } else { echo "<br />\n"; }
 if ($strLinkQuality) { echo 'Link Quality : ' . $strLinkQuality . '<br />'."\n"; } else { echo "<br />\n"; }
+echo '<br />'."\n";
+if (file_exists('/etc/wpa_supplicant/wpa_supplicant.conf')) {
+	exec('grep "country" /etc/wpa_supplicant/wpa_supplicant.conf', $wifiCountryArr);
+	}
+if (isset($wifiCountryArr[0])) {
+	$wifiCountry = explode("=", $wifiCountryArr[0]);
+	if (isset($wifiCountry[1])) {
+		echo 'WiFi Country : '.$wifiCountry[1]."<br />\n";
+		}
+	}
 echo '<br />
 <br />
-<br />
-<br />
 </div>
+<br />
 </div>
 <div class="intfooter">Information provided by ifconfig and iwconfig</div>';
 	break;
@@ -186,6 +195,11 @@ echo '<br />
 		$ssid = array();
 		$psk = array();
 		foreach($return as $a) {
+			if(preg_match('/country=/i',$a)) {
+				$wifiCountryArr = explode("=",$a);
+				$wifiCountry = $wifiCountryArr[1];
+			}
+
 			// Make sure we only put ONE SSID and matching PSK into the arrays
                         if ( ( isset($curssidplain) || isset($curssidalt) ) && ( isset($curpskplain) || isset($curpskalt) ) ) {
                                 if (isset($curssidplain)) { $ssid[] = $curssidplain; unset($curssidplain); unset($curssidalt); }
@@ -222,7 +236,18 @@ echo '<br />
 		$output = '<form method="post" action="'.$_SERVER['PHP_SELF'].'?page=wpa_conf" id="wpa_conf_form">
 <input type="button" value="WiFi Info" name="wlan0_info" onclick="document.location=\'?page=\'+this.name" /><br />
 <input type="hidden" id="Networks" name="Networks" />
-<div class="network" id="networkbox">';
+<div class="network" id="networkbox">'."\n";
+		if (!isset($wifiCountry)) { $wifiCountry = "JP"; }
+		$output .= 'WiFi Regulatory Domain (Country Code) : <select name="wifiCountryCode">'."\n";
+		exec('regdbdump /lib/crda/regulatory.bin | fgrep country | cut -b 9-10', $regDomains);
+		foreach($regDomains as $regDomain) {
+			if ($regDomain == $wifiCountry) {
+				$output .= '<option value="'.$regDomain.'" selected>'.$regDomain.'</option>'."\n";
+			} else {
+				$output .= '<option value="'.$regDomain.'">'.$regDomain.'</option>'."\n";
+			}
+		}
+		$output .= '</select><br />'."\n";
 
 		for($ssids = 0; $ssids < $numSSIDs; $ssids++) {
 			$output .= '<div id="Networkbox'.$ssids.'" class="NetworkBoxes">Network '.$ssids."\n";
@@ -243,7 +268,7 @@ echo '<br />
 	echo '<script type="text/Javascript">UpdateNetworks()</script>';
 
 	if(isset($_POST['SaveWPAPSKSettings'])) {
-		$config = "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\nupdate_config=1\nap_scan=1\nfast_reauth=1\ncountry=JP\n\n";
+		$config = "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\nupdate_config=1\nap_scan=1\nfast_reauth=1\ncountry=".$_POST['wifiCountryCode']."\n\n";
 		$networks = $_POST['Networks'];
 
 		//Reworked WiFi Starts Here
