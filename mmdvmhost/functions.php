@@ -391,6 +391,7 @@ function getDAPNETGatewayLog($myRIC) {
 // I: 1970-01-01 00:00:00.000 MMDVM protocol version: 1, description: Nano_hotSPOT-v1.3.3 20180224 ADF7021 FW by CA6JAU GitID #62323e7
 // I: 1970-01-01 00:00:00.000 MMDVM protocol version: 1, description: Nano-Spot-v1.3.3 20180224 ADF7021 FW by CA6JAU GitID #62323e7
 // I: 1970-01-01 00:00:00.000 MMDVM protocol version: 1, description: Nano_DV-v1.4.3 20180716 12.2880MHz ADF7021 FW by CA6JAU GitID #6729d23
+// I: 2020-01-08 09:23:22.268 MMDVM protocol version: 1, description: OpenGD77_HS v0.0.73 GitID #ce8217f
 
 function getDVModemFirmware() {
 	$logMMDVMNow = MMDVMLOGPATH."/".MMDVMLOGPREFIX."-".gmdate("Y-m-d").".log";
@@ -444,6 +445,9 @@ function getDVModemFirmware() {
 		}
 		if (strpos($logLine, 'description: OpenGD77 Hotspot')) {
 			$modemFirmware = "OpenGD77:".strtok(substr($logLine, 83, 12), ' ');
+		}
+		if (strpos($logLine, 'description: OpenGD77_HS ')) {
+			$modemFirmware = "OpenGD77:".strtok(substr($logLine, 79, 12), ' ');
 		}
 	}
 	return $modemFirmware;
