@@ -1793,6 +1793,12 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $configmmdvm['Modem']['Port'] = "/dev/ttyACM0";
 	    $configmmdvm['General']['Duplex'] = 0;
 	    $configmmdvm['DMR Network']['Slot1'] = 0;
+
+	    if ((empty($_POST['mmdvmDisplayType']) == TRUE) || (escapeshellcmd($_POST['mmdvmDisplayType']) == "None"))
+	    {
+		$configmmdvm['General']['Display'] = "CAST";
+		unset($_POST['mmdvmDisplayType']);
+	    }
 	  }
 
 	  // Set the Service start delay
