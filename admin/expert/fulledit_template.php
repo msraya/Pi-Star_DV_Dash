@@ -41,7 +41,7 @@ require_once('../config/version.php');
 		    // Open the file and write the data
 		    $filepath = $tempfile;
 		    $fh = fopen($filepath, 'w');
-		    fwrite($fh, $_POST['data']);
+		    fwrite($fh, str_replace("\r", "", $_POST['data']));;
 		    fclose($fh);
 		    
 		    exec('sudo mount -o remount,rw /');
