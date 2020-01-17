@@ -7,9 +7,22 @@ $configPistarRelease = array();
 $configPistarRelease = parse_ini_file($pistarReleaseConfig, true);
 // Load the Version Info
 require_once('config/version.php');
+include_once('mmdvmhost/tools.php');
 
 // Retrieve server information
 //$system = system_information();
+
+function getStatusClass($status, $disabled = false) {
+    if ($status) {
+	echo '<td class="active-mode-cell" align="left">';
+    }
+    else {
+	if ($disabled)
+	    echo '<td class="disabled-mode-cell" align="left">';
+	else
+	    echo '<td class="inactive-mode-cell" align="left">';
+    }
+}
 
 function system_information() {
     @list($system, $host, $kernel) = preg_split('/[\s,]+/', php_uname('a'), 5);
@@ -167,47 +180,47 @@ function formatSize( $bytes ) {
 		    echo "  <tr><td><b>Binary</b></td><td><b>Version</b></td></tr>\n";
 		    if (is_executable('/usr/local/bin/MMDVMHost')) {
 			$MMDVMHost_Ver = exec('/usr/local/bin/MMDVMHost -v | cut -d\' \' -f 3-');
-			echo "  <tr><td align=\"left\">MMDVMHost</td><td align=\"left\">".$MMDVMHost_Ver."</td></tr>\n";
+			echo "  <tr>";getStatusClass(isProcessRunning("MMDVMHost"), true); echo "MMDVMHost</td><td align=\"left\">".$MMDVMHost_Ver."</td></tr>\n";
 		    }
 		    if (is_executable('/usr/local/bin/DMRGateway')) {
 			$DMRGateway_Ver = exec('/usr/local/bin/DMRGateway -v | cut -d\' \' -f 3-');
-			echo "  <tr><td align=\"left\">DMRGateway</td><td align=\"left\">".$DMRGateway_Ver."</td></tr>\n";
+			echo "  <tr>";getStatusClass(isProcessRunning("DMRGateway"), true); echo "DMRGateway</td><td align=\"left\">".$DMRGateway_Ver."</td></tr>\n";
 		    }
 		    if (is_executable('/usr/local/bin/DMR2YSF')) {
 			$DMR2YSF_Ver = exec('/usr/local/bin/DMR2YSF -v | cut -d\' \' -f 3-');
-			echo "  <tr><td align=\"left\">DMR2YSF</td><td align=\"left\">".$DMR2YSF_Ver."</td></tr>\n";
+			echo "  <tr>";getStatusClass(isProcessRunning("DMR2YSF"), true); echo "DMR2YSF</td><td align=\"left\">".$DMR2YSF_Ver."</td></tr>\n";
 		    }
 		    if (is_executable('/usr/local/bin/DMR2NXDN')) {
 			$DMR2NXDN_Ver = exec('/usr/local/bin/DMR2NXDN -v | cut -d\' \' -f 3-');
-			echo "  <tr><td align=\"left\">DMR2NXDN</td><td align=\"left\">".$DMR2NXDN_Ver."</td></tr>\n";
+			echo "  <tr>";getStatusClass(isProcessRunning("DMR2NXDN"), true); echo "DMR2NXDN</td><td align=\"left\">".$DMR2NXDN_Ver."</td></tr>\n";
 		    }
 		    if (is_executable('/usr/local/bin/YSFGateway')) {
 			$YSFGateway_Ver = exec('/usr/local/bin/YSFGateway -v | cut -d\' \' -f 3-');
-			echo "  <tr><td align=\"left\">YSFGateway</td><td align=\"left\">".$YSFGateway_Ver."</td></tr>\n";
+			echo "  <tr>";getStatusClass(isProcessRunning("YSFGateway"), true); echo "YSFGateway</td><td align=\"left\">".$YSFGateway_Ver."</td></tr>\n";
 		    }
 		    if (is_executable('/usr/local/bin/YSF2DMR')) {
 			$YSF2DMR_Ver = exec('/usr/local/bin/YSF2DMR -v | cut -d\' \' -f 3-');
-			echo "  <tr><td align=\"left\">YSF2DMR</td><td align=\"left\">".$YSF2DMR_Ver."</td></tr>\n";
+			echo "  <tr>";getStatusClass(isProcessRunning("YSF2DMR"), true); echo "YSF2DMR</td><td align=\"left\">".$YSF2DMR_Ver."</td></tr>\n";
 		    }
 		    if (is_executable('/usr/local/bin/YSF2P25')) {
 			$YSF2P25_Ver = exec('/usr/local/bin/YSF2P25 -v | cut -d\' \' -f 3-');
-			echo "  <tr><td align=\"left\">YSF2P25</td><td align=\"left\">".$YSF2P25_Ver."</td></tr>\n";
+			echo "  <tr>";getStatusClass(isProcessRunning("YSF2P25"), true); echo "YSF2P25</td><td align=\"left\">".$YSF2P25_Ver."</td></tr>\n";
 		    }
 		    if (is_executable('/usr/local/bin/YSF2NXDN')) {
 			$YSF2NXDN_Ver = exec('/usr/local/bin/YSF2NXDN -v | cut -d\' \' -f 3-');
-			echo "  <tr><td align=\"left\">YSF2NXDN</td><td align=\"left\">".$YSF2NXDN_Ver."</td></tr>\n";
+			echo "  <tr>";getStatusClass(isProcessRunning("YSF2NXDN"), true); echo "YSF2NXDN</td><td align=\"left\">".$YSF2NXDN_Ver."</td></tr>\n";
 		    }
 		    if (is_executable('/usr/local/bin/P25Gateway')) {
 			$P25Gateway_Ver = exec('/usr/local/bin/P25Gateway -v | cut -d\' \' -f 3-');
-			echo "  <tr><td align=\"left\">P25Gateway</td><td align=\"left\">".$P25Gateway_Ver."</td></tr>\n";
+			echo "  <tr>";getStatusClass(isProcessRunning("P25Gateway"), true); echo "P25Gateway</td><td align=\"left\">".$P25Gateway_Ver."</td></tr>\n";
 		    }
 		    if (is_executable('/usr/local/bin/NXDNGateway')) {
 			$NXDNGateway_Ver = exec('/usr/local/bin/YSFGateway -v | cut -d\' \' -f 3-');
-			echo "  <tr><td align=\"left\">NXDNGateway</td><td align=\"left\">".$NXDNGateway_Ver."</td></tr>\n";
+			echo "  <tr>";getStatusClass(isProcessRunning("NXDNGateway"), true); echo "NXDNGateway</td><td align=\"left\">".$NXDNGateway_Ver."</td></tr>\n";
 		    }
 		    if (is_executable('/usr/local/bin/DAPNETGateway')) {
 			$DAPNETGateway_Ver = exec('/usr/local/bin/DAPNETGateway -v | cut -d\' \' -f 3-');
-			echo "  <tr><td align=\"left\">DAPNETGateway</td><td align=\"left\">".$DAPNETGateway_Ver."</td></tr>\n";
+			echo "  <tr>";getStatusClass(isProcessRunning("DAPNETGateway"), true); echo "DAPNETGateway</td><td align=\"left\">".$DAPNETGateway_Ver."</td></tr>\n";
 		    }
 		    ?>
 		</table>
