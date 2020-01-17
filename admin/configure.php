@@ -3289,7 +3289,7 @@ else:
     <table>
     <tr>
     <th width="200"><a class="tooltip" href="#"><?php echo $lang['setting'];?><span><b>Setting</b></span></a></th>
-    <th><a class="tooltip" href="#"><?php echo $lang['value'];?><span><b>Value</b>The current value from the<br />configuration files</span></a></th>
+    <th colspan="2"><a class="tooltip" href="#"><?php echo $lang['value'];?><span><b>Value</b>The current value from the<br />configuration files</span></a></th>
     </tr>
     <tr>
     <td align="left"><a class="tooltip2" href="#"><?php echo $lang['dmr_master'];?>:<span><b>DMR Master (MMDVMHost)</b>Set your prefered DMR master here</span></a></td>
@@ -3402,7 +3402,7 @@ else:
     <tr>
     <td align="left"><a class="tooltip2" href="#"><?php echo $lang['dmr_plus_network'];?>:<span><b>DMR+ Network</b>Set your options= for DMR+ here</span></a></td>
     <td align="left">
-    Options=<input type="text" name="dmrNetworkOptions" size="65" maxlength="100" value="<?php if (isset($configdmrgateway['DMR Network 2']['Options'])) { echo $configdmrgateway['DMR Network 2']['Options']; } ?>" />
+    Options=<input type="text" name="dmrNetworkOptions" size="40" maxlength="100" value="<?php if (isset($configdmrgateway['DMR Network 2']['Options'])) { echo $configdmrgateway['DMR Network 2']['Options']; } ?>" />
     </td>
     </tr>
     <tr>
@@ -3557,7 +3557,7 @@ else:
       echo '    <tr>
     <td align="left"><a class="tooltip2" href="#">'.$lang['dmr_plus_network'].':<span><b>DMR+ Network</b>Set your options= for DMR+ here</span></a></td>
     <td align="left">
-    Options=<input type="text" name="dmrNetworkOptions" size="65" maxlength="100" value="';
+    Options=<input type="text" name="dmrNetworkOptions" size="40" maxlength="100" value="';
 	if (isset($configmmdvm['DMR Network']['Options'])) { echo $configmmdvm['DMR Network']['Options']; }
         echo '" />
     </td>
@@ -3948,7 +3948,7 @@ $ysfHosts = fopen("/usr/local/etc/YSFHosts.txt", "r"); ?>
     <tr>
 	<td align="left"><a class="tooltip2" href="#">DMR Options:<span><b>DMR Options (YSF2DMR)</b>Set your Options= for the DMR master above</span></a></td>
 	<td align="left" colspan="2">
-	    Options=<input type="text" name="ysf2dmrNetworkOptions" size="65" maxlength="100" value="<?php if (isset($configysf2dmr['DMR Network']['Options'])) { echo $configysf2dmr['DMR Network']['Options']; } ?>" />
+	    Options=<input type="text" name="ysf2dmrNetworkOptions" size="40" maxlength="100" value="<?php if (isset($configysf2dmr['DMR Network']['Options'])) { echo $configysf2dmr['DMR Network']['Options']; } ?>" />
 	</td>
     </tr>
     <tr>
