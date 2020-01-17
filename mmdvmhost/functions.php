@@ -150,7 +150,7 @@ function getModeClass($status, $disabled = false) {
     }
     else {
 	if ($disabled)
-	    echo "<td class=\"disabled-mode-cell\">";
+	    echo '<td class="disabled-mode-cell">';
 	else
 	    echo '<td class="inactive-mode-cell" style="width:50%;">';
     }
