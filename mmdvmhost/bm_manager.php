@@ -116,7 +116,7 @@ if ( $testMMDVModeDMR == 1 ) {
     echo '<script type="text/javascript">setTimeout(function() { window.location=window.location;},3000);</script>';
   else: // Do this when we are not handling post data
     if (isset($bmAPIkey)) {
-      echo '<b>BrandMeister Manager</b>'."\n";
+      echo '<a href="https://brandmeister.network/?page=hotspot&amp;id='.$dmrID.'" target="_new" style="color:inherit;" ><b>BrandMeister Manager</b></a>'."\n";
       echo '<form action="'.htmlentities($_SERVER['PHP_SELF']).'" method="post">'."\n";
       echo '<table>
       <tr>
