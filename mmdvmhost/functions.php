@@ -1,4 +1,13 @@
 <?php
+function get_string_between($string, $start, $end){
+	$string = " ".$string;
+	$ini = strpos($string,$start);
+	if ($ini == 0) return "";
+	$ini += strlen($start);   
+	$len = strpos($string,$end,$ini) - $ini;
+	return substr($string,$ini,$len);
+}
+
 function getMMDVMConfig() {
 	// loads /etc/mmdvmhost into array for further use
 	$conf = array();
@@ -888,6 +897,7 @@ function getActualLink($logLines, $mode) {
 	// returns actual link state of specific mode
 	//M: 2016-05-02 07:04:10.504 D-Star link status set to "Verlinkt zu DCS002 S"
 	//M: 2016-04-03 16:16:18.638 DMR Slot 2, received network voice header from 4000 to 2625094
+	//M: 2020-01-22 01:54:50.780 DMR Slot 2, received network voice header from 4000 to TG 9
 	//M: 2016-04-03 19:30:03.099 DMR Slot 2, received network voice header from 4020 to 2625094
 	//M: 2017-09-03 08:10:42.862 DMR Slot 2, received network data header from M6JQD to TG 9, 5 blocks
 	switch ($mode) {
@@ -898,39 +908,25 @@ function getActualLink($logLines, $mode) {
     		return "No D-Star Network";
     	}
         break;
+
     case "DMR Slot 1":
-        foreach ($logLines as $logLine) {
-        	if(strpos($logLine,"unable to decode the network CSBK")) {
-				continue;
-			} else if(substr($logLine, 27, strpos($logLine,",") - 27) == "DMR Slot 1") {
-				$to = "";
-				if (strpos($logLine,"to")) {
-					$to = trim(substr($logLine, strpos($logLine,"to") + 3));
-				}
-				if ($to !== "") {
-					if (substr($to, 0, 3) !== 'TG ') {
-						continue;
-					}
-					if ($to === "TG 4000") {
-						return "No TG";
-					}
-					if (strpos($to, ',') !== false) {
-						$to = substr($to, 0, strpos($to, ','));
-					}
-					return $to;
-				}
-	        	}
-		}
-		return "No TG";
-        break;
     case "DMR Slot 2":
         foreach ($logLines as $logLine) {
         	if(strpos($logLine,"unable to decode the network CSBK")) {
 				continue;
-			} else if(substr($logLine, 27, strpos($logLine,",") - 27) == "DMR Slot 2") {
+			} else if(substr($logLine, 27, strpos($logLine,",") - 27) == $mode) {
 				$to = "";
+				$from = "";
+				if (strpos($logLine, "from") != FALSE) {
+					$from = trim(get_string_between($logLine, "from", "to"));
+				}
 				if (strpos($logLine,"to")) {
 					$to = trim(substr($logLine, strpos($logLine,"to") + 3));
+				}
+				if ($from !== "") {
+					if ($from === "4000") {
+						return "No TG";
+					}
 				}
 				if ($to !== "") {
 					if (substr($to, 0, 3) !== 'TG ') {
@@ -944,7 +940,7 @@ function getActualLink($logLines, $mode) {
 					}
 					return $to;
 				}
-        		}
+			}
 		}
 		return "No TG";
         break;
