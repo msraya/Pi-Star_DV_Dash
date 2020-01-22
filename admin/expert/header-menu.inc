@@ -99,6 +99,7 @@
 			    <ul class="dropdown">
 				<li class="subs"><a href="services.php?action=stop">Stop Services</a></li>
 				<li class="subs"><a href="services.php?action=restart">Restart Services</a></li>
+				<li class="subs"><a href="services.php?action=killmmdvmhost">Kill MMDVMHost</a></li>
 			    </ul>
 			</li>
 			<li class="subs"><a href="edit_dashboard.php">CSS Tool</a></li>

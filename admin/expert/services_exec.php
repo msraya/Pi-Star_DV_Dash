@@ -8,6 +8,9 @@ switch ($action) {
     case "restart":
 	$cmdresult = exec('sudo /usr/local/sbin/pistar-services restart', $cmdoutput, $retvalue);
 	break;
+    case "killmmdvmhost":
+	$cmdresult = exec('sudo /usr/bin/killall -q -9 MMDVMHost', $cmdoutput, $retvalue);
+	break;
     default:
 	$cmdoutput = array('error !');
 }
