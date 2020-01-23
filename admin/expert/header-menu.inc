@@ -95,7 +95,7 @@
 		<li class="has-subs"><a href="#">Tools</a>
 		    <ul class="dropdown">
 			<!-- Services Sub -->
-			<li class="subs has-subs"><a href="#">Services</a>
+			<li class="subs has-subs"><a href="#">Pi-Star Services</a>
 			    <ul class="dropdown">
 				<li class="subs"><a href="services.php?action=stop">Stop Services</a></li>
 				<li class="subs"><a href="services.php?action=restart">Restart Services</a></li>
