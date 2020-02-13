@@ -80,8 +80,8 @@ if (isset($configdapnetapi['DAPNETAPI']['USER']) && (empty($configdapnetapi['DAP
 			<th><a class=tooltip href="#">Action<span><b>Send the message</b></span></a></th>
 		</tr>'."\n";
         echo '  <tr>';
-        echo '    <td><input type="text" name="dapToCallsign" size="10" maxlength="70" title="Define the Callsign(s) here." value="" /></td>';
-        echo '    <td rowspan="2"><textarea maxlength="'.$maxlength.'" name="dapMsgContent" cols="55" rows="3" style="overflow:scroll;" value="" /></textarea></td>';
+        echo '    <td><input type="text" name="dapToCallsign" size="8" maxlength="70" title="Define the Callsign(s) here." value="" /></td>';
+        echo '    <td rowspan="2"><textarea maxlength="'.$maxlength.'" name="dapMsgContent" cols="53" rows="3" style="overflow:scroll;" value="" /></textarea></td>';
         echo '    <td rowspan="2" style="vertical-align:bottom;padding:5px;"><input type="submit" value="Send" name="dapSubmit" /></td>';
         echo '  </tr>'."\n";
         echo '  <tr>';
