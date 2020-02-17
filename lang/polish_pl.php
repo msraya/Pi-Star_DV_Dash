@@ -1,8 +1,8 @@
 <?php
 //
 // Polska PL Language Pack
-// Łukasz Misiura (SQ9LM)
-// Updated: 02-Dec-2019 v1.3
+// SQ7PTE
+// Updated: 17-Feb-2020 v0.1
 //
 $lang = array (
   // Banner texts
@@ -12,12 +12,13 @@ $lang = array (
   // Banner links
   "dashboard"                   =>  "Dashboard",
   "admin"                       =>  "Admin",
-  "power"                       =>  "Power",
+  "power"                       =>  "Restart/Wyłącz",
   "update"                      =>  "Aktualizacja",
-  "upgrade"                     =>  "Upgrade",
+  "upgrade"						=>	"Aktualizacja wersji",
   "backup_restore"              =>  "Kopia/Przywracanie",
-  "factory_reset"               =>  "Przywracanie ustawień fabrycznych",
-  "live_logs"                   =>  "Logi na żywo :)",
+  "factory_reset"               =>  "Ustawienia fabryczne",
+  "sysinfo"						=>	"Info systemu",
+  "live_logs"                   =>  "Log na żywo",
   // Config page section headdings
   "hardware_info"               =>  "Informacje o sprzęcie bramki",
   "control_software"            =>  "Oprogramowanie sterujące",
@@ -31,19 +32,19 @@ $lang = array (
   "pocsag_config"               =>  "Konfiguracja POCSAG",
   "wifi_config"                 =>  "Konfiguracja Wireless",
   "fw_config"                   =>  "Konfiguracja Zapory",
-  "remote_access_pw"            =>  "Hasło zdalnego Dostępu",
+  "remote_access_pw"            =>  "Hasło zdalnego dostępu",
   // Config Page - Section General
   "setting"                     =>  "Ustawienia",
   "value"                       =>  "Wartość",
-  "apply"                       =>  "Zapisz Zmiany",
+  "apply"                       =>  "Zapisz zmiany",
   // Config Page - Gateway Hardware Information
   "hostname"                    =>  "Nazwa hosta",
   "kernel"                      =>  "Kernel/Jądro",
   "platform"                    =>  "Platforma",
   "cpu_load"                    =>  "Obciążenie procesora",
-  "cpu_temp"                    =>  "Temp. procesora",
+  "cpu_temp"                    =>  "Temperatura",
   // Config Page - Control Software
-  "controller_software"         =>  "Oprogramowanie Sterujące",
+  "controller_software"         =>  "Oprogramowanie sterujące",
   "controller_mode"             =>  "Oprogramowanie kontrolera",
   // Config Page - MMDVMHost Configuration
   "dmr_mode"                    =>  "Tryb DMR",
@@ -54,16 +55,17 @@ $lang = array (
   "mmdvm_display"               =>  "Typ wyświetlania MMDVM",
   "mode_hangtime"               =>  "Czas rozłączenia",
   // Config Page - General Configuration
-  "node_call"                   =>  "Znak wtwoławczy",
+  "hostname"					=>	"Nazwa hosta",
+  "node_call"                   =>  "Znak wywoławczy",
   "dmr_id"                      =>  "CCS7/DMR ID",
-  "radio_freq"                  =>  "Częstotliwość Pracy",
+  "radio_freq"                  =>  "Częstotliwość",
   "lattitude"                   =>  "Szer.geograficzna",
   "longitude"                   =>  "Dł.geograficzna",
   "town"                        =>  "Miasto",
   "country"                     =>  "Kraj",
   "url"                         =>  "Strona",
   "radio_type"                  =>  "Tryb radia/modemu",
-  "node_type"                   =>  "Trym Pracy",
+  "node_type"                   =>  "Tryb Pracy",
   "timezone"                    =>  "Strefa czasowa",
   "dash_lang"                   =>  "Język Dashboard'u",
   // Config Page - DMR Configuration
@@ -80,7 +82,7 @@ $lang = array (
   // Config Page - D-Star Configuration
   "dstar_rpt1"                  =>  "Znak wywoławczy RPT1",
   "dstar_rpt2"                  =>  "Znak wywoławczy RPT2",
-  "dstar_irc_password"          =>  "Hasło zdalnego sostępu",
+  "dstar_irc_password"          =>  "Hasło zdalnego dostępu",
   "dstar_default_ref"           =>  "Domyślny Reflektor",
   "aprs_host"                   =>  "APRS Host",
   "dstar_irc_lang"              =>  "Język ircDDBGateway",
@@ -117,16 +119,15 @@ $lang = array (
   "nxdn_net"                    =>  "Sieć NXDN",
   // Dashboard Front Page - Calls
   "time"                        =>  "Godzina",
-  "mode"                        =>  "Tryb",
-  "callsign"                    =>  "Znak Wywoławczy",
-  "target"                      =>  "Cel",
-  "src"                         =>  "Żr.",        // Short version of "Source"
-  "dur"                         =>  "Cel",        // Short version of "Duration"
-  "loss"                        =>  "Strata",
+  "mode"                        =>  "Slot",
+  "callsign"                    =>  "Znak wywoławczy",
+  "target"                      =>  "Grupa",
+  "src"                         =>  "Src",        // Short version of "Source"
+  "dur"                         =>  "Czas",        // Short version of "Duration"
+  "loss"                        =>  "Loss",
   "ber"                         =>  "BER",        // Short version of "Bit Error Rate"
   // POCSAG Specific
   "pocsag_list"                 =>  "Aktywność bramy DAPNET",
-  "pocsag_persolist"            =>  "DAPNET Personnal Messages",
   "pocsag_timeslot"             =>  "Szczelina Czasowa",
   "pocsag_msg"                  =>  "Wiadomość",
   // Dashboard - Extra Info
@@ -142,6 +143,6 @@ $lang = array (
   "active_starnet_members"      =>  "Aktywni członkowie grupy Starnet",
   "d-star_link_manager"         =>  "Menedżer linków D-Star",
   "d-star_link_status"          =>  "Informacje o łączu D-Star",
-  "service_status"              =>  "Status Usługi"
+  "service_status"              =>  "Status usługi"
 );
 ?>
