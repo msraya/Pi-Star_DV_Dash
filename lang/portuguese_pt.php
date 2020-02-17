@@ -14,6 +14,7 @@ $lang = array (
   "admin"                       =>  "Admin",
   "power"                       =>  "Ação",
   "update"                      =>  "Atualizar",
+  "upgrade"                     =>  "Upgrade",
   "backup_restore"              =>  "Backup/Restauro",
   "factory_reset"               =>  "Reset",
   "live_logs"                   =>  "Logs online",

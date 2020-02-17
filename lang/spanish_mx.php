@@ -14,6 +14,7 @@ $lang = array (
   "admin"                       =>  "Admin",
   "power"                       =>  "Poder",
   "update"                      =>  "Actualizar",
+  "upgrade"                     =>  "Upgrade",
   "backup_restore"              =>  "Copia deseguridad_restaurar",
   "factory_reset"               =>  "Restablecimiento de fabrica",
   "live_logs"                   =>  "Vivo Logs",

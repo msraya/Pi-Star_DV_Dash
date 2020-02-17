@@ -14,6 +14,7 @@ $lang = array (
   "admin"                       =>  "Administrat°",
   "power"                       =>  "Syst&egrave;me",
   "update"                      =>  "Mise &agrave; jour",
+  "upgrade"                     =>  "Mise &agrave; niveau",
   "backup_restore"              =>  "Sauvegarde/Restaurat°",
   "factory_reset"               =>  "R&eacute;glages Usine",
   "live_logs"                   =>  "Livre de bord",

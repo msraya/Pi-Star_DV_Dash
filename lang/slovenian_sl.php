@@ -14,6 +14,7 @@ $lang = array (
   "admin"                       =>  "Skrbniški način",
   "power"                       =>  "Vklop/Izklop",
   "update"                      =>  "Posodobitev",
+  "upgrade"                     =>  "Upgrade",
   "backup_restore"              =>  "Varnostno kopiranje",
   "factory_reset"               =>  "Tovarniške nastavitve",
   "live_logs"                   =>  "Dnevnik",

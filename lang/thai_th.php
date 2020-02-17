@@ -14,6 +14,7 @@ $lang = array (
   "admin"                       =>  "ผู้ดูแล",
   "power"                       =>  "เพาเวอร์",
   "update"                      =>  "อัพเดท",
+  "upgrade"                     =>  "Upgrade",
   "backup_restore"              =>  "สำรองข้อมูล",
   "factory_reset"               =>  "รีเซ็ต",
   "live_logs"                   =>  "ประวัติการติดต่อ (สด)",

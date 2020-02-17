@@ -14,6 +14,7 @@ $lang = array (
   "admin"                       =>  "Administrator",
   "power"                       =>  "Alimentare",
   "update"                      =>  "Actualizare",
+  "upgrade"                     =>  "Upgrade",
   "backup_restore"              =>  "Copie Rezerva/Restabilire",
   "factory_reset"               =>  "Resetare Stare Initiala",
   "live_logs"                   =>  "Jurnal Live",

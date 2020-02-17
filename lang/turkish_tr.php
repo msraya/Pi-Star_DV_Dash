@@ -14,6 +14,7 @@ $lang = array (
   "admin"                       =>  "Yönetici",
   "power"                       =>  "Güç",
   "update"                      =>  "Güncelle",
+  "upgrade"                     =>  "Upgrade",
   "backup_restore"              =>  "Yedekle/Geriyükle",
   "factory_reset"               =>  "Fabrika Ayarları",
   "live_logs"                   =>  "Sistem Günlüğü",

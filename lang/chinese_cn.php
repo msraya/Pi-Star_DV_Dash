@@ -15,6 +15,7 @@ $lang = array (
   "admin"                       =>  "管理",
   "power"                       =>  "电源",
   "update"                      =>  "更新",
+  "upgrade"                     =>  "Upgrade",
   "backup_restore"              =>  "备份/恢复",
   "factory_reset"               =>  "恢复出厂设置",
   "live_logs"                   =>  "日志",
