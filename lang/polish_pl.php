@@ -2,7 +2,7 @@
 //
 // Polska PL Language Pack
 // SQ7PTE
-// Updated: 17-Feb-2020 v0.1
+// Updated: 17-Feb-2020 v0.2
 //
 $lang = array (
   // Banner texts
@@ -13,16 +13,16 @@ $lang = array (
   "dashboard"                   =>  "Dashboard",
   "admin"                       =>  "Admin",
   "power"                       =>  "Restart/Wyłącz",
-  "update"                      =>  "Aktualizacja",
+  "update"                      =>  "Aktualizacja systemu",
   "upgrade"						=>	"Aktualizacja wersji",
   "backup_restore"              =>  "Kopia/Przywracanie",
   "factory_reset"               =>  "Ustawienia fabryczne",
   "sysinfo"						=>	"Info systemu",
   "live_logs"                   =>  "Log na żywo",
   // Config page section headdings
-  "hardware_info"               =>  "Informacje o sprzęcie bramki",
+  "hardware_info"               =>  "Informacje Raspberry",
   "control_software"            =>  "Oprogramowanie sterujące",
-  "mmdvmhost_config"            =>  "Konfiguracja MMDVMHost",
+  "mmdvmhost_config"            =>  "Konfiguracja MMDVM Host",
   "general_config"              =>  "Konfiguracja ogólna",
   "dmr_config"                  =>  "Konfiguracja DMR",
   "dstar_config"                =>  "Konfiguracja D-Star",
@@ -30,7 +30,7 @@ $lang = array (
   "p25_config"                  =>  "Konfiguracja P25",
   "nxdn_config"                 =>  "Konfiguracja NXDN",
   "pocsag_config"               =>  "Konfiguracja POCSAG",
-  "wifi_config"                 =>  "Konfiguracja Wireless",
+  "wifi_config"                 =>  "Konfiguracja połączenia Internetu",
   "fw_config"                   =>  "Konfiguracja Zapory",
   "remote_access_pw"            =>  "Hasło zdalnego dostępu",
   // Config Page - Section General
@@ -57,10 +57,10 @@ $lang = array (
   // Config Page - General Configuration
   "hostname"					=>	"Nazwa hosta",
   "node_call"                   =>  "Znak wywoławczy",
-  "dmr_id"                      =>  "CCS7/DMR ID",
+  "dmr_id"                      =>  "ID DMR użytkownika",
   "radio_freq"                  =>  "Częstotliwość",
-  "lattitude"                   =>  "Szer.geograficzna",
-  "longitude"                   =>  "Dł.geograficzna",
+  "lattitude"                   =>  "Szer. geograficzna",
+  "longitude"                   =>  "Dł. geograficzna",
   "town"                        =>  "Miasto",
   "country"                     =>  "Kraj",
   "url"                         =>  "Strona",
@@ -102,14 +102,14 @@ $lang = array (
   "fw_irc"                      =>  "Zdalny dostęp ircDDBGateway",
   "fw_ssh"                      =>  "Dostęp SSH",
   // Config Page - Password
-  "user"                        =>  "Nazwa Użytkownika",
+  "user"                        =>  "Nazwa użytkownika",
   "password"                    =>  "Hasło",
-  "set_password"                =>  "Ustaw Hasło",
+  "set_password"                =>  "Zapisz hasło",
   // Dashboard Front Page - Repeater Info Pannel
-  "modes_enabled"               =>  "Tryb włączony",
+  "modes_enabled"               =>  "Rodzaj Trybu",
   "net_status"                  =>  "Status Sieci",
   "internet"                    =>  "Internet",
-  "radio_info"                  =>  "Informacja Radio",
+  "radio_info"                  =>  "Informacja o Radiu",
   "dstar_repeater"              =>  "D-Star Rypiter",
   "dstar_net"                   =>  "Sieć D-Star",
   "dmr_repeater"                =>  "DMR Rypiter",
@@ -121,13 +121,14 @@ $lang = array (
   "nxdn_net"                    =>  "Sieć NXDN",
   // Dashboard Front Page - Calls
   "time"                        =>  "Godzina",
-  "mode"                        =>  "Slot",
+  "mode"                        =>  "Slot/Szczelina",
   "callsign"                    =>  "Znak wywoławczy",
   "target"                      =>  "Grupa",
-  "src"                         =>  "Src",        // Short version of "Source"
-  "dur"                         =>  "Czas",        // Short version of "Duration"
-  "loss"                        =>  "Loss",
-  "ber"                         =>  "BER",        // Short version of "Bit Error Rate"
+  "src"                         =>  "Sieć",        // Short version of "Source"
+  "dur"                         =>  "Czas (s)",        // Short version of "Duration"
+  "loss"                        =>  "Loss (%)",
+  "ber"                         =>  "BER (%)",        // Short version of "Bit Error Rate"
+  "rssi"						=>	"Sygnał",
   // POCSAG Specific
   "pocsag_list"                 =>  "Aktywność bramy DAPNET",
   "pocsag_timeslot"             =>  "Szczelina Czasowa",
@@ -139,8 +140,8 @@ $lang = array (
   "utot"                        =>  "UTOT",       // Short for User Timeout
   "gtot"                        =>  "GTOT",       // Short for Group Timeout
   // Dashboard Front Page / Admin - Section Headders
-  "last_heard_list"             =>  "Aktywność bramy",
-  "local_tx_list"               =>  "Lokalna aktywność RF",
+  "last_heard_list"             =>  "Aktywność HotSpot`a",
+  "local_tx_list"               =>  "Aktywność lokalna RF",
   "active_starnet_groups"       =>  "Aktywne grupy Starnet",
   "active_starnet_members"      =>  "Aktywni członkowie grupy Starnet",
   "d-star_link_manager"         =>  "Menedżer linków D-Star",
