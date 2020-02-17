@@ -3099,7 +3099,7 @@ else:
     <th colspan="2"><a class="tooltip" href="#"><?php echo $lang['value'];?><span><b>Value</b>The current value from the<br />configuration files</span></a></th>
     </tr>
     <tr>
-    <td align="left"><a class="tooltip2" href="#">Hostname:<span><b>System Hostname</b>This is the system hostname, used for access to the dashboard etc.</span></a></td>
+    <td align="left"><a class="tooltip2" href="#"><?php echo $lang['hostname'];?>:<span><b>System Hostname</b>This is the system hostname, used for access to the dashboard etc.</span></a></td>
     <td align="left" colspan="2"><input type="text" name="confHostname" size="13" maxlength="15" value="<?php echo exec('cat /etc/hostname'); ?>" />Do not add suffixes such as .local</td>
     </tr>
     <tr>
@@ -3476,7 +3476,7 @@ else:
     </select></td></tr>
     <?php if (isset($configdmrgateway['XLX Network 1']['Startup'])) { ?>
     <tr>
-    <td align="left"><a class="tooltip2" href="#">XLX Startup TG:<span><b>XLX Startup TG</b></span></a></td>
+    <td align="left"><a class="tooltip2" href="#"><?php echo $lang['xlx_startup_tg'];?>:<span><b>XLX Startup TG</b></span></a></td>
     <td align="left"><select name="dmrMasterHost3Startup">
 <?php
 	if (isset($configdmrgateway['XLX Network 1']['Startup'])) {
@@ -3499,7 +3499,7 @@ else:
     <?php } ?>
     <?php if (isset($configdmrgateway['XLX Network']['TG'])) { ?>
     <tr>
-    <td align="left"><a class="tooltip2" href="#">XLX Startup Module:<span><b>XLX Startup Module override</b>Default will use the host file option, or override it here.</span></a></td>
+    <td align="left"><a class="tooltip2" href="#"><?php echo $lang['xlx_startup_module'];?>:<span><b>XLX Startup Module override</b>Default will use the host file option, or override it here.</span></a></td>
     <td align="left"><select name="dmrMasterHost3StartupModule">
 <?php
 	if (isset($configdmrgateway['XLX Network']['Module'])) {

@@ -65,7 +65,7 @@ $lang = array (
   "radio_type"                  =>  "Mod&egrave;le Radio/Modem",
   "node_type"                   =>  "Type de Node",
   "timezone"                    =>  "Fuseau horaire",
-  "dash_lang"                   =>  "Langage de la console",
+  "dash_lang"                   =>  "Language de la console",
   // Config Page - DMR Configuration
   "dmr_master"                  =>  "Master DMR(MMDVMHost)",
   "bm_master"                   =>  "Master BrandMeister",
@@ -74,6 +74,8 @@ $lang = array (
   "dmr_plus_network"            =>  "R&eacute;seau DMR+",
   "xlx_master"                  =>  "Master XLX",
   "xlx_enable"                  =>  "Master XLX actif",
+  "xlx_startup_tg"              =>  "TG XLX au d&eacute;marrage",
+  "xlx_startup_module"          =>  "Module XLX au d&eacute;marrage",
   "dmr_cc"                      =>  "Code Couleur DMR",
   "dmr_embeddedlconly"          =>  "DMR LC int&eacute;gr&eacute; uniquement",
   "dmr_dumptadata"              =>  "DMR DumpTAData",
