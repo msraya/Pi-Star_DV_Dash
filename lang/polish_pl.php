@@ -30,7 +30,7 @@ $lang = array (
   "p25_config"                  =>  "Konfiguracja P25",
   "nxdn_config"                 =>  "Konfiguracja NXDN",
   "pocsag_config"               =>  "Konfiguracja POCSAG",
-  "wifi_config"                 =>  "Konfiguracja połączenia Internetu",
+  "wifi_config"                 =>  "Konfiguracja połączenia z Internetem",
   "fw_config"                   =>  "Konfiguracja Zapory",
   "remote_access_pw"            =>  "Hasło zdalnego dostępu",
   // Config Page - Section General
@@ -125,7 +125,7 @@ $lang = array (
   "callsign"                    =>  "Znak wywoławczy",
   "target"                      =>  "Grupa",
   "src"                         =>  "Sieć",        // Short version of "Source"
-  "dur"                         =>  "Czas (s)",        // Short version of "Duration"
+  "dur"                         =>  "Czas",        // Short version of "Duration"
   "loss"                        =>  "Loss (%)",
   "ber"                         =>  "BER (%)",        // Short version of "Bit Error Rate"
   "rssi"						=>	"Sygnał",
