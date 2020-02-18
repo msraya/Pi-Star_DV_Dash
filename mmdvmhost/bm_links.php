@@ -44,7 +44,7 @@ if ( $testMMDVModeDMR == 1 ) {
   if (substr($dmrMasterHost, 0, 2) == "BM") {
 
   // Use BM API to get information about current TGs
-  $jsonContext = stream_context_create(array('http'=>array('timeout' => 2) )); // Add Timout
+  $jsonContext = stream_context_create(array('http'=>array('timeout' => 2, 'header' => 'User-Agent: Mozilla/5.0 (X11; Linux armv7l; rv:45.0) Gecko/20100101 Firefox/45.0') )); // Add Timeout and User-Agent (required since Feb 18th 2020
   $json = json_decode(@file_get_contents("https://api.brandmeister.network/v1.0/repeater/?action=PROFILE&q=$dmrID", true, $jsonContext));
 
   // Set some Variable
