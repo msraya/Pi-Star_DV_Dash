@@ -4,6 +4,10 @@ include_once $_SERVER['DOCUMENT_ROOT'].'/mmdvmhost/tools.php';        // MMDVMDa
 include_once $_SERVER['DOCUMENT_ROOT'].'/mmdvmhost/functions.php';    // MMDVMDash Functions
 include_once $_SERVER['DOCUMENT_ROOT'].'/config/language.php';        // Translation Code
 
+$pistarReleaseConfig = '/etc/pistar-release';
+$configPistarRelease = array();
+$configPistarRelease = parse_ini_file($pistarReleaseConfig, true);
+
 // Check if DMR is Enabled
 $testMMDVModeDMR = getConfigItem("DMR", "Enable", $mmdvmconfigs);
 
@@ -44,7 +48,7 @@ if ( $testMMDVModeDMR == 1 ) {
   if (substr($dmrMasterHost, 0, 2) == "BM") {
 
   // Use BM API to get information about current TGs
-  $jsonContext = stream_context_create(array('http'=>array('timeout' => 2, 'header' => 'User-Agent: Mozilla/5.0 (X11; Linux armv7l; rv:45.0) Gecko/20100101 Firefox/45.0') )); // Add Timeout and User-Agent (required since Feb 18th 2020
+  $jsonContext = stream_context_create(array('http'=>array('timeout' => 2, 'header' => 'User-Agent: Pi-Star '.$configPistarRelease['Pi-Star']['Version'].'-f1rmb Dashboard for '.$dmrID) )); // Add Timout and User Agent to include DMRID
   $json = json_decode(@file_get_contents("https://api.brandmeister.network/v1.0/repeater/?action=PROFILE&q=$dmrID", true, $jsonContext));
 
   // Set some Variable

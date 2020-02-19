@@ -89,9 +89,9 @@ if ( $testMMDVModeDMR == 1 ) {
       'Content-Type: application/x-www-form-urlencoded',
       'Content-Length: '.strlen($postData),
       'Authorization: Basic '.base64_encode($bmAPIkey.':'),
-      'User-Agent: Mozilla/5.0 (X11; Linux armv7l; rv:45.0) Gecko/20100101 Firefox/45.0',
+      'User-Agent: Pi-Star '.$configPistarRelease['Pi-Star']['Version'].'-f1rmb Dashboard for '.$dmrID,
     );
-    
+
     $opts = array(
       'http' => array(
       'header'  => $postHeaders,
