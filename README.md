@@ -18,7 +18,7 @@ ssh pi-star@pi-star.local
 sudo su
 rpi-rw
 cd
-wget http://tinyurl.com/f1rmb-pistar
+wget http://tinyurl.com/f1rmb-pistar-ng -O f1rmb-pistar
 chmod +x f1rmb-pistar
 ```
 * Now you can execute this script with some arguments. For a complete list, use '-h' or '--help'
