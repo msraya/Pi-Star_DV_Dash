@@ -19,12 +19,14 @@ if ( $testMMDVModeDMR == 1 ) {
 
   //Load the dmrgateway config file
   $dmrGatewayConfigFile = '/etc/dmrgateway';
+  $bmEnabled = true;
   if (fopen($dmrGatewayConfigFile,'r')) { $configdmrgateway = parse_ini_file($dmrGatewayConfigFile, true); }
 
   // Get the current DMR Master from the config
   $dmrMasterHost = getConfigItem("DMR Network", "Address", $mmdvmconfigs);
   if ( $dmrMasterHost == '127.0.0.1' ) {
     $dmrMasterHost = $configdmrgateway['DMR Network 1']['Address'];
+    $bmEnabled = ($configdmrgateway['DMR Network 1']['Enabled'] != "0" ? true : false);
     if (isset($configdmrgateway['DMR Network 1']['Id'])) { $dmrID = $configdmrgateway['DMR Network 1']['Id']; }
   } elseif (getConfigItem("DMR", "Id", $mmdvmconfigs)) {
     $dmrID = getConfigItem("DMR", "Id", $mmdvmconfigs);
@@ -44,7 +46,8 @@ if ( $testMMDVModeDMR == 1 ) {
       if ($dmrMasterHost == $dmrMasterHostF[2]) { $dmrMasterHost = str_replace('_', ' ', $dmrMasterHostF[0]); }
     }
   }
-    if (substr($dmrMasterHost, 0, 2) == "BM") {
+
+  if ((substr($dmrMasterHost, 0, 2) == "BM") && ($bmEnabled == true)) {
     // OK this is Brandmeister, get some config and output the HTML
 
   // If there is a BM API Key

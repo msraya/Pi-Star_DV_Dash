@@ -3472,6 +3472,7 @@ else:
     <td style="text-align: left;"><select name="dmrMasterHost3">
 <?php
 	$dmrMasterFile3 = fopen("/usr/local/etc/DMR_Hosts.txt", "r");
+	$testMMDVMdmrMaster3 = "";
 	if (isset($configdmrgateway['XLX Network 1']['Address'])) { $testMMDVMdmrMaster3= $configdmrgateway['XLX Network 1']['Address']; }
 	if (isset($configdmrgateway['XLX Network']['Startup'])) { $testMMDVMdmrMaster3= $configdmrgateway['XLX Network']['Startup']; }
 	while (!feof($dmrMasterFile3)) {

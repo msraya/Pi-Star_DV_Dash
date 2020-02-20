@@ -19,12 +19,14 @@ if ( $testMMDVModeDMR == 1 ) {
   
   //Load the dmrgateway config file
   $dmrGatewayConfigFile = '/etc/dmrgateway';
+  $bmEnabled = true;
   if (fopen($dmrGatewayConfigFile,'r')) { $configdmrgateway = parse_ini_file($dmrGatewayConfigFile, true); }
 
   // Get the current DMR Master from the config
   $dmrMasterHost = getConfigItem("DMR Network", "Address", $mmdvmconfigs);
   if ( $dmrMasterHost == '127.0.0.1' ) {
     $dmrMasterHost = $configdmrgateway['DMR Network 1']['Address'];
+    $bmEnabled = ($configdmrgateway['DMR Network 1']['Enabled'] != "0" ? true : false);
     if (isset($configdmrgateway['DMR Network 1']['Id'])) { $dmrID = $configdmrgateway['DMR Network 1']['Id']; }
   } elseif (getConfigItem("DMR", "Id", $mmdvmconfigs)) {
     $dmrID = getConfigItem("DMR", "Id", $mmdvmconfigs);
@@ -45,7 +47,7 @@ if ( $testMMDVModeDMR == 1 ) {
                 }
   }
 
-  if (substr($dmrMasterHost, 0, 2) == "BM") {
+  if ((substr($dmrMasterHost, 0, 2) == "BM") && ($bmEnabled == true)) {
 
   // Use BM API to get information about current TGs
   $jsonContext = stream_context_create(array('http'=>array('timeout' => 2, 'header' => 'User-Agent: Pi-Star '.$configPistarRelease['Pi-Star']['Version'].'-f1rmb Dashboard for '.$dmrID) )); // Add Timout and User Agent to include DMRID
