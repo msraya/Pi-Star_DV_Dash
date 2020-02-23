@@ -324,6 +324,45 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	// Make the root filesystem writable
 	system('sudo mount -o remount,rw /');
 
+        if (isset($_POST['adminPasswordUpdate'])) {
+	    echo "<table>\n";
+	    echo "<tr><th>Working...</th></tr>\n";
+	    echo "<tr><td>Updating Password...</td></tr>\n";
+	    echo "</table>\n";
+	    
+	    // Admin Password Change
+	    if (empty($_POST['adminPassword']) != TRUE ) {
+		$rollAdminPass0 = 'htpasswd -b /var/www/.htpasswd pi-star '.escapeshellcmd($_POST['adminPassword']);
+		system($rollAdminPass0);
+		$rollAdminPass2 = 'sudo echo -e "'.escapeshellcmd($_POST['adminPassword']).'\n'.escapeshellcmd($_POST['adminPassword']).'" | sudo passwd pi-star';
+		system($rollAdminPass2);
+		
+		// File Manager password
+		$fmAuth = '<?php'."\n".'$auth_users = array('."\n".'\'root\' => \''.password_hash(escapeshellcmd($_POST['adminPassword']), PASSWORD_DEFAULT).'\','."\n".'\'pi-star\' => \''.password_hash(escapeshellcmd($_POST['adminPassword']), PASSWORD_DEFAULT).'\''."\n".');'."\n".'?>'."\n";
+		if (($fd = fopen('/etc/tinyfilemanager-auth.php', "w")))
+		{
+		    @fwrite($fd, $fmAuth);
+		    fclose($fd);
+		}
+		
+		exec('sudo chown www-data:www-data '.$fmAuth.'');
+		exec('sudo chmod 664 '.$fmAuth.'');
+
+		echo "<br />\n";
+		echo "<table>\n";
+		echo "<tr><th>Done</th></tr>\n";
+		echo "<tr><td>Password Updated...</td><tr>\n";
+		echo "</table>\n";
+		unset($_POST);
+	    }
+	    
+	    // Make the root filesystem writable
+	    system('sudo mount -o remount,ro /');
+
+            echo '<script type="text/javascript">setTimeout(function() { window.location=window.location;},3000);</script>';
+	    die();
+	}
+
 	// Stop Cron (occasionally remounts root as RO - would be bad if it did this at the wrong time....)
 	system('sudo systemctl stop cron.service > /dev/null 2>/dev/null &');			//Cron
 
@@ -417,25 +456,6 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	if (empty($_POST['dashboardLanguage']) != TRUE ) {
 	  $rollDashLang = 'sudo sed -i "/pistarLanguage=/c\\$pistarLanguage=\''.escapeshellcmd($_POST['dashboardLanguage']).'\';" /var/www/dashboard/config/language.php';
 	  system($rollDashLang);
-	  }
-
-	// Admin Password Change
-	if (empty($_POST['adminPassword']) != TRUE ) {
-	  $rollAdminPass0 = 'htpasswd -b /var/www/.htpasswd pi-star '.escapeshellcmd($_POST['adminPassword']);
-	  system($rollAdminPass0);
-	  $rollAdminPass2 = 'sudo echo -e "'.escapeshellcmd($_POST['adminPassword']).'\n'.escapeshellcmd($_POST['adminPassword']).'" | sudo passwd pi-star';
-	  system($rollAdminPass2);
-
-	  // File Manager password
-	  $fmAuth = '<?php'."\n".'$auth_users = array('."\n".'\'root\' => \''.password_hash(escapeshellcmd($_POST['adminPassword']), PASSWORD_DEFAULT).'\','."\n".'\'pi-star\' => \''.password_hash(escapeshellcmd($_POST['adminPassword']), PASSWORD_DEFAULT).'\''."\n".');'."\n".'?>'."\n";
-	  if (($fd = fopen('/etc/tinyfilemanager-auth.php', "w")))
-	  {
-	    @fwrite($fd, $fmAuth);
-	    fclose($fd);
-	  }
-	    
-	  exec('sudo chown www-data:www-data '.$fmAuth.'');
-	  exec('sudo chmod 664 '.$fmAuth.'');
 	  }
 
 	// Set the ircDDBGAteway Remote Password and Port
@@ -4438,7 +4458,7 @@ echo '
     <td align="left"><label for="pass1">Password:</label><input type="password" name="adminPassword" id="pass1" onkeyup="checkPass(); return false;" size="15" />
     <label for="pass2">Confirm Password:</label><input type="password" name="adminPassword" id="pass2" onkeyup="checkPass(); return false;" />
     <br /><span id="confirmMessage" class="confirmMessage"></span></td>
-    <td align="right"><input type="button" id="submitpwd" value="<?php echo $lang['set_password'];?>" onclick="submitPassform()" disabled="disabled" /></td>
+    <td align="right"><input type="hidden" name="adminPasswordUpdate" value="1" /><input type="button" id="submitpwd" value="<?php echo $lang['set_password'];?>" onclick="submitPassform()" disabled="disabled" /></td>
     </tr>
     <tr><td colspan="3"><b>WARNING:</b> This changes the password for this admin page<br />AND the "pi-star" SSH account</td></tr>
     </table>
