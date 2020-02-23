@@ -85,6 +85,8 @@ if ($_SERVER["PHP_SELF"] == "/admin/config_backup.php") {
 	  $output .= shell_exec("sudo cp /etc/bmapi.key $backupDir 2>&1");
 	  $output .= shell_exec("sudo cp /etc/dapnetapi.key $backupDir 2>&1");
 	  $output .= shell_exec("sudo cp /etc/mobilegps $backupDir 2>&1");
+	  $output .= shell_exec("sudo cp /etc/tinyfilemanager-auth.php $backupDir 2>&1");
+	  $output .= shell_exec("sudo cp /etc/tinyfilemanager-config.php $backupDir 2>&1");
 	  $output .= shell_exec("sudo cp /usr/local/etc/RSSI.dat $backupDir 2>&1");
 	  $output .= shell_exec("sudo cp /var/www/dashboard/config/ircddblocal.php $backupDir 2>&1");
 	  $output .= shell_exec("sudo cp /var/www/dashboard/config/config.php $backupDir 2>&1");

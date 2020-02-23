@@ -425,6 +425,17 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  system($rollAdminPass0);
 	  $rollAdminPass2 = 'sudo echo -e "'.escapeshellcmd($_POST['adminPassword']).'\n'.escapeshellcmd($_POST['adminPassword']).'" | sudo passwd pi-star';
 	  system($rollAdminPass2);
+
+	  // File Manager password
+	  $fmAuth = '<?php'."\n".'$auth_users = array('."\n".'\'root\' => \''.password_hash(escapeshellcmd($_POST['adminPassword']), PASSWORD_DEFAULT).'\','."\n".'\'pi-star\' => \''.password_hash(escapeshellcmd($_POST['adminPassword']), PASSWORD_DEFAULT).'\''."\n".');'."\n".'?>'."\n";
+	  if (($fd = fopen('/etc/tinyfilemanager-auth.php', "w")))
+	  {
+	    @fwrite($fd, $fmAuth);
+	    fclose($fd);
+	  }
+	    
+	  exec('sudo chown www-data:www-data '.$fmAuth.'');
+	  exec('sudo chmod 664 '.$fmAuth.'');
 	  }
 
 	// Set the ircDDBGAteway Remote Password and Port
@@ -605,15 +616,19 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	}
 
 	// Set the POCSAG WhiteList
-	if ((escapeshellcmd($_POST['MMDVMModePOCSAG']) == 'ON') && (isset($configdapnetgw['General']['WhiteList'])) && (empty($_POST['pocsagWhitelist']) == TRUE)) { unset($configdapnetgw['General']['WhiteList']); }
-	if (empty($_POST['pocsagWhitelist']) != TRUE ) {
-	  $configdapnetgw['General']['WhiteList'] = preg_replace('/[^0-9\,]/', '', escapeshellcmd($_POST['pocsagWhitelist']));
+	if (empty($_POST['MMDVMModePOCSAG']) != TRUE ) {
+	    if ((escapeshellcmd($_POST['MMDVMModePOCSAG']) == 'ON') && (isset($configdapnetgw['General']['WhiteList'])) && (empty($_POST['pocsagWhitelist']) == TRUE)) { unset($configdapnetgw['General']['WhiteList']); }
+	    if (empty($_POST['pocsagWhitelist']) != TRUE ) {
+		$configdapnetgw['General']['WhiteList'] = preg_replace('/[^0-9\,]/', '', escapeshellcmd($_POST['pocsagWhitelist']));
+	    }
 	}
 
 	// Set the POCSAG BlackList
-	if ((escapeshellcmd($_POST['MMDVMModePOCSAG']) == 'ON') && (isset($configdapnetgw['General']['BlackList'])) && (empty($_POST['pocsagBlacklist']) == TRUE)) { unset($configdapnetgw['General']['BlackList']); }
-	if (empty($_POST['pocsagBlacklist']) != TRUE ) {
-	  $configdapnetgw['General']['BlackList'] = preg_replace('/[^0-9\,]/', '', escapeshellcmd($_POST['pocsagBlacklist']));
+	if (empty($_POST['MMDVMModePOCSAG']) != TRUE ) {
+	    if ((escapeshellcmd($_POST['MMDVMModePOCSAG']) == 'ON') && (isset($configdapnetgw['General']['BlackList'])) && (empty($_POST['pocsagBlacklist']) == TRUE)) { unset($configdapnetgw['General']['BlackList']); }
+	    if (empty($_POST['pocsagBlacklist']) != TRUE ) {
+		$configdapnetgw['General']['BlackList'] = preg_replace('/[^0-9\,]/', '', escapeshellcmd($_POST['pocsagBlacklist']));
+	    }
 	}
 
 	// Set the POCSAG Server
@@ -2863,10 +2878,12 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	system('sudo systemctl start dapnetgateway.service > /dev/null 2>/dev/null &');		// DAPNetGateway
 
 	// Set the system timezone
-	$rollTimeZone = 'sudo timedatectl set-timezone '.escapeshellcmd($_POST['systemTimezone']);
-	system($rollTimeZone);
-	$rollTimeZoneConfig = 'sudo sed -i "/date_default_timezone_set/c\\date_default_timezone_set(\''.escapeshellcmd($_POST['systemTimezone']).'\')\;" /var/www/dashboard/config/config.php';
-	system($rollTimeZoneConfig);
+	if (empty($_POST['systemTimezone']) != TRUE) {
+	   $rollTimeZone = 'sudo timedatectl set-timezone '.escapeshellcmd($_POST['systemTimezone']);
+	   system($rollTimeZone);
+	   $rollTimeZoneConfig = 'sudo sed -i "/date_default_timezone_set/c\\date_default_timezone_set(\''.escapeshellcmd($_POST['systemTimezone']).'\')\;" /var/www/dashboard/config/config.php';
+	   system($rollTimeZoneConfig);
+	}
 
 	// Start Cron (occasionally remounts root as RO - would be bad if it did this at the wrong time....)
 	system('sudo systemctl start cron.service > /dev/null 2>/dev/null &');			//Cron

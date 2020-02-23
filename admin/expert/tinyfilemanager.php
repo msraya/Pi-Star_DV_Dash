@@ -301,6 +301,9 @@ if ($use_auth) {
                                         <div class="text-center">
                                             <h1 class="card-title"><?php echo APP_TITLE; ?></h1>
                                         </div>
+                                        <div class="text-center">
+                                            <h1 class="card-title3">Connect as 'root' or 'pi-star'</h1>
+                                        </div>
                                     </div>
                                     <hr />
                                     <div class="form-group">
@@ -320,6 +323,9 @@ if ($use_auth) {
                                     <div class="form-group">
                                         <button type="submit" class="btn btn-success btn-block mt-4" role="button">
                                             <?php echo lng('Login'); ?>
+                                        </button>
+                                        <button type="button" class="btn btn-warning btn-block mt-4" role="button" onclick="window.location.href = '/admin/expert';">
+                                            <?php echo lng('Cancel'); ?>
                                         </button>
                                     </div>
                                 </form>
@@ -3282,6 +3288,7 @@ global $lang, $root_url, $favicon_path;
         .fm-login-page .brand img{ width:100%}
         .fm-login-page .card-wrapper{ width:360px;margin-top:10%;}
         .fm-login-page .card{ border-color:transparent;box-shadow:0 4px 8px rgba(0,0,0,.05)}
+        .fm-login-page .card-title3{ margin-bottom:0.1rem;font-size:14px;}
         .fm-login-page .card-title2{ margin-bottom:1.5rem;font-size:46px;font-weight:400;}
         .fm-login-page .card-title{ margin-bottom:1.5rem;font-size:24px;font-weight:400;}
         .fm-login-page .form-control{ border-width:2.3px}
