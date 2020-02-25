@@ -136,8 +136,8 @@ $lang = array (
   "utot"                        =>  "用户逾時",     // Short for User Timeout
   "gtot"                        =>  "群組逾時",       // Short for Group Timeout
   // Dashboard Front Page / Admin - Section Headders
-  "last_heard_list"             =>  "最近 20 個通訊",
-  "local_tx_list"               =>  "最近 20 個本地 RF 通訊",
+  "last_heard_list"             =>  "最近 40 個通訊",
+  "local_tx_list"               =>  "最近 40 個本地 RF 通訊",
   "active_starnet_groups"       =>  "啟用 Starnet 群組",
   "active_starnet_members"      =>  "啟用 Starnet 成員",
   "d-star_link_manager"         =>  "D-Star 連線管理",

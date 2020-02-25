@@ -138,8 +138,8 @@ $lang = array (
   "utot"                        =>  "UTOT",        // Short for User Timeout
   "gtot"                        =>  "GTOT",        // Short for Group Timeout
   // Dashboard Front Page / Admin - Section Headders
-  "last_heard_list"             =>  "Τελευταία 20 διακριτικά που ακούστηκαν μέσω αυτής της Πύλης",
-  "local_tx_list"               =>  "Τελευταία 20 διακριτικά που είχαν πρόσβαση σε αυτή την Πύλη",
+  "last_heard_list"             =>  "Τελευταία 40 διακριτικά που ακούστηκαν μέσω αυτής της Πύλης",
+  "local_tx_list"               =>  "Τελευταία 40 διακριτικά που είχαν πρόσβαση σε αυτή την Πύλη",
   "active_starnet_groups"       =>  "Ενεργές Ομάδες Starnet",
   "active_starnet_members"      =>  "Ενεργά Μέλη Ομάδων Starnet",
   "d-star_link_manager"         =>  "Διαχειριστής Ζεύζης D-Star",

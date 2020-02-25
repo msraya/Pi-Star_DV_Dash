@@ -137,8 +137,8 @@ $lang = array (
   "utot"                        =>  "UTOT",       // Short for User Timeout
   "gtot"                        =>  "GTOT",       // Short for Group Timeout
   // Dashboard Front Page / Admin - Section Headders
-  "last_heard_list"             => "Laatste 20 oproepen gehoord (RX) via deze Gateway",
-  "local_tx_list"               =>  "Laatste 20 oproepen verzonden (TX) via deze Gateway",
+  "last_heard_list"             => "Laatste 40 oproepen gehoord (RX) via deze Gateway",
+  "local_tx_list"               =>  "Laatste 40 oproepen verzonden (TX) via deze Gateway",
   "active_starnet_groups"       =>  "Actieve Starnet groepen",
   "active_starnet_members"      =>  "Actieve Starnet groepsleden",
   "d-star_link_manager"         =>  "D-Star Link Manager",

@@ -139,8 +139,8 @@ $lang = array (
   "utot"                        =>  "UTOT", 
   "gtot"                        =>  "GTOT", 
   // Dashboard Front Page / Admin - Section Headders
-  "last_heard_list"             =>  "Últimes 20 trucades rebudes",
-  "local_tx_list"               =>  "Últimes 20 trucades rebudes via radio",
+  "last_heard_list"             =>  "Últimes 40 trucades rebudes",
+  "local_tx_list"               =>  "Últimes 40 trucades rebudes via radio",
   "active_starnet_groups"       =>  "Grups actius Starnet",
   "active_starnet_members"      =>  "Membres actius grup Starnet",
   "d-star_link_manager"         =>  "Gestor d'enllaços D-Star",

@@ -138,8 +138,8 @@ $lang = array (
   "utot"                        =>  "UTOT",       // Short for User Timeout
   "gtot"                        =>  "GTOT",       // Short for Group Timeout
   // Dashboard Front Page / Admin - Section Headders
-  "last_heard_list"             =>  "Le Ultime 20 Trasmissioni Di Questo Nodo",
-  "local_tx_list"               =>  "Gli Ultimi 20 Accessi RF Su Questo Nodo",
+  "last_heard_list"             =>  "Le Ultime 40 Trasmissioni Di Questo Nodo",
+  "local_tx_list"               =>  "Gli Ultimi 40 Accessi RF Su Questo Nodo",
   "active_starnet_groups"       =>  "Gruppi Attivi Starnet",
   "active_starnet_members"      =>  "Menbri Attivi Nel Gruppo Starnet",
   "d-star_link_manager"         =>  "Gestione D-Star Link",

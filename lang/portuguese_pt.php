@@ -138,8 +138,8 @@ $lang = array (
   "utot"                        =>  "UTOT",       // abreviatura para Timeout do utilizador
   "gtot"                        =>  "GTOT",       // abreviatura para Timeout do grupo
   // Dashboard Front Page / Admin - Section Headders
-  "last_heard_list"             =>  "Últimas 20 chamadas através deste Gateway",
-  "local_tx_list"               =>  "Últimas 20 chamadas deste Gateway",
+  "last_heard_list"             =>  "Últimas 40 chamadas através deste Gateway",
+  "local_tx_list"               =>  "Últimas 40 chamadas deste Gateway",
   "active_starnet_groups"       =>  "Grupos ativos na Starnet",
   "active_starnet_members"      =>  "Grupo de membros ativos na Starnet",
   "d-star_link_manager"         =>  "Gerir a ligação DSTAR",

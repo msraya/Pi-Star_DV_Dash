@@ -138,8 +138,8 @@ $lang = array (
   "utot"                        =>  "UTOT",       //tiempo agotado para usuario
   "gtot"                        =>  "GTOT",       // tiempo agotado para grupo
   // Dashboard Front Page / Admin - Section Headders
-  "last_heard_list"             =>  "Ultimos 20 llamadas escuchadas atraves de este puerto",
-  "local_tx_list"               =>  "Ultimo 20 llamadas que accesaron este puerto",
+  "last_heard_list"             =>  "Ultimos 40 llamadas escuchadas atraves de este puerto",
+  "local_tx_list"               =>  "Ultimo 40 llamadas que accesaron este puerto",
   "active_starnet_groups"       =>  "Activo grupo Starnet Groups",
   "active_starnet_members"      =>  "Activo miembros de grupo Starnet",
   "d-star_link_manager"         =>  "D-Star gestar de enlaces",
