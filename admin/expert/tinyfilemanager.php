@@ -614,7 +614,9 @@ if (isset($_GET['new']) && isset($_GET['type']) && !FM_READONLY) {
         if ($_GET['type'] == "file") {
             if (!file_exists($path . '/' . $new)) {
                 if(fm_is_valid_ext($new)) {
+		    mount_rw();
                     @fopen($path . '/' . $new, 'w') or die('Cannot open file:  ' . $new);
+		    mount_ro();
                     fm_set_msg(sprintf('File <b>%s</b> created', fm_enc($new)));
                 } else {
                     fm_set_msg('File extension is not allowed', 'error');
@@ -1672,9 +1674,11 @@ if (isset($_GET['edit'])) {
     // Save File
     if (isset($_POST['savedata'])) {
         $writedata = $_POST['savedata'];
+	mount_rw();
         $fd = fopen($file_path, "w");
         @fwrite($fd, $writedata);
         fclose($fd);
+	mount_ro();
         fm_set_msg('File Saved Successfully');
     }
 
