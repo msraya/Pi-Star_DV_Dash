@@ -38,8 +38,14 @@ require_once('../config/version.php');
 		if (strcmp($action, 'stop') == 0) {
 		    $action_msg = 'Stopping Services';
 		}
+		if (strcmp($action, 'fullstop') == 0) {
+		    $action_msg = 'Stopping Fully Services';
+		}
 		else if (strcmp($action, 'restart') == 0) {
 		    $action_msg = 'Restarting Services';
+		}
+		else if (strcmp($action, 'status') == 0) {
+		    $action_msg = 'Services Status';
 		}
 		else {
 		    $action_msg = 'Unknown Action';
@@ -53,7 +59,7 @@ require_once('../config/version.php');
 			echo '<script type="text/javascript">'."\n";
 			echo 'function loadServicesExec(optStr){'."\n";
 			echo '  $("#service_result").load("/admin/expert/services_exec.php"+optStr);'."\n";
-			echo '  setTimeout(function() { window.location="/admin/expert/index.php";}, 10000);'."\n";
+			echo '  setTimeout(function() { window.location="/admin/expert/index.php";}, ("'.$action.'" == "status" ? 30000: 10000));'."\n";
 			echo '}'."\n";
 			echo 'setTimeout(loadServicesExec, 100, "?action='.$action.'");'."\n";
 			echo '$(window).trigger(\'resize\');'."\n";

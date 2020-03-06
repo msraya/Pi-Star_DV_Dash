@@ -98,7 +98,9 @@
 			<li class="subs has-subs"><a href="#">Pi-Star Services</a>
 			    <ul class="dropdown">
 				<li class="subs"><a href="services.php?action=stop">Stop Services</a></li>
+				<li class="subs"><a href="services.php?action=fullstop">Full Stop Services</a></li>
 				<li class="subs"><a href="services.php?action=restart">Restart Services</a></li>
+				<li class="subs"><a href="services.php?action=status">Services Status</a></li>
 				<li class="subs"><a href="services.php?action=killmmdvmhost">Kill MMDVMHost</a></li>
 			    </ul>
 			</li>
