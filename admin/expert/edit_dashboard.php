@@ -42,6 +42,21 @@ require_once('../config/version.php');
 	 }
 	</style>
 	<script type="text/javascript">
+	 function cssDownload()
+	 {
+	     window.location.href = "/admin/expert/css_download.php";
+	 }
+	 
+	 function cssUpload()
+	 {
+	     document.getElementById('fileid').addEventListener('change', submitForm);
+	     document.getElementById('fileid').click();
+	 }
+	 
+         function submitForm() {
+	     document.getElementById('cssUpload').submit();
+         }
+	 
 	 function cssReset()
 	 {
 	     if (confirm('WARNING: This will set these settings back to factory defaults.\n\nAre you SURE you want to do this?\n\nPress OK to restore the factory CSS configuration\nPress Cancel to go back.')) {
@@ -134,7 +149,7 @@ require_once('../config/version.php');
 		    if (empty($_POST['cssReset']) != TRUE) {
 			echo "<br />\n";
 			echo "<table>\n";
-			echo "<tr><th>CSS Reset Config</th></tr>\n";
+			echo "<tr><th>CSS Configuration Reset</th></tr>\n";
 			echo "<tr><td>Loading fresh configuration file(s)...</td><tr>\n";
 			echo "</table>\n";
 			unset($_POST);
@@ -144,7 +159,96 @@ require_once('../config/version.php');
 			exec('sudo mount -o remount,ro /');                             // Make rootfs read-only
 			echo '<script type="text/javascript">setTimeout(function() { window.location=window.location;},0);</script>';
 			die();
-		    } else {
+		    }
+		    else if (empty($_POST['cssDownload']) != TRUE)
+		    {
+			// Do nothing, handled in JS function
+		    }
+		    else if (empty($_POST['cssUpload']) != TRUE)
+		    {
+			echo "<tr><th colspan=\"2\">CCS Configuration Restore</th></tr>\n";
+			
+			if (isset($_FILES['cssFile']) && $_FILES['cssFile']['error'] === UPLOAD_ERR_OK)
+			{
+			    $output = "Uploading your CSS configuration data\n";
+			    $target_dir = "/tmp/css_restore/";
+			    $okay = false;
+			    
+			    shell_exec("sudo rm -rf $target_dir 2>&1");
+			    shell_exec("mkdir $target_dir 2>&1");
+			    
+			    if($_FILES["cssFile"]["name"]) {
+				$filename = $_FILES["cssFile"]["name"];
+	  			$source = $_FILES["cssFile"]["tmp_name"];
+				$type = $_FILES["cssFile"]["type"];
+				
+				$name = explode(".", $filename);
+				$accepted_types = array('application/zip', 'application/x-zip-compressed', 'multipart/x-zip', 'application/x-compressed');
+				
+				foreach($accepted_types as $mime_type) {
+				    if($mime_type == $type) {
+					$okay = true;
+					break;
+				    }
+				}
+			    }
+
+			    $continue = false;
+			    if (isset($name))
+			    {
+				$continue = strtolower($name[1]) == 'zip' ? true : false;
+			    }
+			    
+			    if ($okay == false || $continue == false) {
+				$output .= "The file you are trying to upload is not a .zip file. Please try again.\n";
+				die();
+			    }
+			    
+			    if (isset($filename))
+			    {
+				$target_path = $target_dir.$filename;
+			    }
+			    
+			    if(isset($target_path) && move_uploaded_file($source, $target_path)) {
+				$zip = new ZipArchive();
+				$x = $zip->open($target_path);
+				if ($x === true) {
+			            $zip->extractTo($target_dir); // change this to the correct site path
+			            $zip->close();
+			            unlink($target_path);
+				}
+				
+				$output .= "Your .zip file was uploaded and unpacked.\n";
+
+				// Make the disk Writable
+				shell_exec('sudo mount -o remount,rw / 2>&1');
+				
+				$output .= "Copying CSS configuration file\n";
+				$output .= shell_exec("sudo mv -v -f /tmp/css_restore/pistar-css.ini /etc/ 2>&1")."\n";
+
+				// Make the disk Read-Only
+				shell_exec('sudo mount -o remount,ro / 2>&1');
+				
+				// Complete
+				$output .= "Configuration Restore Complete.\n";
+				
+				echo '<script type="text/javascript">setTimeout(function() { window.location=window.location;}, 4000);</script>';
+			    }
+			    else {
+				$output .= "There was a problem with the upload. Please try again.<br />";
+				$output .= "\n".'<button onclick="goBack()">Go Back</button><br />'."\n";
+				$output .= '<script>'."\n";
+				$output .= 'function goBack() {'."\n";
+				$output .= '    window.history.back();'."\n";
+				$output .= '}'."\n";
+				$output .= '</script>'."\n";
+			    }
+			    echo "<tr><td align=\"left\"><pre>$output</pre></td></tr>\n";
+			}
+			die();
+		    }
+		    else
+		    {
 			//update ini file, call function
 			update_ini_file($data, $filepath);
 		    }
@@ -235,9 +339,15 @@ require_once('../config/version.php');
 		echo "</form>";
 		echo "<br /><br />\n";
 		echo 'If you took it all too far and now it makes you feel sick, click below to reset the values to default.'."\n";
-		echo '<form id="cssReset" action="" method="post">'."\n";
+		echo '<form id="cssUpload" action="" method="POST" enctype="multipart/form-data">'."\n";
+		echo '  <div><input id="fileid" name="cssFile" type="file" hidden/></div>'."\n";
+		echo '  <div><input type="hidden" name="cssUpload" value="1" /></div>'."\n";
+		echo '</form>'."\n";
+		echo '<form id="cssReset" action="" method="POST">'."\n";
 		echo '  <div><input type="hidden" name="cssReset" value="1" /></div>'."\n";
 		echo '</form>'."\n";
+		echo '<input type="button" onclick="javascript:cssDownload();" value="CSS Download" />'."\n";
+		echo '<input type="button" onclick="javascript:cssUpload();" value="CSS Upload" />'."\n";
 		echo '<input type="button" onclick="javascript:cssReset();" value="CSS '.$lang['factory_reset'].'" />'."\n";
 		?>
 	    </div>
