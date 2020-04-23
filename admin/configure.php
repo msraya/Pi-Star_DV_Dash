@@ -1055,8 +1055,11 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	     unset ($configysf2dmr['DMR Network']['Options']);
 	  }
 
-	    if (empty($_POST['bmHSSecurity']) != TRUE ) {
-	    $configysf2dmr['DMR Network']['Password'] = '"'.escapeshellcmd($_POST['bmHSSecurity']).'"';
+	  if (empty($_POST['bmHSSecurity']) != TRUE ) {
+	    $configysf2dmr['DMR Network']['Password'] = '"'.$_POST['bmHSSecurity'].'"';
+	    $configModem['BrandMeister']['Password'] = '"'.$_POST['bmHSSecurity'].'"';
+	  } else {
+	    unset ($configModem['BrandMeister']['Password']);
 	  }
 	}
 
