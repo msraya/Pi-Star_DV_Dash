@@ -1,7 +1,14 @@
 <?php
 $cmdoutput = array();
-exec('sudo echo HELLO >> /tmp/trace.txt');
-$cmdresult = exec('sudo /usr/bin/unattended-upgrade -d > /dev/null 2<&1', $cmdoutput, $retvalue);
+# Avoid that FS is remounted RO while upgrading, the process could take some time to finish
+exec('systemctl stop pistar-watchdog.timer > /dev/null 2>&1');
+exec('systemctl stop pistar-watchdog.service > /dev/null 2>&1');
+exec('sudo mount -o remount,rw /');
+$cmdresult = exec('sudo /usr/bin/unattended-upgrade > /dev/null 2<&1', $cmdoutput, $retvalue);
+exec('sudo mount -o remount,ro /');
+exec('systemctl start pistar-watchdog.service > /dev/null 2>&1');
+exec('systemctl start pistar-watchdog.timer > /dev/null 2>&1');
+
 echo "<br />";
 foreach ($cmdoutput as $l) {
     echo $l."<br />";
