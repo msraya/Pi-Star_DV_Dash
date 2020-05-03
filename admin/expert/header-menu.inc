@@ -104,7 +104,7 @@
 				<li class="subs"><a href="services.php?action=killmmdvmhost">Kill MMDVMHost</a></li>
 			    </ul>
 			</li>
-			<!-- <li class="subs"><a href="security_upgrades.php">Security Upgrades</a></li> -->
+			<li class="subs"><a href="security_upgrades.php">Security Upgrades</a></li>
 			<li class="subs"><a href="filemanager.php">File Manager</a></li>
 			<li class="subs"><a href="edit_dashboard.php">CSS Tool</a></li>
 			<li class="subs"><a href="ssh_access.php">SSH Access</a></li>
