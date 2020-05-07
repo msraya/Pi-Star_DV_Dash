@@ -338,8 +338,9 @@ if ( $testMMDVModeYSF == 1 || (isset($testDMR2YSF) && $testDMR2YSF == 1) ) { //H
         echo "</table>\n";
 }
 
+$testYSF2DMR = 0;
 if ( isset($configysf2dmr['Enabled']['Enabled']) ) { $testYSF2DMR = $configysf2dmr['Enabled']['Enabled']; }
-if ( $testYSF2DMR ) { //Hide the YSF2DMR information when YSF2DMR Network mode not enabled.
+if ($testYSF2DMR == 1) { //Hide the YSF2DMR information when YSF2DMR Network mode not enabled.
         $dmrMasterFile = fopen("/usr/local/etc/DMR_Hosts.txt", "r");
         $dmrMasterHost = $configysf2dmr['DMR Network']['Address'];
         while (!feof($dmrMasterFile)) {
