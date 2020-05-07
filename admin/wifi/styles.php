@@ -74,6 +74,7 @@ input[type=button]:hover,input[type=submit]:hover {
 	border-left: 1px solid;
 	float: left;
         border-bottom:1px solid;
+	font-family: "Courier New", Courier, monospace;
 }
 
 .wifiinfo {
@@ -83,6 +84,7 @@ input[type=button]:hover,input[type=submit]:hover {
 	border-right: 1px solid;
 	text-align: left;
         border-bottom:1px solid;
+	font-family: "Courier New", Courier, monospace;
 }
 
 .intheader {

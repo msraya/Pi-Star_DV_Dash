@@ -37,6 +37,8 @@ switch($page) {
 		$strTxPower = NULL;
 		$strLinkQuality = NULL;
 		$strSignalLevel = NULL;
+		$strWifiFreq = NULL;
+		$strWifiChan = NULL;
 
 		exec('ifconfig wlan0',$return);
 		exec('iwconfig wlan0',$return);
@@ -110,6 +112,11 @@ switch($page) {
 				$strSignalLevel = $result[1]; }
 				if (preg_match('/signal:\ (-[0-9]+ dBm)/i',$strWlan0,$result)) {
 				$strSignalLevel = $result[1]; }
+				if (preg_match('/Frequency:([0-9.]+ GHz)/i',$strWlan0,$result)) {
+                                $strWifiFreq = $result[1];
+				$strWifiChan = str_replace(" GHz", "", $strWifiFreq);
+                                $strWifiChan = str_replace(".", "", $strWifiChan);
+				$strWifiChan = ConvertToChannel(str_replace(".", "", $strWifiChan)); }
 		}
 		else {
 			$strStatus = '<span style="color:red">Interface is down</span>';
@@ -149,39 +156,43 @@ switch($page) {
 </form>
 <div class="infoheader">Wireless Information and Statistics</div>
 <div class="intinfo"><div class="intheader">Interface Information</div>
-Interface Name : wlan0<br />
-Interface Status : ' . $strStatus . '<br />
-IP Address : ' . $strIPAddress . '<br />
-Subnet Mask : ' . $strNetMask . '<br />
-Mac Address : ' . $strHWAddress . '<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Interface Name : wlan0<br />
+&nbsp;&nbsp;&nbsp;&nbsp;Interface Status : ' . $strStatus . '<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IP Address : ' . $strIPAddress . '<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Subnet Mask : ' . $strNetMask . '<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mac Address : ' . $strHWAddress . '<br />
 <br />
 <div class="intheader">Interface Statistics</div>
-Received Packets : ' . $strRxPackets . '<br />
-Received Bytes : ' . $strRxBytes . '<br />
-Transferred Packets : ' . $strTxPackets . '<br />
-Transferred Bytes : ' . $strTxBytes . '<br />
+&nbsp;&nbsp;&nbsp;&nbsp;Received Packets : ' . $strRxPackets . '<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Received Bytes : ' . $strRxBytes . '<br />
+&nbsp;Transferred Packets : ' . $strTxPackets . '<br />
+&nbsp;&nbsp;&nbsp;Transferred Bytes : ' . $strTxBytes . '<br />
 <br />
 </div>
 <div class="wifiinfo">
 <div class="intheader">Wireless Information</div>
-Connected To : ' . $strSSID . '<br />
-AP Mac Address : ' . $strBSSID . '<br />
+&nbsp;&nbsp;&nbsp;Connected To : ' . $strSSID . '<br />
+&nbsp;AP Mac Address : ' . $strBSSID . '<br />
 <br />
-Bitrate : ' . $strBitrate . '<br />
-Signal Level : ' . $strSignalLevel . '<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bitrate : ' . $strBitrate . '<br />
+&nbsp;&nbsp;&nbsp;Signal Level : ' . $strSignalLevel . '<br />
 <br />';
-if ($strTxPower) { echo 'Transmit Power : ' . $strTxPower .'<br />'."\n"; } else { echo "<br />\n"; }
-if ($strLinkQuality) { echo 'Link Quality : ' . $strLinkQuality . '<br />'."\n"; } else { echo "<br />\n"; }
-echo '<br />'."\n";
+if ($strTxPower) { echo '&nbsp;Transmit Power : ' . $strTxPower .'<br />'."\n"; } else { echo "<br />\n"; }
+if ($strLinkQuality) { echo '&nbsp;&nbsp;&nbsp;Link Quality : ' . $strLinkQuality . '<br />'."\n"; } else { echo "<br />\n"; }
+if (($strWifiFreq) && ($strWifiChan) && ($strWifiChan != "Invalid Channel")) {
+	echo '&nbsp;&nbsp;&nbsp;Channel Info : ' . $strWifiChan . ' (' . $strWifiFreq . ')<br />'."\n";
+} else {
+	echo "<br />\n";
+}
 if (file_exists('/etc/wpa_supplicant/wpa_supplicant.conf')) {
-	exec('grep "country" /etc/wpa_supplicant/wpa_supplicant.conf', $wifiCountryArr);
-	}
+        exec('grep "country" /etc/wpa_supplicant/wpa_supplicant.conf', $wifiCountryArr);
+        }
 if (isset($wifiCountryArr[0])) {
-	$wifiCountry = explode("=", $wifiCountryArr[0]);
-	if (isset($wifiCountry[1])) {
-		echo 'WiFi Country : '.$wifiCountry[1]."<br />\n";
-		}
-	}
+        $wifiCountry = explode("=", $wifiCountryArr[0]);
+        if (isset($wifiCountry[1])) {
+                echo '&nbsp;&nbsp;&nbsp;WiFi Country : '.$wifiCountry[1]."<br />\n";
+                }
+        }
 echo '<br />
 <br />
 </div>
