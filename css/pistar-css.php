@@ -686,6 +686,7 @@ input.toggle-round-flat:focus + label {
 }
 
 /* Tame Firefox Buttons */
+/*
 @-moz-document url-prefix() {
     select,
     input {
@@ -700,3 +701,4 @@ input.toggle-round-flat:focus + label {
         -moz-border-radius : 3px 3px 3px 3px;
     }
 }
+*/
