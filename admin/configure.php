@@ -2473,6 +2473,44 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 		}
 	}
 
+	// P25Gateway config file wrangling
+	$p25gwContent = "";
+        foreach($configp25gateway as $p25gwSection=>$p25gwValues) {
+                // UnBreak special cases
+                $p25gwSection = str_replace("_", " ", $p25gwSection);
+                $p25gwContent .= "[".$p25gwSection."]\n";
+                // append the values
+                foreach($p25gwValues as $p25gwKey=>$p25gwValue) {
+                        $p25gwContent .= $p25gwKey."=".$p25gwValue."\n";
+                        }
+                        $p25gwContent .= "\n";
+                }
+
+        if (!$handleP25GWconfig = fopen('/tmp/aFE45dgs4tFS.tmp', 'w')) {
+                return false;
+        }
+
+	if (!is_writable('/tmp/aFE45dgs4tFS.tmp')) {
+          echo "<br />\n";
+          echo "<table>\n";
+          echo "<tr><th>ERROR</th></tr>\n";
+          echo "<tr><td>Unable to write configuration file(s)...</td><tr>\n";
+          echo "<tr><td>Please wait a few seconds and retry...</td></tr>\n";
+          echo "</table>\n";
+          unset($_POST);
+          echo '<script type="text/javascript">setTimeout(function() { window.location=window.location;},5000);</script>';
+          die();
+	}
+	else {
+	        $success = fwrite($handleP25GWconfig, $p25gwContent);
+	        fclose($handleP25GWconfig);
+		if ( (intval(exec('cat /tmp/aFE45dgs4tFS.tmp | wc -l')) > 30 ) && (file_exists('/etc/p25gateway')) ) {
+			exec('sudo mv /tmp/aFE45dgs4tFS.tmp /etc/p25gateway');		// Move the file back
+			exec('sudo chmod 644 /etc/p25gateway');				// Set the correct runtime permissions
+			exec('sudo chown root:root /etc/p25gateway');				// Set the owner
+		}
+	}
+
 	// NXDNGateway config file wrangling
 	$nxdngwContent = "";
         foreach($confignxdngateway as $nxdngwSection=>$nxdngwValues) {
