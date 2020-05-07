@@ -13,7 +13,7 @@ if ( $testMMDVModeNXDN == 1 ) {
   if (fopen($nxdnGatewayConfigFile,'r')) { $confignxdngateway = parse_ini_file($nxdnGatewayConfigFile, true); }
 
   // Check that the remote is enabled
-  if ( $confignxdngateway['Remote Commands']['Enable'] == 1 ) {
+  if (isset($confignxdngateway['Remote Commands']['Enable']) && (isset($confignxdngateway['Remote Commands']['Port'])) && ($confignxdngateway['Remote Commands']['Enable'] == 1)) {
     $remotePort = $confignxdngateway['Remote Commands']['Port'];
     if (!empty($_POST) && isset($_POST["nxdnMgrSubmit"])) {
       // Handle Posted Data

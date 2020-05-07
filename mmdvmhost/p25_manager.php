@@ -13,7 +13,7 @@ if ( $testMMDVModeP25 == 1 ) {
   if (fopen($p25GatewayConfigFile,'r')) { $configp25gateway = parse_ini_file($p25GatewayConfigFile, true); }
 
   // Check that the remote is enabled
-  if ( $configp25gateway['Remote Commands']['Enable'] == 1 ) {
+  if (isset($configp25gateway['Remote Commands']['Enable']) && (isset($configp25gateway['Remote Commands']['Port'])) && ($configp25gateway['Remote Commands']['Enable'] == 1)) {
     $remotePort = $configp25gateway['Remote Commands']['Port'];
     if (!empty($_POST) && isset($_POST["p25MgrSubmit"])) {
       // Handle Posted Data

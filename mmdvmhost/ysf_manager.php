@@ -13,7 +13,7 @@ if ( $testMMDVModeYSF == 1 ) {
   if (fopen($ysfGatewayConfigFile,'r')) { $configysfgateway = parse_ini_file($ysfGatewayConfigFile, true); }
 
   // Check that the remote is enabled
-  if ( $configysfgateway['Remote Commands']['Enable'] == 1 ) {
+  if (isset($configysfgateway['Remote Commands']['Enable']) && (isset($configysfgateway['Remote Commands']['Port'])) && ($configysfgateway['Remote Commands']['Enable'] == 1)) {
     $remotePort = $configysfgateway['Remote Commands']['Port'];
     if (!empty($_POST) && isset($_POST["ysfMgrSubmit"])) {
       // Handle Posted Data
