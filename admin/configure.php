@@ -2184,7 +2184,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	if (!isset($configdmr2ysf['DMR Network']['TGUnlink'])) { $configdmr2ysf['DMR Network']['TGUnlink'] = "4000"; }
 	if (!isset($configdmr2ysf['DMR Network']['TGListFile'])) { $configdmr2ysf['DMR Network']['TGListFile'] = "/usr/local/etc/TGList_YSF.txt"; }
 	$configdmr2ysf['Log']['DisplayLevel'] = "0";
-	$configdmr2ysf['Log']['FileLevel'] = "0";
+	$configdmr2ysf['Log']['FileLevel'] = "2";
 
 	// Add missing options to YSFGateway
 	if (!isset($configysfgateway['General']['WiresXMakeUpper'])) { $configysfgateway['General']['WiresXMakeUpper'] = "1"; }
@@ -2309,6 +2309,20 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 		unset($configdmrgateway['XLX Network 2']);
 	}
 
+	// Add P25Gateway Options
+	$p25GatewayVer = exec("P25Gateway -v | awk {'print $3'} | cut -c 1-8");
+	if ($p25GatewayVer > 20200502) {
+		if (!isset($configp25gateway['Remote Commands']['Enable'])) { $configp25gateway['Remote Commands']['Enable'] = "1"; }
+		if (!isset($configp25gateway['Remote Commands']['Port'])) { $configp25gateway['Remote Commands']['Port'] = "6074"; }
+	}
+
+	// Add NXDNGateway Options
+	$nxdnGatewayVer = exec("NXDNGateway -v | awk {'print $3'} | cut -c 1-8");
+	if ($nxdnGatewayVer > 20200502) {
+		if (!isset($confignxdngateway['Remote Commands']['Enable'])) { $confignxdngateway['Remote Commands']['Enable'] = "1"; }
+		if (!isset($confignxdngateway['Remote Commands']['Port'])) { $confignxdngateway['Remote Commands']['Port'] = "6075"; }
+	}
+
 	// Migrate YSFGateway Config
 	$ysfGatewayVer = exec("YSFGateway -v | awk {'print $3'} | cut -c 1-8");
 	if ($ysfGatewayVer > 20180303) {
@@ -2334,6 +2348,10 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 		$configysfgateway['FCS Network']['Enable'] = "1";
 		$configysfgateway['FCS Network']['Port'] = "42001";
 		$configysfgateway['FCS Network']['Rooms'] = "/usr/local/etc/FCSHosts.txt";
+	}
+	if ($ysfGatewayVer > 20200502) {
+		if (!isset($configysfgateway['Remote Commands']['Enable'])) { $configysfgateway['Remote Commands']['Enable'] = "1"; }
+		if (!isset($configysfgateway['Remote Commands']['Port'])) { $configysfgateway['Remote Commands']['Port'] = "6073"; }
 	}
 
 	// Add the DAPNet Config
@@ -3941,7 +3959,7 @@ $ysfHosts = fopen("/usr/local/etc/YSFHosts.txt", "r"); ?>
                 while (!feof($fcsHosts)) {
                         $ysfHostsLine = fgets($fcsHosts);
                         $ysfHost = preg_split('/;/', $ysfHostsLine);
-                        if ((strpos($ysfHost[0], '#') === FALSE ) && ($ysfHost[0] != '')) {
+			if (substr($ysfHost[0], 0, 3) == "FCS") {
                                 if ( ($testYSFHost == $ysfHost[0]) || ($testYSFHost == $ysfHost[1]) ) { echo "      <option value=\"$ysfHost[0],$ysfHost[0]\" selected=\"selected\">$ysfHost[0] - ".htmlspecialchars($ysfHost[1])."</option>\n"; }
                                 else { echo "      <option value=\"$ysfHost[0],$ysfHost[0]\">$ysfHost[0] - ".htmlspecialchars($ysfHost[1])."</option>\n"; }
                         }
@@ -4153,7 +4171,7 @@ $p25Hosts = fopen("/usr/local/etc/P25Hosts.txt", "r");
     <td align="left"><a class="tooltip2" href="#"><?php echo $lang['p25_startup_host'];?>:<span><b>P25 Host</b>Set your prefered P25 Host here</span></a></td>
     <td style="text-align: left;"><select name="p25StartupHost">
 <?php
-	$testP25Host = $configp25gateway['Network']['Startup'];
+	if (isset($configp25gateway['Network']['Startup'])) { $testP25Host = $configp25gateway['Network']['Startup']; } else { $testP25Host = "none"; }
 	if ($testP25Host == "") { echo "      <option value=\"none\" selected=\"selected\">None</option>\n"; }
         else { echo "      <option value=\"none\">None</option>\n"; }
 	if ($testP25Host == "10") { echo "      <option value=\"10\" selected=\"selected\">10 - Parrot</option>\n"; }
@@ -4205,7 +4223,7 @@ $p25Hosts = fopen("/usr/local/etc/P25Hosts.txt", "r");
 <?php
 	if (file_exists('/etc/nxdngateway')) {
 		$nxdnHosts = fopen("/usr/local/etc/NXDNHosts.txt", "r");
-		$testNXDNHost = $confignxdngateway['Network']['Startup'];
+		if (isset($confignxdngateway['Network']['Startup'])) { $testNXDNHost = $confignxdngateway['Network']['Startup']; } else { $testNXDNHost = ""; }
 		if ($testNXDNHost == "") { echo "      <option value=\"none\" selected=\"selected\">None</option>\n"; }
 	        else { echo "      <option value=\"none\">None</option>\n"; }
 		if ($testNXDNHost == "10") { echo "      <option value=\"10\" selected=\"selected\">10 - Parrot</option>\n"; }

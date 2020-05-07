@@ -843,7 +843,7 @@ function getActualMode($metaLastHeard, $mmdvmconfigs) {
 function getDSTARLinks() {
 	// returns link-states of all D-Star-modules
 	if (filesize(LINKLOGPATH."/Links.log") == 0) {
-		return "not linked";
+		return "Not Linked";
 	}
 	if ($linkLog = fopen(LINKLOGPATH."/Links.log",'r')) {
 		while ($linkLine = fgets($linkLog)) {
@@ -982,22 +982,22 @@ function getActualLink($logLines, $mode) {
                   $to = substr($logLine, 51, 5);
                }
                if (strpos($logLine,"Disconnect via DTMF")) {
-                  $to = "not linked";
+                  $to = "Not Linked";
                }
                if (strpos($logLine,"Opening YSF network connection")) {
-                  $to = "not linked";
+                  $to = "Not Linked";
                }
 	       if (strpos($logLine,"Link has failed")) {
-                  $to = "not linked";
+                  $to = "Not Linked";
                }
                if (strpos($logLine,"DISCONNECT Reply")) {
-                  $to = "not linked";
+                  $to = "Not Linked";
                }
                if ($to !== "") {
                   return $to;
                }
             }
-            return "not linked";
+            return "Not Linked";
          } else {
             return "Service Not Started";
          }

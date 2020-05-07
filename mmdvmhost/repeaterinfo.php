@@ -201,19 +201,19 @@ if ($dmrMasterHost == '127.0.0.1') {
         $dmrMasterHost3Tooltip = $dmrMasterHost3;
 	if (isset($dmrMasterHost4)) { $dmrMasterHost4Tooltip = $dmrMasterHost4; }
 	if (isset($dmrMasterHost5)) { $dmrMasterHost5Tooltip = $dmrMasterHost5; }
-       if (strlen($xlxMasterHost1) > 19) { $xlxMasterHost1 = substr($xlxMasterHost1, 0, 17) . '..'; }
-       if (strlen($dmrMasterHost1) > 19) { $dmrMasterHost1 = substr($dmrMasterHost1, 0, 17) . '..'; }
-       if (strlen($dmrMasterHost2) > 19) { $dmrMasterHost2 = substr($dmrMasterHost2, 0, 17) . '..'; }
-       if (strlen($dmrMasterHost3) > 19) { $dmrMasterHost3 = substr($dmrMasterHost3, 0, 17) . '..'; }
-       if (isset($dmrMasterHost4)) { if (strlen($dmrMasterHost4) > 19) { $dmrMasterHost4 = substr($dmrMasterHost4, 0, 17) . '..'; } }
-       if (isset($dmrMasterHost5)) { if (strlen($dmrMasterHost5) > 19) { $dmrMasterHost5 = substr($dmrMasterHost5, 0, 17) . '..'; } }
+	if (strlen($xlxMasterHost1) > 19) { $xlxMasterHost1 = substr($xlxMasterHost1, 0, 17) . '..'; }
+	if (strlen($dmrMasterHost1) > 19) { $dmrMasterHost1 = substr($dmrMasterHost1, 0, 17) . '..'; }
+	if (strlen($dmrMasterHost2) > 19) { $dmrMasterHost2 = substr($dmrMasterHost2, 0, 17) . '..'; }
+	if (strlen($dmrMasterHost3) > 19) { $dmrMasterHost3 = substr($dmrMasterHost3, 0, 17) . '..'; }
+	if (isset($dmrMasterHost4)) { if (strlen($dmrMasterHost4) > 19) { $dmrMasterHost4 = substr($dmrMasterHost4, 0, 17) . '..'; } }
+	if (isset($dmrMasterHost5)) { if (strlen($dmrMasterHost5) > 19) { $dmrMasterHost5 = substr($dmrMasterHost5, 0, 17) . '..'; } }
 }
 else {
 	while (!feof($dmrMasterFile)) {
 		$dmrMasterLine = fgets($dmrMasterFile);
                 $dmrMasterHostF = preg_split('/\s+/', $dmrMasterLine);
 		if ((strpos($dmrMasterHostF[0], '#') === FALSE) && ($dmrMasterHostF[0] != '')) {
-		    if (($dmrMasterHost == $dmrMasterHostF[2]) && ($dmrMasterPort == $dmrMasterHostF[4])) { $dmrMasterHost = str_replace('_', ' ', $dmrMasterHostF[0]); }
+			if (($dmrMasterHost == $dmrMasterHostF[2]) && ($dmrMasterPort == $dmrMasterHostF[4])) { $dmrMasterHost = str_replace('_', ' ', $dmrMasterHostF[0]); }
 		}
 	}
         $dmrMasterHostTooltip = $dmrMasterHost;
@@ -265,16 +265,16 @@ if (getEnabled("DMR Network", $mmdvmconfigs) == 1) {
 			if ($configdmrgateway['DMR Network 3']['Enabled'] == 1) {
 				echo "<tr><td  style=\"background: #ffffff;\" colspan=\"2\" title=\"".$dmrMasterHost3Tooltip."\">".$dmrMasterHost3."</td></tr>\n";
 			}
-                        if (isset($configdmrgateway['DMR Network 4']['Enabled'])) {
-                                if ($configdmrgateway['DMR Network 4']['Enabled'] == 1) {
+			if (isset($configdmrgateway['DMR Network 4']['Enabled'])) {
+				if ($configdmrgateway['DMR Network 4']['Enabled'] == 1) {
                                         echo "<tr><td  style=\"background: #ffffff;\" colspan=\"2\" title=\"".$dmrMasterHost4Tooltip."\">".$dmrMasterHost4."</td></tr>\n";
-                                }
-                        }
-                        if (isset($configdmrgateway['DMR Network 5']['Enabled'])) {
-                                if ($configdmrgateway['DMR Network 5']['Enabled'] == 1) {
+				}
+			}
+			if (isset($configdmrgateway['DMR Network 5']['Enabled'])) {
+				if ($configdmrgateway['DMR Network 5']['Enabled'] == 1) {
                                         echo "<tr><td  style=\"background: #ffffff;\" colspan=\"2\" title=\"".$dmrMasterHost5Tooltip."\">".$dmrMasterHost5."</td></tr>\n";
-                                }
-                        }
+				}
+			}
 		}
 		else {
 			echo "<tr><td  style=\"background: #ffffff;\" colspan=\"2\" title=\"".$dmrMasterHostTooltip."\">".$dmrMasterHost."</td></tr>\n";
@@ -291,28 +291,28 @@ if ( isset($configdmr2ysf['Enabled']['Enabled']) ) {
     $testDMR2YSF = $configdmr2ysf['Enabled']['Enabled'];
 }
 if ( $testMMDVModeYSF == 1 || (isset($testDMR2YSF) && $testDMR2YSF == 1) ) { //Hide the YSF information when System Fusion Network mode not enabled.
-    $ysfLinkedTo = getActualLink($reverseLogLinesYSFGateway, "YSF");
+        $ysfLinkedTo = getActualLink($reverseLogLinesYSFGateway, "YSF");
     
-    if ($ysfLinkedTo == 'not linked' || $ysfLinkedTo == 'Service Not Started') {
-        $ysfLinkedToTxt = $ysfLinkedTo;
+    if ($ysfLinkedTo == 'Not Linked' || $ysfLinkedTo == 'Service Not Started') {
+                $ysfLinkedToTxt = $ysfLinkedTo;
         $ysfLinkState = '';
 	$ysfLinkStateTooltip = $ysfLinkedTo;
     }
     else {
-        $ysfHostFile = fopen("/usr/local/etc/YSFHosts.txt", "r");
-        $ysfLinkedToTxt = "null";
-        while (!feof($ysfHostFile)) {
-            $ysfHostFileLine = fgets($ysfHostFile);
-            $ysfRoomTxtLine = preg_split('/;/', $ysfHostFileLine);
+                $ysfHostFile = fopen("/usr/local/etc/YSFHosts.txt", "r");
+                $ysfLinkedToTxt = "null";
+                while (!feof($ysfHostFile)) {
+                        $ysfHostFileLine = fgets($ysfHostFile);
+                        $ysfRoomTxtLine = preg_split('/;/', $ysfHostFileLine);
 	    
             if (empty($ysfRoomTxtLine[0]) || empty($ysfRoomTxtLine[1]))
 		continue;
 
-            if (($ysfRoomTxtLine[0] == $ysfLinkedTo) || ($ysfRoomTxtLine[1] == $ysfLinkedTo)) {
-                $ysfLinkedToTxt = $ysfRoomTxtLine[1];
-                break;
-            }
-        }
+                        if (($ysfRoomTxtLine[0] == $ysfLinkedTo) || ($ysfRoomTxtLine[1] == $ysfLinkedTo)) {
+                                $ysfLinkedToTxt = $ysfRoomTxtLine[1];
+                                break;
+                        }
+                }
 	
         if ($ysfLinkedToTxt != "null") {
 	    //$ysfLinkedToTxt = "Room: ".$ysfLinkedToTxt;
@@ -326,16 +326,16 @@ if ( $testMMDVModeYSF == 1 || (isset($testDMR2YSF) && $testDMR2YSF == 1) ) { //H
 	    $ysfLinkStateTooltip = 'Linked to: ';
 	}
 	
-        $ysfLinkedToTxt = str_replace('_', ' ', $ysfLinkedToTxt);
-    }
+                $ysfLinkedToTxt = str_replace('_', ' ', $ysfLinkedToTxt);
+        }
     
     $ysfLinkedToTooltip = $ysfLinkStateTooltip.$ysfLinkedToTxt;
-    if (strlen($ysfLinkedToTxt) > 19) { $ysfLinkedToTxt = substr($ysfLinkedToTxt, 0, 17) . '..'; }
-    echo "<br />\n";
-    echo "<table>\n";
+        if (strlen($ysfLinkedToTxt) > 19) { $ysfLinkedToTxt = substr($ysfLinkedToTxt, 0, 17) . '..'; }
+        echo "<br />\n";
+        echo "<table>\n";
     echo "<tr><th colspan=\"2\">".$lang['ysf_net']."".$ysfLinkState."</th></tr>\n";
     echo "<tr><td colspan=\"2\"style=\"background: #ffffff;\" title=\"".$ysfLinkedToTooltip."\">".$ysfLinkedToTxt."</td></tr>\n";
-    echo "</table>\n";
+        echo "</table>\n";
 }
 
 if ( isset($configysf2dmr['Enabled']['Enabled']) ) { $testYSF2DMR = $configysf2dmr['Enabled']['Enabled']; }
@@ -404,7 +404,7 @@ if ( $testMMDVModePOCSAG == 1 ) { //Hide the POCSAG information when POCSAG Netw
 	if (isset($configdapnetgateway['DAPNET']['Address'])) {
 		$dapnetGatewayRemoteAddr = $configdapnetgateway['DAPNET']['Address'];
 	        $dapnetGatewayRemoteTooltip = $dapnetGatewayRemoteAddr;
-	        if (strlen($dapnetGatewayRemoteAddr) > 19) { $dapnetGatewayRemoteAddr = substr($dapnetGatewayRemoteAddr, 0, 17) . '..'; }
+		if (strlen($dapnetGatewayRemoteAddr) > 19) { $dapnetGatewayRemoteAddr = substr($dapnetGatewayRemoteAddr, 0, 17) . '..'; }
 		echo "<tr><th colspan=\"2\">POCSAG Master</th></tr>\n";
 		echo "<tr><td colspan=\"2\"style=\"background: #ffffff;\" title=\"".$dapnetGatewayRemoteTooltip."\">".$dapnetGatewayRemoteAddr."</td></tr>\n";
 	}
