@@ -6,7 +6,7 @@ This, and other required Pi-Star modules, are my personal forks, **DO NOT** repo
 
 **How to install it**
 
-* You need a working Pi-Star, from [here](http://www.pistar.uk/downloads/). Pi-Star 3 and 4-RC are supported.
+* You need a working Pi-Star, from [here](http://www.pistar.uk/downloads/). Pi-Star 3 and 4 are supported.
 
 * **MAKE A BACKUP OF YOUR Pi-Star CONFIGURATION**
 * Connect your Pi-Star
