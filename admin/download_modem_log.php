@@ -8,15 +8,15 @@ if ($_SERVER["PHP_SELF"] == "/admin/download_modem_log.php") {
 		if (file_exists("/var/log/pi-star/dstarrepeaterd-".gmdate('Y-m-d').".log")) {$logfile = "/var/log/pi-star/dstarrepeaterd-".gmdate('Y-m-d').".log";}
 	}
 
-	$unixfile = file_get_contents($logfile);
-	$dosfile = str_replace("\n", "\r\n", $unixfile);
+	//$unixfile = file_get_contents($logfile);
+	//$dosfile = str_replace("\n", "\r\n", $unixfile);
 
 	header('Pragma: public');
 	header('Expires: 0');
 	header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 	header('Cache-Control: private', false);
 	header('Content-Type: text/plain');
-	header('Content-Disposition: attachment; filename="Pi-Star_'.basename($logfile).'";');
+	header('Content-Disposition: attachment; filename="Pi-Star_'.exec('cat /etc/hostname').'_'.basename($logfile).'";');
 	header('Content-Length: '.filesize($logfile));
 	header('Accept-Ranges: bytes');
 
