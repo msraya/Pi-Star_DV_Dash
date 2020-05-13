@@ -12,15 +12,17 @@ include_once $_SERVER['DOCUMENT_ROOT'].'/config/language.php';        // Transla
  $(function(){
      $('table.perso-poc-table').floatThead({
 	 position: 'fixed',
-	 scrollContainer: function($table){
-	     return $table.closest('.table-container');
-	 }
+	 scrollContainer: true
+	 //scrollContainer: function($table){
+	 //    return $table.closest('.table-container');
+	 //}
      });
      $('table.poc-lh-table').floatThead({
 	 position: 'fixed',
-	 scrollContainer: function($table){
-	     return $table.closest('.table-container');
-	 }
+	 scrollContainer: true
+	 //scrollContainer: function($table){
+	 //    return $table.closest('.table-container');
+	 //}
      });
  });
 </script>

@@ -8,9 +8,10 @@ include_once $_SERVER['DOCUMENT_ROOT'].'/config/language.php';	      // Translat
  $(function(){
      $('table.lh-table').floatThead({
 	 position: 'fixed',
-	 scrollContainer: function($table){
-	     return $table.closest('.table-container');
-	 }
+	 scrollContainer: true
+	 //scrollContainer: function($table){
+	 //    return $table.closest('.table-container');
+	 //}
      });
  });
 </script>

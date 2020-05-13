@@ -11,9 +11,10 @@ $localTXList = $lastHeard;
  $(function(){
      $('table.local-tx-table').floatThead({
 	 position: 'fixed',
-	 scrollContainer: function($table){
-	     return $table.closest('.table-container');
-	 }
+	 scrollContainer: true
+	 //scrollContainer: function($table){
+	 //    return $table.closest('.table-container');
+	 //}
      });
  });
 </script>
