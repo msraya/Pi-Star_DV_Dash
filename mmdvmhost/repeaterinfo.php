@@ -323,7 +323,7 @@ if ( $testMMDVModeYSF == 1 || (isset($testDMR2YSF) && $testDMR2YSF == 1) ) { //H
 	    //$ysfLinkedToTxt = "Linked to: ".$ysfLinkedTo;
 	    $ysfLinkedToTxt = $ysfLinkedTo;
             $ysfLinkState = ' [Lnkd]';
-	    $ysfLinkStateTooltip = 'Linked to: ';
+	    $ysfLinkStateTooltip = 'Linked to ';
 	}
 	
                 $ysfLinkedToTxt = str_replace('_', ' ', $ysfLinkedToTxt);
@@ -391,7 +391,7 @@ if ( $testMMDVModeNXDN == 1 || isset($testYSF2NXDN) || isset($testDMR2NXDN) ) { 
 	if (file_exists('/etc/nxdngateway')) {
 		echo "<tr><td colspan=\"2\"style=\"background: #ffffff;\">".getActualLink($logLinesNXDNGateway, "NXDN")."</td></tr>\n";
 	} else {
-		echo "<tr><td colspan=\"2\"style=\"background: #ffffff;\">Linked to: TG65000</td></tr>\n";
+		echo "<tr><td colspan=\"2\"style=\"background: #ffffff;\">Linked to TG65000</td></tr>\n";
 	}
 	echo "</table>\n";
 }
