@@ -118,12 +118,12 @@ if ( $configmmdvm['Mobile GPS']['Enable'] == 1 ) {
 	exec('echo "MinDistance=400" >> /tmp/zmh2nHP4qgkwgv.tmp');
 	exec('echo "MinTime=60" >> /tmp/zmh2nHP4qgkwgv.tmp');
 	exec('echo "MaxTime=300" >> /tmp/zmh2nHP4qgkwgv.tmp');
-	exec('echo "Daemon=0" >> /tmp/zmh2nHP4qgkwgv.tmp');
+	exec('echo "Daemon=1" >> /tmp/zmh2nHP4qgkwgv.tmp');
 	exec('echo "Debug=0" >> /tmp/zmh2nHP4qgkwgv.tmp');
 	exec('echo "" >> /tmp/zmh2nHP4qgkwgv.tmp');
 	exec('echo "[Log]" >> /tmp/zmh2nHP4qgkwgv.tmp');
 	exec('echo "DisplayLevel=0" >> /tmp/zmh2nHP4qgkwgv.tmp');
-	exec('echo "FileLevel=2" >> /tmp/zmh2nHP4qgkwgv.tmp');
+	exec('echo "FileLevel=1" >> /tmp/zmh2nHP4qgkwgv.tmp');
 	exec('echo "FilePath=/var/log/pi-star" >> /tmp/zmh2nHP4qgkwgv.tmp');
         exec('echo "FileRoot=MobileGPS" >> /tmp/zmh2nHP4qgkwgv.tmp');
 	exec('echo "" >> /tmp/zmh2nHP4qgkwgv.tmp');
@@ -530,6 +530,9 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	   $configmmdvm['Mobile GPS']['Enable'] = $mobilegpsEnabled;
 	   $configysfgateway['Mobile GPS']['Enable'] = $mobilegpsEnabled;
 	   $confignxdngateway['Mobile GPS']['Enable'] = $mobilegpsEnabled;
+	    
+	   $configmobilegps['General']['Daemon'] = "1";
+	   $configmobilegps['Log']['FileLevel'] = "1";
 
 	   if (empty($_POST['mobilegpsPort']) != TRUE ) {
 	      $configmobilegps['GPS']['Port'] = escapeshellcmd($_POST['mobilegpsPort']);
@@ -4304,16 +4307,15 @@ $p25Hosts = fopen("/usr/local/etc/P25Hosts.txt", "r");
 <?php } ?>
 
 <!-- Mobile GPS-->
-<!-- TRANSLAGE -->
 <?php if ( $configmmdvm['Mobile GPS']['Enable'] == 1 ) { ?>
-	<h2>Mobile GPS Configuration</h2>
+	<h2><?php echo $lang['mobilegps_config'];?></h2>
     <table>
       <tr>
         <th width="200"><a class="tooltip" href="#"><?php echo $lang['setting'];?><span><b>Setting</b></span></a></th>
         <th colspan="2"><a class="tooltip" href="#"><?php echo $lang['value'];?><span><b>Value</b>The current value from the<br />configuration files</span></a></th>
       </tr>
       <tr>
-        <td align="left"><a class="tooltip2" href="#">GPS Port:<span><b>GPS Port</b>Define the GPS serial port here</span></a></td>
+        <td align="left"><a class="tooltip2" href="#"><?php echo $lang['mobilegps_port'];?>:<span><b>GPS Port</b>Define the GPS serial port here</span></a></td>
 	<td align="left" colspan="2"><select name="mobilegpsPort">
 	    <?php
 	    exec('ls -lR /dev/ | grep "dialout" | awk \'{print "/dev/"$10}\'', $serialPorts);
@@ -4332,7 +4334,7 @@ $p25Hosts = fopen("/usr/local/etc/P25Hosts.txt", "r");
 	    </select></td>
       </tr>
       <tr>
-        <td align="left"><a class="tooltip2" href="#">GPS Baudrate:<span><b>GPS Baudrate</b>Set the serial baudrate speed here</span></a></td>
+        <td align="left"><a class="tooltip2" href="#"><?php echo $lang['mobilegps_speed'];?>:<span><b>GPS Baudrate</b>Set the serial baudrate speed here</span></a></td>
         <td align="left" colspan-"2"><select name="mobilegpsBaudrate">
 	    <?php
 	    $serialSpeeds = array('110', '300', '600', '1200', '2400', '4800', '9600', '14400', '19200', '28800', '38400', '56000', '57600', '115200');
