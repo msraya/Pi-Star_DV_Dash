@@ -169,6 +169,19 @@ if (file_exists('/etc/dstar-radio.mmdvmhost')) {
                 include 'mmdvmhost/bm_manager.php';                     // DMR Link Manager
         }
 
+	if ($_SERVER["PHP_SELF"] == "/admin/index.php") { 		// Admin Only Option
+		echo '<script type="text/javascript">'."\n";
+        	echo 'function reloadtgifConnections(){'."\n";
+        	echo '  $("#tgifConnects").load("/mmdvmhost/tgif_links.php",function(){ setTimeout(reloadtgifConnections,15000) });'."\n";
+        	echo '}'."\n";
+        	echo 'setTimeout(reloadtgifConnections,15000);'."\n";
+		echo '$(window).trigger(\'resize\');'."\n";
+        	echo '</script>'."\n";
+        	echo '<div id="tgifConnects">'."\n";
+		include 'mmdvmhost/tgif_links.php';			// TGIF Links
+		echo '</div>'."\n";
+	}
+
 	$testMMDVModeYSFnet = getConfigItem("System Fusion Network", "Enable", $mmdvmconfigs);
         if ( $testMMDVModeYSFnet == 1 ) {				// If YSF network is enabled, add these extra features.
 		if ($_SERVER["PHP_SELF"] == "/admin/index.php") { 	// Admin Only Option
