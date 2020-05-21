@@ -2,7 +2,7 @@
 # This is an auto-generated config-file!
 # Be careful, when manual editing this!
 
-date_default_timezone_set('Europe/Paris');
+date_default_timezone_set('UTC');
 define("MMDVMLOGPATH", "/var/log/pi-star");
 define("MMDVMLOGPREFIX", "MMDVM");
 define("MMDVMINIPATH", "/etc");

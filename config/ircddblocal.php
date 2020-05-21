@@ -1,6 +1,6 @@
 <?php
 $logPath='/var/log/pi-star';
-$callsign='F1RMB';
+$callsign='M1ABC';
 $registerURL = '';
 $starLogPath = $logPath . '/STARnet.log';
 $linkLogPath = $logPath . '/Links.log';
