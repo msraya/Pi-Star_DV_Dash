@@ -86,13 +86,13 @@ if (file_exists('/etc/dmr2nxdn')) {
 // Load the p25gateway config file
 if (file_exists('/etc/p25gateway')) {
 	$p25gatewayConfigFile = '/etc/p25gateway';
-	$configp25gateway = parse_ini_file($p25gatewayConfigFile, true);
+	if (fopen($p25gatewayConfigFile,'r')) { $configp25gateway = parse_ini_file($p25gatewayConfigFile, true); }
 }
 
 // Load the nxdngateway config file
 if (file_exists('/etc/nxdngateway')) {
 	$nxdngatewayConfigFile = '/etc/nxdngateway';
-	$confignxdngateway = parse_ini_file($nxdngatewayConfigFile, true);
+	if (fopen($nxdngatewayConfigFile,'r')) { $confignxdngateway = parse_ini_file($nxdngatewayConfigFile, true); }
 }
 
 // Load the nxdn2dmr config file
@@ -908,7 +908,6 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  $rollTIMESERVERcall = 'sudo sed -i "/callsign=/c\\callsign='.$newCallsignUpper.'" /etc/timeserver';
 	  $rollSTARNETSERVERcall = 'sudo sed -i "/callsign=/c\\callsign='.$newCallsignUpper.'" /etc/starnetserver';
 	  $rollSTARNETSERVERirc = 'sudo sed -i "/ircddbUsername=/c\\ircddbUsername='.$newCallsignUpperIRC.'" /etc/starnetserver';
-	  $rollP25GATEWAY = 'sudo sed -i "/Callsign=/c\\Callsign='.$newCallsignUpper.'" /etc/p25gateway';
 
 	  // Only roll ircDDBGateway Username if using OpenQuad
 	  if ($configs['ircddbHostname'] == "rr.openquad.net") {
@@ -932,6 +931,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  $configysf2p25['aprs.fi']['Description'] = $newCallsignUpper."_Pi-Star";
 	  $configysf2p25['YSF Network']['Callsign'] = $newCallsignUpper;
 	  $configdmr2ysf['YSF Network']['Callsign'] = $newCallsignUpper;
+	  $configp25gateway['General']['Callsign'] = $newCallsignUpper;
 	  $confignxdngateway['aprs.fi']['Description'] = $newCallsignUpper."_Pi-Star";
 	  $confignxdngateway['aprs.fi']['Password'] = aprspass($newCallsignUpper);
 	  $confignxdngateway['General']['Callsign'] = $newCallsignUpper;
@@ -953,20 +953,18 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  system($rollTIMESERVERcall);
 	  system($rollSTARNETSERVERcall);
 	  system($rollSTARNETSERVERirc);
-	  system($rollP25GATEWAY);
 	}
 
 	// Set the P25 Startup Host
 	if (empty($_POST['p25StartupHost']) != TRUE ) {
           $newP25StartupHost = strtoupper(escapeshellcmd($_POST['p25StartupHost']));
           if ($newP25StartupHost === "NONE") {
-		  $rollP25Startup = 'sudo sed -i "/Startup=/c\\#Startup=" /etc/p25gateway';
+		  unset($configp25gateway['Network']['Startup']);
 		  unset($configysf2p25['P25 Network']['StartupDstId']);
 	  } else {
-		  $rollP25Startup = 'sudo sed -i "/Startup=/c\\Startup='.$newP25StartupHost.'" /etc/p25gateway';
+		  $configp25gateway['Network']['Startup'] = $newP25StartupHost;
 		  $configysf2p25['P25 Network']['StartupDstId'] = $newP25StartupHost;
 	  }
-	  system($rollP25Startup);
 	}
 
 	// Set P25 NAC
@@ -1094,13 +1092,12 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  $newYSF2P25StartupHost = strtoupper(escapeshellcmd($_POST['ysf2p25StartupDstId']));
 
 	  if ($newYSF2P25StartupHost === "NONE") {
-		  $rollYSF2P25Startup = 'sudo sed -i "/Startup=/c\\#Startup=" /etc/p25gateway';
+		  unset($configp25gateway['Network']['Startup']);
 		  unset($configysf2p25['P25 Network']['StartupDstId']);
 	  } else {
-		  $rollYSF2P25Startup = 'sudo sed -i "/Startup=/c\\Startup='.$newYSF2P25StartupHost.'" /etc/p25gateway';
+		  $configp25gateway['Network']['Startup'] = $newYSF2P25StartupHost;
 		  $configysf2p25['P25 Network']['StartupDstId'] = $newYSF2P25StartupHost;
 	  }
-	  system($rollYSF2P25Startup);
 	}
 
 	// Set the YSF2P25 P25Id
@@ -2063,8 +2060,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 
 	// Set the MMDVMHost Display Type
 	if  (empty($_POST['mmdvmDisplayPort']) != TRUE ) {
-	  $configmmdvm['TFT Serial']['Port'] = $_POST['mmdvmDisplayPort'];
-	  $configmmdvm['Nextion']['Port'] = $_POST['mmdvmDisplayPort'];
+	  if ($_POST['mmdvmDisplayPort'] == "None") {
+		  $configmmdvm['TFT Serial']['Port'] = $_POST['mmdvmDisplayPort'];
+		  $configmmdvm['Nextion']['Port'] = $_POST['mmdvmDisplayPort'];
+	  } else {
+		  $configmmdvm['TFT Serial']['Port'] = "/dev/".$_POST['mmdvmDisplayPort'];
+		  $configmmdvm['Nextion']['Port'] = "/dev/".$_POST['mmdvmDisplayPort'];
+	  }
 	}
 
 	// Set the Nextion Display Layout
@@ -2315,15 +2317,8 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	// Add P25Gateway Options
 	$p25GatewayVer = exec("P25Gateway -v | awk {'print $3'} | cut -c 1-8");
 	if ($p25GatewayVer >= 20200403) {
-		if (!isset($configp25gateway['Remote Commands']['Enable'])) {
-			system('echo "[Remote Commands]" >> /etc/p25gateway');
-			system('echo "Enable=1" >> /etc/p25gateway');
-			system('echo "Port=6074" >> /etc/p25gateway');
-			$configp25gateway['Remote Commands']['Enable'] = "1";
-		}
-		if (!isset($configp25gateway['Remote Commands']['Port'])) {
-			$configp25gateway['Remote Commands']['Port'] = "6074"; 
-		}
+		if (!isset($configp25gateway['Remote Commands']['Enable'])) { $configp25gateway['Remote Commands']['Enable'] = "1"; }
+		if (!isset($configp25gateway['Remote Commands']['Port'])) { $configp25gateway['Remote Commands']['Port'] = "6074"; }
 	}
 
 	// Add NXDNGateway Options
@@ -2483,44 +2478,6 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 		}
 	}
 
-	// P25Gateway config file wrangling
-	$p25gwContent = "";
-        foreach($configp25gateway as $p25gwSection=>$p25gwValues) {
-                // UnBreak special cases
-                $p25gwSection = str_replace("_", " ", $p25gwSection);
-                $p25gwContent .= "[".$p25gwSection."]\n";
-                // append the values
-                foreach($p25gwValues as $p25gwKey=>$p25gwValue) {
-                        $p25gwContent .= $p25gwKey."=".$p25gwValue."\n";
-                        }
-                        $p25gwContent .= "\n";
-                }
-
-        if (!$handleP25GWconfig = fopen('/tmp/aFE45dgs4tFS.tmp', 'w')) {
-                return false;
-        }
-
-	if (!is_writable('/tmp/aFE45dgs4tFS.tmp')) {
-          echo "<br />\n";
-          echo "<table>\n";
-          echo "<tr><th>ERROR</th></tr>\n";
-          echo "<tr><td>Unable to write configuration file(s)...</td><tr>\n";
-          echo "<tr><td>Please wait a few seconds and retry...</td></tr>\n";
-          echo "</table>\n";
-          unset($_POST);
-          echo '<script type="text/javascript">setTimeout(function() { window.location=window.location;},5000);</script>';
-          die();
-	}
-	else {
-	        $success = fwrite($handleP25GWconfig, $p25gwContent);
-	        fclose($handleP25GWconfig);
-		if ( (intval(exec('cat /tmp/aFE45dgs4tFS.tmp | wc -l')) > 30 ) && (file_exists('/etc/p25gateway')) ) {
-			exec('sudo mv /tmp/aFE45dgs4tFS.tmp /etc/p25gateway');		// Move the file back
-			exec('sudo chmod 644 /etc/p25gateway');				// Set the correct runtime permissions
-			exec('sudo chown root:root /etc/p25gateway');				// Set the owner
-		}
-	}
-
 	// NXDNGateway config file wrangling
 	$nxdngwContent = "";
         foreach($confignxdngateway as $nxdngwSection=>$nxdngwValues) {
@@ -2556,6 +2513,44 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 			exec('sudo mv /tmp/kXKwkDKy793HF5.tmp /etc/nxdngateway');		// Move the file back
 			exec('sudo chmod 644 /etc/nxdngateway');				// Set the correct runtime permissions
 			exec('sudo chown root:root /etc/nxdngateway');				// Set the owner
+		}
+	}
+
+	// P25Gateway config file wrangling
+	$p25gwContent = "";
+        foreach($configp25gateway as $p25gwSection=>$p25gwValues) {
+                // UnBreak special cases
+                $p25gwSection = str_replace("_", " ", $p25gwSection);
+                $p25gwContent .= "[".$p25gwSection."]\n";
+                // append the values
+                foreach($p25gwValues as $p25gwKey=>$p25gwValue) {
+                        $p25gwContent .= $p25gwKey."=".$p25gwValue."\n";
+                        }
+                        $p25gwContent .= "\n";
+                }
+
+        if (!$handleP25GWconfig = fopen('/tmp/sJSySkheSgrelJX.tmp', 'w')) {
+                return false;
+        }
+
+	if (!is_writable('/tmp/sJSySkheSgrelJX.tmp')) {
+          echo "<br />\n";
+          echo "<table>\n";
+          echo "<tr><th>ERROR</th></tr>\n";
+          echo "<tr><td>Unable to write configuration file(s)...</td><tr>\n";
+          echo "<tr><td>Please wait a few seconds and retry...</td></tr>\n";
+          echo "</table>\n";
+          unset($_POST);
+          echo '<script type="text/javascript">setTimeout(function() { window.location=window.location;},5000);</script>';
+          die();
+	}
+	else {
+	        $success = fwrite($handleP25GWconfig, $p25gwContent);
+	        fclose($handleP25GWconfig);
+		if ( (intval(exec('cat /tmp/sJSySkheSgrelJX.tmp | wc -l')) > 30 ) && (file_exists('/etc/p25gateway')) ) {
+			exec('sudo mv /tmp/sJSySkheSgrelJX.tmp /etc/p25gateway');		// Move the file back
+			exec('sudo chmod 644 /etc/p25gateway');					// Set the correct runtime permissions
+			exec('sudo chown root:root /etc/p25gateway');				// Set the owner
 		}
 	}
 
@@ -3209,29 +3204,32 @@ else:
 	    </select>
 	    Port: <select name="mmdvmDisplayPort">
 	    <?php
-            if (($configmmdvm['General']['Display'] == "None") || ($configmmdvm['General']['Display'] == "") ) {
-	    	echo '	    <option selected="selected" value="None">None</option>'."\n";
-    	    } else {
-	        echo '	    <option value="None">None</option>'."\n";
+            if (($configmmdvm['General']['Display'] == "None") || ($configmmdvm['General']['Display'] == "")) {
+                echo '      <option selected="selected" value="None">None</option>'."\n";
+            } else {
+                echo '      <option value="None">None</option>'."\n";
             }
-	    if (isset($configmmdvm['Nextion']['Port'])) {
-	    	if ($configmmdvm['Nextion']['Port'] == "modem") {
-			echo '	    <option selected="selected" value="modem">modem</option>'."\n";
-		} else {
-			echo '	    <option value="modem">modem</option>'."\n";
-			echo '	    <option selected="selected" value="'.$configmmdvm['Nextion']['Port'].'">'.$configmmdvm['Nextion']['Port'].'</option>'."\n";
-		}
-    	    }
-	    exec('ls /dev/ | egrep -h "ttyA|ttyUSB"', $availablePorts);
-		  foreach($availablePorts as $port) {
-			  echo "	    <option value=\"/dev/$port\">/dev/$port</option>\n";
-	          }
+            if (isset($configmmdvm['Nextion']['Port'])) {
+                if ($configmmdvm['Nextion']['Port'] == "modem") {
+                        echo '      <option selected="selected" value="modem">modem</option>'."\n";
+                } else {
+                        echo '      <option value="modem">modem</option>'."\n";
+                }
+                if ( ($configmmdvm['Nextion']['Port'] == "None") || ($configmmdvm['Nextion']['Port'] == "" )) { } else {
+			$currentPort = str_replace($configmmdvm['Nextion']['Port'], "/dev/", "");
+                        echo '      <option selected="selected" value="'.$currentPort.'">'.$configmmdvm['Nextion']['Port'].'</option>'."\n";
+                }
+            }
+            exec('ls /dev/ | egrep -h "ttyA|ttyUSB"', $availablePorts);
+            foreach($availablePorts as $port) {
+                 echo "     <option value=\"$port\">/dev/$port</option>\n";
+            }
 	    ?>
 	    <?php if (file_exists('/dev/ttyS2')) { ?>
-	    <option <?php if ($configmmdvm['Nextion']['Port'] == "/dev/ttyS2") {echo 'selected="selected" ';}; ?>value="/dev/ttyS2">/dev/ttyS2</option>
+	    <option <?php if ($configmmdvm['Nextion']['Port'] == "/dev/ttyS2") {echo 'selected="selected" ';}; ?>value="ttyS2">/dev/ttyS2</option>
     	    <?php } ?>
 	    <?php if (file_exists('/dev/ttyNextionDriver')) { ?>
-	    <option <?php if ($configmmdvm['Nextion']['Port'] == "/dev/ttyNextionDriver") {echo 'selected="selected" ';}; ?>value="/dev/ttyNextionDriver">/dev/ttyNextionDriver</option>
+	    <option <?php if ($configmmdvm['Nextion']['Port'] == "/dev/ttyNextionDriver") {echo 'selected="selected" ';}; ?>value="ttyNextionDriver">/dev/ttyNextionDriver</option>
     	    <?php } ?>
 	    </select>
 	    Nextion Layout: <select name="mmdvmNextionDisplayType">
