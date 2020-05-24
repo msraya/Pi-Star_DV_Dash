@@ -81,9 +81,16 @@ for ($i = 0; $i < $maxCount; $i++) {
 	}
 	// Duration
 	if ($listElem[6] == null) {
-	    echo "<td style=\"background:#f33;\">TX</td><td></td><td></td>";
+	    // Live duration
+            $utc_time = $listElem[0];
+            $utc_tz =  new DateTimeZone('UTC');
+            $now = new DateTime("now", $utc_tz);
+            $dt = new DateTime($utc_time, $utc_tz);
+            $duration = $now->getTimestamp() - $dt->getTimestamp();
+            $duration_string = $duration<999 ? "&asymp; " . round($duration) . "s" : "&infin;";
+            echo "<td colspan =\"3\" style=\"background:#f33;\">TX " . $duration_string . "</td>";
 	} else if ($listElem[6] == "SMS") {
-	    echo "<td style=\"background:#1d1;\">SMS</td><td></td><td></td>";
+	    echo "<td colspan =\"3\" style=\"background:#1d1;\">SMS</td>";
 	} else {
 	    echo "<td>$listElem[6]</td>";
 	    
