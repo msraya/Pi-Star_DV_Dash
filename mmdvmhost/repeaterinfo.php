@@ -142,7 +142,7 @@ if (isset($lastHeard[0])) {
 		}
 	}
 else {
-	echo "<td></td>";
+	echo "<td style=\"background:#0b0; color:#030;\">Listening</td>";
 }
 ?></tr>
 <tr><th>Tx</th><td style="background: #ffffff;"><?php echo getMHZ(getConfigItem("Info", "TXFrequency", $mmdvmconfigs)); ?></td></tr>
