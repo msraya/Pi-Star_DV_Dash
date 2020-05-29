@@ -94,7 +94,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/expert/upgrade.php") {
   <?php include './header-menu.inc'; ?>
   <div class="contentwide">
   <table width="100%">
-  <tr><th>Upgrade Running</th></tr>
+  <tr><th>Upgrade is Running</th></tr>
   <tr><td align="left"><div id="tail">Starting upgrade, please wait...<br /></div></td></tr>
   </table>
   </div>
