@@ -53,41 +53,44 @@ $configmmdvm = parse_ini_file($mmdvmConfigFile, true);
 $ysfgatewayConfigFile = '/etc/ysfgateway';
 $configysfgateway = parse_ini_file($ysfgatewayConfigFile, true);
 
+function ensureFileExists($fname) {
+    if (!file_exists('/etc/'.$fname) || trim(@file_get_contents('/etc/'.$fname)) == false) {
+	exec('sudo mount -o remount,rw /');
+	exec('sudo sudo rm -rf /tmp/cfgupdate && mkdir -p /tmp/cfgupdate && sudo unzip /usr/local/bin/config_clean.zip -d /tmp/cfgupdate && sudo rm -f /etc/'.$fname.' && sudo mv -f /tmp/cfgupdate/'.$fname.' /etc/'.$fname.' && sudo chmod 644 /etc/'.$fname.' && sudo chown root:root /etc/'.$fname.' && sudo rm -rf /tmp/cfgupdate');
+	exec('sudo mount -o remount,ro /');
+    }
+}
+
 // Load the ysf2dmr config file
+ensureFileExists('ysf2dmr');
 if (file_exists('/etc/ysf2dmr')) {
 	$ysf2dmrConfigFile = '/etc/ysf2dmr';
 	if (fopen($ysf2dmrConfigFile,'r')) { $configysf2dmr = parse_ini_file($ysf2dmrConfigFile, true); }
 }
 
 // Load the ysf2nxdn config file
+ensureFileExists('ysf2nxdn');
 if (file_exists('/etc/ysf2nxdn')) {
 	$ysf2nxdnConfigFile = '/etc/ysf2nxdn';
 	if (fopen($ysf2nxdnConfigFile,'r')) { $configysf2nxdn = parse_ini_file($ysf2nxdnConfigFile, true); }
 }
 
 // Load the ysf2p25 config file
+ensureFileExists('ysf2p25');
 if (file_exists('/etc/ysf2p25')) {
 	$ysf2p25ConfigFile = '/etc/ysf2p25';
 	if (fopen($ysf2p25ConfigFile,'r')) { $configysf2p25 = parse_ini_file($ysf2p25ConfigFile, true); }
 }
 
 // Load the dmr2ysf config file
-if (!file_exists('/etc/dmr2ysf')) {
-    exec('sudo mount -o remount,rw /');
-    exec('sudo mkdir -p /tmp/cfgupdate && sudo unzip /usr/local/bin/config_clean.zip -d /tmp/cfgupdate && sudo cp /tmp/cfgupdate/dmr2ysf /etc/ && sudo chmod 644 /etc/dmr2ysf && sudo chown root:root /etc/dmr2ysf && sudo rm -rf /tmp/cfgupdate');
-    exec('sudo mount -o remount,ro /');
-}
+ensureFileExists('dmr2ysf');
 if (file_exists('/etc/dmr2ysf')) {
 	$dmr2ysfConfigFile = '/etc/dmr2ysf';
 	if (fopen($dmr2ysfConfigFile,'r')) { $configdmr2ysf = parse_ini_file($dmr2ysfConfigFile, true); }
 }
 
 // Load the dmr2nxdn config file
-if (!file_exists('/etc/dmr2nxdn')) {
-    exec('sudo mount -o remount,rw /');
-    exec('sudo mkdir -p /tmp/cfgupdate && sudo unzip /usr/local/bin/config_clean.zip -d /tmp/cfgupdate && sudo cp /tmp/cfgupdate/dmr2nxdn /etc/ && sudo chmod 644 /etc/dmr2nxdn && sudo chown root:root /etc/dmr2nxdn && sudo rm -rf /tmp/cfgupdate');
-    exec('sudo mount -o remount,ro /');
-}
+ensureFileExists('dmr2nxdn');
 if (file_exists('/etc/dmr2nxdn')) {
 	$dmr2nxdnConfigFile = '/etc/dmr2nxdn';
 	if (fopen($dmr2nxdnConfigFile,'r')) { $configdmr2nxdn = parse_ini_file($dmr2nxdnConfigFile, true); }
