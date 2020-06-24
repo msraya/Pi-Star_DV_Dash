@@ -16,7 +16,7 @@ function update_ini_file($data, $filepath) {
 	$content .= "[".$section."]\n";
 	//append the values
 	foreach($values as $key=>$value) {
-	    if (($section == "DMR Network 1" || $section == "DMR Network 2") && $key == "Options" && $value) {
+	    if ((strncmp($section, "DMR Network", 11) == 0) && ($key == "Options" || $key == "Password") && $value) {
 		$value = str_replace('"', "", $value);
 		$content .= $key."=\"".$value."\"\n";
 	    }
