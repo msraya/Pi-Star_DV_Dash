@@ -222,9 +222,9 @@ function formatSize( $bytes ) {
 			$DAPNETGateway_Ver = exec('/usr/local/bin/DAPNETGateway -v | cut -d\' \' -f 3-');
 			echo "  <tr>";getStatusClass(isProcessRunning("DAPNETGateway"), true); echo "DAPNETGateway</td><td align=\"left\">".$DAPNETGateway_Ver."</td></tr>\n";
 		    }
-		    if (is_executable('/usr/local/bin/MobileGPS')) {
-			$MobileGPS_Ver = exec('/usr/local/bin/MobileGPS -v | cut -d\' \' -f 3-');
-			echo "  <tr>";getStatusClass(isProcessRunning("MobileGPS"), true); echo "MobileGPS</td><td align=\"left\">".$MobileGPS_Ver."</td></tr>\n";
+		    if (is_executable('/usr/sbin/gpsd')) {
+			$GPSD_Ver = exec('/usr/sbin/gpsd -V | cut -d\' \' -f 2-');
+			echo "  <tr>";getStatusClass(isProcessRunning("gpsd"), true); echo "GPSd</td><td align=\"left\">".$GPSD_Ver."</td></tr>\n";
 		    }
 		    ?>
 		</table>

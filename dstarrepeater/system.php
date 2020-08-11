@@ -65,7 +65,7 @@ function getServiceStatusClass($active) {
     <td class="<?php getServiceStatusClass(isProcessRunning('/usr/local/sbin/pistar-watchdog',true)); ?>">PiStar-Watchdog</td>
     <td class="<?php getServiceStatusClass(isProcessRunning('/usr/local/sbin/pistar-remote',true)); ?>">PiStar-Remote</td>
     <td class="<?php getServiceStatusClass(isProcessRunning('/usr/local/sbin/pistar-keeper',true)); ?>">PiStar-Keeper</td>
-    <td class="<?php getServiceStatusClass(isProcessRunning('MobileGPS')); ?>">MobileGPS</td>
+    <td class="<?php getServiceStatusClass(isProcessRunning('gpsd')); ?>">GPSd</td>
   </tr>
 </table>
 <br />

@@ -114,52 +114,96 @@ if (file_exists('/etc/nxdn2dmr')) {
 	if (fopen($nxdn2dmrConfigFile,'r')) { $confignxdn2dmr = parse_ini_file($nxdn2dmrConfigFile, true); }
 }
 
-// Load the mobilegps config file
-if (file_exists('/etc/mobilegps')) {
-	$mobilegpsConfigFile = '/etc/mobilegps';
-	if (fopen($mobilegpsConfigFile,'r')) { $configmobilegps = parse_ini_file($mobilegpsConfigFile, true); }
+//
+// Old Mobile GPS conf conversion stuff
+//
+// Delete the old MobileGPS config file
+if (file_exists('/etc/mobilegps'))
+{
+    exec('sudo mount -o remount,rw /');
+    exec('sudo rm -f /etc/mobilegps');
+    exec('sudo mount -o remount,ro /');
+}
+// Convert MMDVMHost config file
+if (isset($configmmdvm['Mobile GPS']))
+{
+    if (isset($configmmdvm['Mobile GPS']['Enable']))
+    {
+	$configmmdvm['GPSD']['Enable'] = $configmmdvm['Mobile GPS']['Enable'];
+	unset($configmmdvm['Mobile GPS']['Enable']);
+    }
+    
+    if (isset($configmmdvm['Mobile GPS']['Address']))
+    {
+	unset($configmmdvm['Mobile GPS']['Address']);
+    }
+    
+    if (isset($configmmdvm['Mobile GPS']['Port']))
+    {
+	unset($configmmdvm['Mobile GPS']['Port']);
+    }
+    
+    unset($configmmdvm['Mobile GPS']);
+}
+// YSF Gateway config file
+if (isset($configysfgateway['Mobile GPS']))
+{
+    if (isset($configysfgateway['Mobile GPS']['Enable']))
+    {
+	unset($configysfgateway['Mobile GPS']['Enable']);
+    }
+    
+    if (isset($configysfgateway['Mobile GPS']['Address']))
+    {
+	unset($configysfgateway['Mobile GPS']['Address']);
+    }
+    
+    if (isset($configysfgateway['Mobile GPS']['Port']))
+    {
+	unset($configysfgateway['Mobile GPS']['Port']);
+    }
+    
+    unset($configysfgateway['Mobile GPS']);
+}
+// NXDN Gateway config file
+if (isset($confignxdngateway['Mobile GPS']))
+{
+    if (isset($confignxdngateway['Mobile GPS']['Enable']))
+    {
+	unset($confignxdngateway['Mobile GPS']['Enable']);
+    }
+    
+    if (isset($confignxdngateway['Mobile GPS']['Address']))
+    {
+	unset($confignxdngateway['Mobile GPS']['Address']);
+    }
+    
+    if (isset($confignxdngateway['Mobile GPS']['Port']))
+    {
+	unset($confignxdngateway['Mobile GPS']['Port']);
+    }
+    
+    unset($confignxdngateway['Mobile GPS']);
 }
 
-// Mobile GPS
-if ( $configmmdvm['Mobile GPS']['Enable'] == 1 ) {
-    // Mobile GPS config (create default file)
-    if (!file_exists('/etc/mobilegps')) {
-        exec('sudo touch /tmp/zmh2nHP4qgkwgv.tmp');
-        exec('sudo chown www-data:www-data /tmp/zmh2nHP4qgkwgv.tmp');
-	
-	exec('echo "[General]" > /tmp/zmh2nHP4qgkwgv.tmp');
-	exec('echo "MinDistance=400" >> /tmp/zmh2nHP4qgkwgv.tmp');
-	exec('echo "MinTime=60" >> /tmp/zmh2nHP4qgkwgv.tmp');
-	exec('echo "MaxTime=300" >> /tmp/zmh2nHP4qgkwgv.tmp');
-	exec('echo "Daemon=1" >> /tmp/zmh2nHP4qgkwgv.tmp');
-	exec('echo "Debug=0" >> /tmp/zmh2nHP4qgkwgv.tmp');
-	exec('echo "" >> /tmp/zmh2nHP4qgkwgv.tmp');
-	exec('echo "[Log]" >> /tmp/zmh2nHP4qgkwgv.tmp');
-	exec('echo "DisplayLevel=0" >> /tmp/zmh2nHP4qgkwgv.tmp');
-	exec('echo "FileLevel=1" >> /tmp/zmh2nHP4qgkwgv.tmp');
-	exec('echo "FilePath=/var/log/pi-star" >> /tmp/zmh2nHP4qgkwgv.tmp');
-        exec('echo "FileRoot=MobileGPS" >> /tmp/zmh2nHP4qgkwgv.tmp');
-	exec('echo "" >> /tmp/zmh2nHP4qgkwgv.tmp');
-	exec('echo "[GPS]" >> /tmp/zmh2nHP4qgkwgv.tmp');
-	exec('echo "Port=/dev/ttyUSB0" >> /tmp/zmh2nHP4qgkwgv.tmp');
-	exec('echo "Speed=9600" >> /tmp/zmh2nHP4qgkwgv.tmp');
-	exec('echo "Debug=0" >> /tmp/zmh2nHP4qgkwgv.tmp');
-	exec('echo "" >> /tmp/zmh2nHP4qgkwgv.tmp');
-	exec('echo "[Network]" >> /tmp/zmh2nHP4qgkwgv.tmp');
-	exec('echo "Address=127.0.0.1" >> /tmp/zmh2nHP4qgkwgv.tmp');
-	exec('echo "Port=7834" >> /tmp/zmh2nHP4qgkwgv.tmp');
-	exec('echo "Debug=0" >> /tmp/zmh2nHP4qgkwgv.tmp');
-	exec('echo "" >> /tmp/zmh2nHP4qgkwgv.tmp');
-	exec('sudo mount -o remount,rw /');
-        exec('sudo cp /tmp/zmh2nHP4qgkwgv.tmp /etc/mobilegps');
-        exec('sudo chmod 644 /etc/mobilegps');
-        exec('sudo chown root:root /etc/mobilegps');
-        exec('sudo mount -o remount,ro /');
+// GPSd
+if (isset($configmmdvm['GPSD']) != TRUE)
+{
+    $configmmdvm['GPSD']['Enable'] = 0;
+    $configmmdvm['GPSD']['Address'] = "127.0.0.1";
+    $configmmdvm['GPSD']['Port'] = "2947";
+}
 
-	if (file_exists('/etc/mobilegps')) {
-	    $mobilegpsConfigFile = '/etc/mobilegps';
-	    if (fopen($mobilegpsConfigFile,'r')) { $configmobilegps = parse_ini_file($mobilegpsConfigFile, true); }
-	}
+if ($configmmdvm['GPSD']['Enable'] == 1)
+{
+    if (isset($configmmdvm['GPSD']['Address']) != TRUE)
+    {
+	$configmmdvm['GPSD']['Address'] = "127.0.0.1";
+    }
+    
+    if (isset($configmmdvm['GPSD']['Port']) != TRUE)
+    {
+	$configmmdvm['GPSD']['Port'] = "2947";
     }
 }
 
@@ -380,7 +424,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	system('sudo systemctl stop cron.service > /dev/null 2>/dev/null &');			//Cron
 
 	// Stop the DV Services
-	system('sudo systemctl stop mobilegps.service > /dev/null 2>/dev/null &');		// MobileGPS Service
+	system('sudo systemctl stop gpsd.service > /dev/null 2>/dev/null &');			// GPSd Service
 	system('sudo systemctl stop dstarrepeater.service > /dev/null 2>/dev/null &');		// D-Star Radio Service
 	system('sudo systemctl stop mmdvmhost.service > /dev/null 2>/dev/null &');		// MMDVMHost Radio Service
 	system('sudo systemctl stop ircddbgateway.service > /dev/null 2>/dev/null &');		// ircDDBGateway Service
@@ -537,23 +581,27 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  system($rollConfLon1);
 	  }
 
-	// Set Mobile GPS
-	if (empty($_POST['MobileGPS']) != TRUE ) {
-	   $mobilegpsEnabled = (escapeshellcmd($_POST['MobileGPS']) == 'ON' ) ? "1" : "0";
-	   $configmmdvm['Mobile GPS']['Enable'] = $mobilegpsEnabled;
-	   $configysfgateway['Mobile GPS']['Enable'] = $mobilegpsEnabled;
-	   $confignxdngateway['Mobile GPS']['Enable'] = $mobilegpsEnabled;
+	// Set GPSd
+	if (empty($_POST['GPSD']) != TRUE ) {
+	   $gpsdEnabled = (escapeshellcmd($_POST['GPSD']) == 'ON' ) ? "1" : "0";
+	   $configmmdvm['GPSD']['Enable'] = $gpsdEnabled;
+	   $configysfgateway['GPSD']['Enable'] = $gpsdEnabled;
+	   $confignxdngateway['GPSD']['Enable'] = $gpsdEnabled;
 	    
-	   $configmobilegps['General']['Daemon'] = "1";
-	   $configmobilegps['Log']['FileLevel'] = "1";
+	   if (empty($_POST['gpsdPort']) != TRUE ) {
+	      $configmmdvm['GPSD']['Port'] = escapeshellcmd($_POST['gpsdPort']);
+	   }
+	    
+	   if (empty($_POST['gpsdServer']) != TRUE ) {
+	      $configmmdvm['GPSD']['Address'] = escapeshellcmd($_POST['gpsdServer']);
+	   }
 
-	   if (empty($_POST['mobilegpsPort']) != TRUE ) {
-	      $configmobilegps['GPS']['Port'] = escapeshellcmd($_POST['mobilegpsPort']);
-	   }
-	    
-	   if (empty($_POST['mobilegpsBaudrate']) != TRUE ) {
-	      $configmobilegps['GPS']['Speed'] = escapeshellcmd($_POST['mobilegpsBaudrate']);
-	   }
+	   // Port and Address for YSF and NXDN gateways
+	   $configysfgateway['GPSD']['Port'] = $configmmdvm['GPSD']['Port'];
+	   $configysfgateway['GPSD']['Address'] = $configmmdvm['GPSD']['Address'];
+	   
+	   $confignxdngateway['GPSD']['Port'] = $configmmdvm['GPSD']['Port'];
+	   $confignxdngateway['GPSD']['Address'] = $configmmdvm['GPSD']['Address'];
 	}
 
 	// Set the Town
@@ -2187,9 +2235,9 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	if (!isset($configmmdvm['System Fusion']['TXHang'])) { $configmmdvm['System Fusion']['TXHang'] = "3"; }
 	if (!isset($configmmdvm['Lock File']['Enable'])) { $configmmdvm['Lock File']['Enable'] = "0"; }
 	if (!isset($configmmdvm['Lock File']['File'])) { $configmmdvm['Lock File']['File'] = "/tmp/MMDVMHost.lock"; }
-	if (!isset($configmmdvm['Mobile GPS']['Enable'])) { $configmmdvm['Mobile GPS']['Enable'] = "0"; }
- 	if (!isset($configmmdvm['Mobile GPS']['Address'])) { $configmmdvm['Mobile GPS']['Address'] = "127.0.0.1"; }
-	if (!isset($configmmdvm['Mobile GPS']['Port'])) { $configmmdvm['Mobile GPS']['Port'] = "7834"; }
+	if (!isset($configmmdvm['GPSD']['Enable'])) { $configmmdvm['GPSD']['Enable'] = "0"; }
+ 	if (!isset($configmmdvm['GPSD']['Address'])) { $configmmdvm['GPSD']['Address'] = "127.0.0.1"; }
+	if (!isset($configmmdvm['GPSD']['Port'])) { $configmmdvm['GPSD']['Port'] = "2947"; }
 	if (!isset($configmmdvm['OLED']['Rotate'])) { $configmmdvm['OLED']['Rotate'] = "0"; }
 	if (!isset($configmmdvm['OLED']['Cast'])) { $configmmdvm['OLED']['Cast'] = "0"; }
 	if (!isset($configmmdvm['OLED']['LogoScreensaver'])) { $configmmdvm['OLED']['LogoScreensaver'] = "0"; }
@@ -2218,9 +2266,9 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	if (isset($configysfgateway['Network']['YSF2DMRPort'])) { unset($configysfgateway['Network']['YSF2DMRPort']); }
 	unset($configysfgateway['Network']['DataPort']);
 	unset($configysfgateway['Network']['StatusPort']);
-	if (!isset($configysfgateway['Mobile GPS']['Enable'])) { $configysfgateway['Mobile GPS']['Enable'] = "0"; }
- 	if (!isset($configysfgateway['Mobile GPS']['Address'])) { $configysfgateway['Mobile GPS']['Address'] = "127.0.0.1"; }
-	if (!isset($configysfgateway['Mobile GPS']['Port'])) { $configysfgateway['Mobile GPS']['Port'] = "7834"; }
+	if (!isset($configysfgateway['GPSD']['Enable'])) { $configysfgateway['GPSD']['Enable'] = "0"; }
+ 	if (!isset($configysfgateway['GPSD']['Address'])) { $configysfgateway['GPSD']['Address'] = "127.0.0.1"; }
+	if (!isset($configysfgateway['GPSD']['Port'])) { $configysfgateway['GPSD']['Port'] = "2947"; }
 
 	// Add missing options to YSF2DMR
 	if (!isset($configysf2dmr['Info']['Power'])) { $configysf2dmr['Info']['Power'] = "1"; }
@@ -2320,10 +2368,10 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 		if(!isset($confignxdngateway['aprs.fi']['Password'])) { $confignxdngateway['aprs.fi']['Password'] = "9999"; }
 		if(!isset($confignxdngateway['aprs.fi']['Description'])) { $confignxdngateway['aprs.fi']['Description'] = "APRS for NXDN Gateway"; }
 		if(!isset($confignxdngateway['aprs.fi']['Suffix'])) { $confignxdngateway['aprs.fi']['Suffix'] = "N"; }
-		// Mobile GPS stuff
-		if(!isset($confignxdngateway['Mobile GPS']['Enable'])) { $confignxdngateway['Mobile GPS']['Enable'] = "0"; }
-		if(!isset($confignxdngateway['Mobile GPS']['Address'])) { $confignxdngateway['Mobile GPS']['Address'] = "127.0.0.1"; }
-		if(!isset($confignxdngateway['Mobile GPS']['Port'])) { $confignxdngateway['Mobile GPS']['Port'] = "7834"; }
+		// GPSd stuff
+		if(!isset($confignxdngateway['GPSD']['Enable'])) { $confignxdngateway['GPSD']['Enable'] = "0"; }
+		if(!isset($confignxdngateway['GPSD']['Address'])) { $confignxdngateway['GPSD']['Address'] = "127.0.0.1"; }
+		if(!isset($confignxdngateway['GPSD']['Port'])) { $confignxdngateway['GPSD']['Port'] = "2947"; }
 	}
 
 	// Clean up legacy options
@@ -2755,46 +2803,6 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
                 }
         }
 
-	// mobilegps config file wrangling
-	if (isset($configmobilegps))
-	{
-	    $mobilegpsContent = "";
-
-            foreach($configmobilegps as $mobilegpsSection=>$mobilegpsValues) {
-                // UnBreak special cases
-                $mobilegpsSection = str_replace("_", " ", $mobilegpsSection);
-                $mobilegpsContent .= "[".$mobilegpsSection."]\n";
-                // append the values
-                foreach($mobilegpsValues as $mobilegpsKey=>$mobilegpsValue) {
-                    $mobilegpsContent .= $mobilegpsKey."=".$mobilegpsValue."\n";
-                }
-                $mobilegpsContent .= "\n";
-            }
-            if (!$handleMOBILEGPSconfig = fopen('/tmp/zmh2nHP4qgkwgv.tmp', 'w')) {
-                return false;
-            }
-            if (!is_writable('/tmp/zmh2nHP4qgkwgv.tmp')) {
-		echo "<br />\n";
-		echo "<table>\n";
-		echo "<tr><th>ERROR</th></tr>\n";
-		echo "<tr><td>Unable to write configuration file(s)...</td><tr>\n";
-		echo "<tr><td>Please wait a few seconds and retry...</td></tr>\n";
-		echo "</table>\n";
-		unset($_POST);
-		echo '<script type="text/javascript">setTimeout(function() { window.location=window.location;},5000);</script>';
-		die();
-            }
-            else {
-                $success = fwrite($handleMOBILEGPSconfig, $mobilegpsContent);
-                fclose($handleMOBILEGPSconfig);
-                if (intval(exec('cat /tmp/zmh2nHP4qgkwgv.tmp | wc -l')) > 22 ) {
-                    exec('sudo mv /tmp/zmh2nHP4qgkwgv.tmp /etc/mobilegps');		// Move the file back
-                    exec('sudo chmod 644 /etc/mobilegps');				// Set the correct runtime permissions
-                    exec('sudo chown root:root /etc/mobilegps');			// Set the owner
-                }
-            }
-	}
-
         // DAPNet Gateway Config file wragling
 	$dapnetContent = "";
         foreach($configdapnetgw as $dapnetSection=>$dapnetValues) {
@@ -2955,7 +2963,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 
 	// Start the DV Services
 	system('sudo systemctl daemon-reload > /dev/null 2>/dev/null &');			// Restart Systemd to account for any service changes
-	system('sudo systemctl start mobilegps.service > /dev/null 2>/dev/null &');		// MobileGPS Service
+	system('sudo systemctl start gpsd.service > /dev/null 2>/dev/null &');			// GPSd Service
 	system('sudo systemctl start dstarrepeater.service > /dev/null 2>/dev/null &');		// D-Star Radio Service
 	system('sudo systemctl start mmdvmhost.service > /dev/null 2>/dev/null &');		// MMDVMHost Radio Service
 	system('sudo systemctl start ircddbgateway.service > /dev/null 2>/dev/null &');		// ircDDBGateway Service
@@ -3051,7 +3059,7 @@ else:
     <input type="hidden" name="MMDVMModeDMR2YSF" value="OFF" />
     <input type="hidden" name="MMDVMModeDMR2NXDN" value="OFF" />
     <input type="hidden" name="MMDVMModePOCSAG" value="OFF" />
-    <input type="hidden" name="MobileGPS" value="OFF" />
+    <input type="hidden" name="GPSD" value="OFF" />
     <input type="hidden" name="pocsagWhitelist" value="<?php if (isset($configdapnetgw['General']['WhiteList'])) { echo $configdapnetgw['General']['WhiteList']; } else { echo ""; } ?>" />
     <input type="hidden" name="pocsagBlacklist" value="<?php if (isset($configdapnetgw['General']['BlackList'])) { echo $configdapnetgw['General']['BlackList']; } else { echo ""; } ?>" />
 	<h2><?php echo $lang['mmdvmhost_config'];?></h2>
@@ -3315,12 +3323,12 @@ else:
     <td align="left" colspan="2"><input type="text" id="confLongitude" name="confLongitude" size="13" maxlength="9" value="<?php echo $configs['longitude'] ?>" />degrees (positive value for East, negative for West)</td>
     </tr>
     <tr>
-    <td align="left"><a class="tooltip2" href="#">Mobile GPS:<span><b>Mobile GPS support</b>Read NMEA data from a serially connected GPS unit and then to make that data available for other programs.</span></a></td>
+    <td align="left"><a class="tooltip2" href="#">GPSd:<span><b>GPS daemon support</b>Read NMEA data from a serially connected GPS unit and then to make that data available for other programs.</span></a></td>
     <td align="left" colspan="2">
     <?php
     // Enabled ??
-    if ($configmmdvm['Mobile GPS']['Enable'] == "1") { echo "<div class=\"switch\"><input id=\"toggle-MobileGPS\" class=\"toggle toggle-round-flat\" type=\"checkbox\" name=\"MobileGPS\" value=\"ON\" checked=\"checked\" /><label for=\"toggle-MobileGPS\"></label></div>\n"; }
-    else { echo "<div class=\"switch\"><input id=\"toggle-MobileGPS\" class=\"toggle toggle-round-flat\" type=\"checkbox\" name=\"MobileGPS\" value=\"ON\" /><label for=\"toggle-MobileGPS\"></label></div>\n"; } ?>
+    if ($configmmdvm['GPSD']['Enable'] == "1") { echo "<div class=\"switch\"><input id=\"toggle-GPSD\" class=\"toggle toggle-round-flat\" type=\"checkbox\" name=\"GPSD\" value=\"ON\" checked=\"checked\" /><label for=\"toggle-GPSD\"></label></div>\n"; }
+    else { echo "<div class=\"switch\"><input id=\"toggle-GPSD\" class=\"toggle toggle-round-flat\" type=\"checkbox\" name=\"GPSD\" value=\"ON\" /><label for=\"toggle-GPSD\"></label></div>\n"; } ?>
     </td>
     </tr>
     <tr>
@@ -4347,58 +4355,27 @@ $p25Hosts = fopen("/usr/local/etc/P25Hosts.txt", "r");
 	<div><input type="button" value="<?php echo $lang['apply'];?>" onclick="submitform()" /><br /><br /></div>
 <?php } ?>
 
-<!-- Mobile GPS-->
-<?php if ( $configmmdvm['Mobile GPS']['Enable'] == 1 ) { ?>
-	<h2><?php echo $lang['mobilegps_config'];?></h2>
+<!-- GPSd -->
+<?php if ( $configmmdvm['GPSD']['Enable'] == 1 ) { ?>
+	<h2><?php echo $lang['gpsd_config'];?></h2>
     <table>
       <tr>
         <th width="200"><a class="tooltip" href="#"><?php echo $lang['setting'];?><span><b>Setting</b></span></a></th>
         <th colspan="2"><a class="tooltip" href="#"><?php echo $lang['value'];?><span><b>Value</b>The current value from the<br />configuration files</span></a></th>
       </tr>
       <tr>
-        <td align="left"><a class="tooltip2" href="#"><?php echo $lang['mobilegps_port'];?>:<span><b>GPS Port</b>Define the GPS serial port here</span></a></td>
-	<td align="left" colspan="2"><select name="mobilegpsPort">
-	    <?php
-	    exec('ls -lR /dev/ | grep "dialout" | awk \'{print "/dev/"$10}\'', $serialPorts);
-
-	    if (! in_array($configmobilegps['GPS']['Port'], $serialPorts))
-	    {
-		array_unshift($serialPorts, $configmobilegps['GPS']['Port']);
-	    }
-	    
-	    foreach ($serialPorts as $serialPort) {
-		echo '<option ';
-		if ($configmobilegps['GPS']['Port'] == $serialPort) { echo 'selected="selected" '; }
-		echo 'value="'.$serialPort.'">'.$serialPort.'</option>'."\n";
-	    }
-	    ?>
-	    </select></td>
+        <td align="left"><a class="tooltip2" href="#"><?php echo $lang['gpsd_port'];?>:<span><b>GPSd Server Port</b>Define the GPSd server port here</span></a></td>
+        <td align="left"><input type="text" name="gpsdPort" size="13" maxlength="8" value="<?php echo $configmmdvm['GPSD']['Port'];?>" /></td>
       </tr>
       <tr>
-        <td align="left"><a class="tooltip2" href="#"><?php echo $lang['mobilegps_speed'];?>:<span><b>GPS Baudrate</b>Set the serial baudrate speed here</span></a></td>
-        <td align="left" colspan-"2"><select name="mobilegpsBaudrate">
-	    <?php
-	    $serialSpeeds = array('110', '300', '600', '1200', '2400', '4800', '9600', '14400', '19200', '28800', '38400', '56000', '57600', '115200');
-
-	    if (! in_array($configmobilegps['GPS']['Speed'], $serialSpeeds))
-	    {
-		array_unshift($serialSpeeds, $configmobilegps['GPS']['Speed']);
-	    }
-	    
-	    foreach ($serialSpeeds as $serialSpeed) {
-		echo '<option ';
-		if ($configmobilegps['GPS']['Speed'] == $serialSpeed) { echo 'selected="selected" '; }
-		echo 'value="'.$serialSpeed.'">'.$serialSpeed.'</option>'."\n";
-	    }
-	    ?>
-	    </select></td>
+        <td align="left"><a class="tooltip2" href="#"><?php echo $lang['gpsd_address'];?>:<span><b>GPSd Server Address</b>Set the GPSd server address here</span></a></td>
+        <td align="left"><input type="text" name="gpsdAddress" size="13" maxlength="128" value="<?php echo $configmmdvm['GPSD']['Address'];?>" /></td>
       </tr>
     </table>
 	<div><input type="button" value="<?php echo $lang['apply'];?>" onclick="submitform()" /><br /><br /></div>
 <?php } ?>	
 
-
-<!-- Mobile GPS-->
+<!-- GPSd -->
 
 <?php if ( $configmmdvm['POCSAG']['Enable'] == 1 ) { ?>
 	<h2><?php echo $lang['pocsag_config'];?></h2>

@@ -84,7 +84,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/config_backup.php") {
 	  $output .= shell_exec("sudo cp /etc/hostname $backupDir 2>&1");
 	  $output .= shell_exec("sudo cp /etc/bmapi.key $backupDir 2>&1");
 	  $output .= shell_exec("sudo cp /etc/dapnetapi.key $backupDir 2>&1");
-	  $output .= shell_exec("sudo cp /etc/mobilegps $backupDir 2>&1");
+	  $output .= shell_exec("sudo cp /etc/default/gpsd $backupDir 2>&1");
 	  $output .= shell_exec("sudo cp /etc/tinyfilemanager-auth.php $backupDir 2>&1");
 	  $output .= shell_exec("sudo cp /etc/tinyfilemanager-config.php $backupDir 2>&1");
 	  $output .= shell_exec("sudo cp /usr/local/etc/RSSI.dat $backupDir 2>&1");
@@ -174,7 +174,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/config_backup.php") {
 			
 			// Stop the DV Services
 			shell_exec('sudo systemctl stop cron.service 2>&1');		//Cron
-			shell_exec('sudo systemctl stop mobilegps.service 2>&1');	//MobileGPS Service
+			shell_exec('sudo systemctl stop gpsd.service 2>&1');		//GPSd Service
 			shell_exec('sudo systemctl stop dstarrepeater.service 2>&1');	//D-Star Radio Service
 			shell_exec('sudo systemctl stop mmdvmhost.service 2>&1');	//MMDVMHost Radio Service
 			shell_exec('sudo systemctl stop ircddbgateway.service 2>&1');	//ircDDBGateway Service
@@ -193,6 +193,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/config_backup.php") {
 			$output .= "Writing new Config\n";
 			$output .= shell_exec("sudo rm -f /etc/dstar-radio.* 2>&1")."\n";
 			$output .= shell_exec("sudo mv -f /tmp/config_restore/RSSI.dat /usr/local/etc/ 2>&1")."\n";
+			$output .= shell_exec("sudo mv -f /tmp/config_restore/gpsd /etc/default/ 2>&1")."\n";
 			$output .= shell_exec("sudo mv -f /tmp/config_restore/ircddblocal.php /var/www/dashboard/config/ 2>&1")."\n";
 			$output .= shell_exec("sudo mv -f /tmp/config_restore/config.php /var/www/dashboard/config/ 2>&1")."\n";
 			$output .= shell_exec("sudo mv -f /tmp/config_restore/language.php /var/www/dashboard/config/ 2>&1")."\n";
@@ -213,7 +214,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/config_backup.php") {
 			
 			// Start the services
 			$output .= "Starting Services.\n";
-			shell_exec('sudo systemctl start mobilegps.service 2>&1');		//MobileGPS Service
+			shell_exec('sudo systemctl start gpsd.service 2>&1');			//GPSd Service
 			shell_exec('sudo systemctl start dstarrepeater.service 2>&1');		//D-Star Radio Service
 			shell_exec('sudo systemctl start mmdvmhost.service 2>&1');		//MMDVMHost Radio Service
 			shell_exec('sudo systemctl start ircddbgateway.service 2>&1');		//ircDDBGateway Service
