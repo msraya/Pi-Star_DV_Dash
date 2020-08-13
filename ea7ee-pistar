@@ -1,0 +1,497 @@
+#!/usr/bin/env bash
+
+# ############################## NOTE ################################### #
+#                                                                         #
+# Setting envvar NO_UPDATE_SELF=1 will disable auto update of this script #
+#                                                                         #
+# ####################################################################### #
+
+if [ "$(id -u)" != "0" ]; then
+  echo -e "You need to be root to run this command...\n"
+  exit 1
+fi
+
+
+UPDATE_SELF=${UPDATE_SELF:-1}
+UPDATE_REPO_URI="https://github.com/msraya/Pi-Star_DV_Dash"
+UPDATE_REPO_CONTENT_URI=${UPDATE_REPO_URI/github.com/raw.githubusercontent.com}
+UPDATE_URI="${UPDATE_REPO_CONTENT_URI}/master/ea7ee-pistar"
+ROOT_PATH=${ROOT_PATH:-"/"}
+WORK_PATH=${WORK_PATH:-"${ROOT_PATH}/root"}
+SELFUPDATE_SCRIPT="${WORK_PATH}/.updateScript-ea7ee-pistar.sh"
+CURL_OPTIONS=${CURL_OPTIONS:-""}
+ALL_ARGS="$@"
+
+RELEASE_FILE="/etc/pistar-release"
+
+if [ -f ${RELEASE_FILE} ]; then
+    PISTAR_VERSION=$(grep 'Version' /etc/pistar-release | cut -f 2 -d '=' | tr -d ' ')
+    PISTAR_VERSION_INFO=( ${PISTAR_VERSION//./ })
+    if [[ ${UPDATE_SELF} -eq 0 ]]; then
+	echo "Detected Pi-Star version: $PISTAR_VERSION (major: ${PISTAR_VERSION_INFO[0]})"
+    fi
+else
+    echo "ERROR: you're not running a PiStar."
+    exit 1
+fi
+
+
+## Dashboard
+OFFICIAL_DASHBOARD_REPO="https://github.com/AndyTaylorTweet/Pi-Star_DV_Dash.git"
+PERSONNAL_DASHBOARD_REPO="https://github.com/msraya/Pi-Star_DV_Dash.git"
+
+# Always follow redirects
+CURL_OPTIONS="${CURL_OPTIONS} -L"
+
+## System Binaries
+OFFICIAL_SBINARIES_REPO="https://github.com/AndyTaylorTweet/Pi-Star_Binaries_sbin.git"
+PERSONNAL_SBINARIES_REPO="https://github.com/msraya/Pi-Star_Binaries_sbin.git"
+
+## Binaries (v3 and v4 are using different repositories
+if [ ${PISTAR_VERSION_INFO[0]} -eq 3 ]; then
+    OFFICIAL_BINARIES_REPO="https://github.com/AndyTaylorTweet/Pi-Star_Binaries.git"
+    PERSONNAL_BINARIES_REPO="https://github.com/msraya/Pi-Star_Binaries.git"
+    OFFICIAL_RELEASE_VERSION="3.4.17"
+elif [ ${PISTAR_VERSION_INFO[0]} -eq 4 ]; then
+    OFFICIAL_BINARIES_REPO="https://github.com/AndyTaylorTweet/Pi-Star_v4_Binaries_Bin.git"
+    PERSONNAL_BINARIES_REPO="https://github.com/msraya/Pi-Star_v4_Binaries_Bin.git"
+    OFFICIAL_RELEASE_VERSION="4.1.2"
+    #OFFICIAL_RELEASE_VERSION="4.1.3"
+else
+    echo "Unsupported PiStar version, bailing out."
+    exit 1
+fi
+
+
+function _rw() {
+    # Prevent the FS to be remounted as RO
+    systemctl stop cron.service > /dev/null 2<&1
+    mount -o remount,rw /
+    mount -o remount,rw /boot
+}
+
+function _ro() {
+    sync
+    mount -o remount,ro /boot
+    mount -o remount,ro /
+    systemctl start cron.service > /dev/null 2<&1
+}
+
+# Change the size of the /run RAM disk, on PI4 only
+# $1: "APPLY" or "REMOVE"
+function ApplyFix_PI4fstab() {
+    modelName=$(grep 'model name' /proc/cpuinfo | sed 's/.*: //')
+    hardwareField=$(grep 'Hardware' /proc/cpuinfo | sed 's/.*: //')
+    fixNeeded="NO"
+
+    if [[ ${modelName} == "ARM"* ]]; then
+	# Pull the Board revision from /proc/cpuinfo
+	boardRev=$(grep 'Revision' /proc/cpuinfo | awk '{print $3}' | sed 's/^100//')
+
+	# Handle Pi4 only
+	case "$boardRev" in
+	    *"a03111" | *"b03111" | *"c03111" | *"b03112" | *"c03112")
+		fixNeeded="YES"
+		;;
+	esac
+	
+	if [[ ${hardwareField} == "ODROID"* ]]; then
+	    :
+	elif [[ ${hardwareField} == *"sun8i"* ]]; then
+	    :
+	elif [[ ${hardwareField} == *"s5p4418"* ]]; then
+	    :
+	else
+	    if [ "$fixNeeded" == "YES" ]; then
+		if [ "$1" == "REMOVE" ]; then
+		    $(grep -q '^tmpfs.*/run[[:blank:]]\+tmpfs[[:blank:]].*size\=64m.*' /etc/fstab)
+		    retval=$?
+		    if [ $retval -eq 0 ]; then
+			sed -i 's/^tmpfs[ \t]\+\/run[ \t]\+tmpfs.*size\=64m.*/tmpfs\t\t\t\/run\t\t\ttmpfs\tnodev,noatime,nosuid,mode\=1777,size\=32m\t\t0\t0/g' /etc/fstab
+			echo " ****************************************** NOTICE ******************************************"
+			echo " *                                                                                          *"
+			echo " *               A critical modification has been applied to your Raspberry.                *"
+			echo " *        You will need to restart your system to take in account this modification.        *"
+			echo " *                                                                                          *"
+			echo " ********************************************************************************************"
+		    fi
+		elif [ "$1" == "APPLY" ]; then
+		    $(grep -q '^tmpfs.*/run[[:blank:]]\+tmpfs[[:blank:]].*size\=32m.*' /etc/fstab)
+		    retval=$?
+		    if [ $retval -eq 0 ]; then
+			sed -i 's/^tmpfs[ \t]\+\/run[ \t]\+tmpfs.*size\=32m.*/tmpfs\t\t\t\/run\t\t\ttmpfs\tnodev,noatime,nosuid,mode\=1777,size\=64m\t\t0\t0/g' /etc/fstab
+			echo " ****************************************** NOTICE ******************************************"
+			echo " *                                                                                          *"
+			echo " *    A critical modification has been applied to your Raspberry, it will reboot shorlty.   *"
+			echo " *        You will need to restart this script to continue to installation process.         *"
+			echo " *                                                                                          *"
+			echo " ********************************************************************************************"
+			_ro
+			sleep 10s
+			/sbin/shutdown -r now
+		    else
+			echo "Raspberry Pi4: no need to apply /etc/fstab modification."
+		    fi
+		fi
+	    fi
+	fi
+	
+    elif [[ ${hardwareField} == *"sun8i"* ]]; then
+	:
+    else
+	:
+    fi
+}
+
+function SanityCheck() {
+    _rw
+    ApplyFix_PI4fstab "APPLY"
+    _ro
+}
+
+function RestoreSanityCheck() {
+    _rw
+    ApplyFix_PI4fstab "REMOVE"
+    _ro
+}
+
+
+function WaitForUnattendedUpgrade() {
+    /usr/bin/systemd-run --property="After=apt-daily.service apt-daily-upgrade.service" --wait /bin/true > /dev/null 2<&1
+}
+
+# $1 directory
+# $2 repository
+function ChangeAndCheckoutRepo() {
+    dir="$1"
+    repo="$2"
+
+    cd "$1"
+    git remote add newrepo "$repo"
+    git fetch newrepo
+    git remote remove origin
+    git remote rename newrepo origin
+    git reset --hard origin/master
+}
+
+function InstallDashboard() {
+    WaitForUnattendedUpgrade
+    _rw
+    ChangeAndCheckoutRepo "/var/www/dashboard" "$PERSONNAL_DASHBOARD_REPO"
+    _ro
+}
+
+function RestoreDashboard() {
+    _rw
+    ChangeAndCheckoutRepo "/var/www/dashboard" "$OFFICIAL_DASHBOARD_REPO"
+    _ro
+}
+
+function InstallBinaries() {
+    WaitForUnattendedUpgrade
+    _rw
+    ChangeAndCheckoutRepo "/usr/local/bin" "$PERSONNAL_BINARIES_REPO"
+    _ro
+}
+
+function RestoreBinaries() {
+    _rw
+    ChangeAndCheckoutRepo "/usr/local/bin" "$OFFICIAL_BINARIES_REPO"
+    _ro
+}
+
+function InstallSBinaries() {
+    WaitForUnattendedUpgrade
+    _rw
+    ChangeAndCheckoutRepo "/usr/local/sbin" "$PERSONNAL_SBINARIES_REPO"
+    _ro
+}
+
+function RestoreSBinaries() {
+    _rw
+    ChangeAndCheckoutRepo "/usr/local/sbin" "$OFFICIAL_SBINARIES_REPO"
+    _ro
+}
+
+function RestoreDataAndDowngrade() {
+    _rw
+    
+    # Remove tweaked CSS colors
+    rm -f /etc/pistar-css.ini
+
+    # Downgrade version
+    if [ ${PISTAR_VERSION_INFO[0]} -eq 3 ]; then
+	# Revert shellinabox localhost-only
+	#rm -f /etc/nginx/default.d/shellinabox.conf
+	#grep -q 'SHELLINABOX_ARGS' /etc/default/shellinabox && (grep -q '^SHELLINABOX_ARGS=.*\-\-localhost\-only' /etc/default/shellinabox && (sed -i 's/\-\-localhost\-only\ //g' /etc/default/shellinabox))
+	#grep -q 'font-family' /etc/shellinabox/options-available/00_White\ On\ Black.css && (sed -i '/#vt100 #console, #vt100 #alt_console, #vt100 #cursor, #vt100 #lineheight {/,/}/d' /etc/shellinabox/options-available/00_White\ On\ Black.css)
+	#systemctl reload nginx.service
+	
+	# Enable SAMBA
+	systemctl unmask smbd
+	systemctl unmask nmbd
+	LC_ALL=C systemctl enable smbd > /dev/null 2<&1
+	LC_ALL=C systemctl enable nmbd > /dev/null 2<&1
+	systemctl start smbd
+	systemctl start nmbd
+
+	# Enable agetty on tty1
+	systemctl enable getty@tty1.service
+	systemctl start getty@tty1.service
+
+	# Delete MobileGPS service
+	systemctl disable mobilegps.timer
+	rm -f /lib/systemd/system/mobilegps.timer
+	rm -f /lib/systemd/system/mobilegps.service	
+	
+	systemctl daemon-reload
+	
+	sed -i "s/$PISTAR_VERSION/$OFFICIAL_RELEASE_VERSION/g" /etc/pistar-release
+
+	/usr/local/sbin/pistar-motdgen
+
+	echo "Downgraded from ${PISTAR_VERSION} to $OFFICIAL_RELEASE_VERSION..."
+	
+    elif [ ${PISTAR_VERSION_INFO[0]} -eq 4 ]; then
+	# Revert shellinabox localhost-only
+	#rm -f /etc/nginx/default.d/shellinabox.conf
+	#grep -q 'SHELLINABOX_ARGS' /etc/default/shellinabox && (grep -q '^SHELLINABOX_ARGS=.*\-\-localhost\-only' /etc/default/shellinabox && (sed -i 's/\-\-localhost\-only\ //g' /etc/default/shellinabox))
+	#grep -q 'font-family' /etc/shellinabox/options-available/00_White\ On\ Black.css && (sed -i '/#vt100 #console, #vt100 #alt_console, #vt100 #cursor, #vt100 #lineheight {/,/}/d' /etc/shellinabox/options-available/00_White\ On\ Black.css)
+	#systemctl reload nginx.service
+	
+	# Revert MobileGPS
+	systemctl disable mobilegps.timer
+	rm -f /lib/systemd/system/mobilegps.timer
+	
+	echo '[Unit]' > /lib/systemd/system/mobilegps.service
+	echo 'Description=Pi-Star MobileGPS Service' >> /lib/systemd/system/mobilegps.service
+	echo 'After=syslog.target network.target' >> /lib/systemd/system/mobilegps.service
+	echo '' >> /lib/systemd/system/mobilegps.service
+	echo '[Service]' >> /lib/systemd/system/mobilegps.service
+	echo 'Type=forking' >> /lib/systemd/system/mobilegps.service
+	echo 'ExecStart=/usr/local/sbin/mobilegps.service start' >> /lib/systemd/system/mobilegps.service
+	echo 'ExecStop=/usr/local/sbin/mobilegps.service stop' >> /lib/systemd/system/mobilegps.service
+	echo 'ExecReload=/usr/local/sbin/mobilegps.service restart' >> /lib/systemd/system/mobilegps.service
+	echo '' >> /lib/systemd/system/mobilegps.service
+	echo '[Install]' >> /lib/systemd/system/mobilegps.service
+	echo 'WantedBy=multi-user.target' >> /lib/systemd/system/mobilegps.service
+	
+	# Enable unattended-upgrades
+        systemctl unmask unattended-upgrades
+        LC_ALL=C systemctl enable unattended-upgrades > /dev/null 2<&1
+        systemctl start unattended-upgrades
+	
+	# Enable SAMBA
+	systemctl unmask smbd
+	systemctl unmask nmbd
+	LC_ALL=C systemctl enable smbd > /dev/null 2<&1
+	LC_ALL=C systemctl enable nmbd > /dev/null 2<&1
+	systemctl start smbd
+	systemctl start nmbd
+
+	# Enable agetty on tty1
+	systemctl enable getty@tty1.service
+	systemctl start getty@tty1.service
+	
+	# Enable the service
+	systemctl daemon-reload
+	systemctl enable mobilegps.service
+	
+	sed -i "s/$PISTAR_VERSION/$OFFICIAL_RELEASE_VERSION/g" /etc/pistar-release
+
+	/usr/local/sbin/pistar-motdgen
+
+	echo "Downgraded from ${PISTAR_VERSION} to $OFFICIAL_RELEASE_VERSION..."
+    fi
+    
+    _ro
+}
+
+function UpdateSelf() {
+    echo "Performing self-update..."
+    local _tempFileName="$0.tmp"
+    _rw
+
+    if ! eval curl -fs ${CURL_OPTIONS} --output "${_tempFileName}" "${UPDATE_URI}"; then
+        echo "ERROR: Failed to download update for f1rmb-pistar!"
+        echo "ERROR: Make sure you have ca-certificates installed and that the time is set correctly"
+	_ro
+        exit 1
+    fi
+    
+    if [[ "$(head -1 ${_tempFileName})" != '#!/usr/bin/env bash' ]]; then
+        echo "ERROR: Failed to download update for f1rmb-pistar!"
+        echo "ERROR: Contents of file is not as expected - github may be down"
+	_ro
+        exit 1
+    fi
+    
+    local OCTAL_MODE=$(stat -c '%a' "$0")
+    if ! chmod ${OCTAL_MODE} "${_tempFileName}" ; then
+        echo "ERROR: Error while trying to set mode on ${_tempFileName}"
+	_ro
+        exit 1
+    fi
+    
+    cat > "${SELFUPDATE_SCRIPT}" << EOF
+      	mount -o remount,rw /
+    	mount -o remount,rw /boot
+        if mv "${_tempFileName}" "$0"; then
+           rm -- "\$0"
+           exec env UPDATE_SELF=0 /usr/bin/env bash "$0" "$ALL_ARGS"
+        else
+           echo "ERROR: Failed!"
+        fi
+       	mount -o remount,ro /
+        mount -o remount,ro /boot
+EOF
+
+    _ro
+    echo "Relaunching after update"
+    exec /usr/bin/env bash "${SELFUPDATE_SCRIPT}"
+}
+
+function DisplayConfigUpdate() {
+    echo " ****************************************** NOTICE ******************************************"
+    echo " *                                                                                           *"
+    echo " * Now you need to open the Pi-Star's Configuration page, and click \"Apply Changes\" button *"
+    echo " *                                                                                           *"
+    echo " *********************************************************************************************"
+}
+
+# $1 directory
+# $1 original repo
+function DisplayRepoStatus() {
+    dir="$1"
+    repo=$(git --work-tree=${dir} --git-dir=${dir}/.git config --get remote.origin.url)
+
+    if [ "$repo" == "$2" ]; then
+	echo "$1 uses *ORIGINAL* PiStar repository."
+    else
+	echo "$1 uses *PERSONNAL* repository."
+    fi
+}
+
+function DisplayStatus() {
+    DisplayRepoStatus "/var/www/dashboard" "$OFFICIAL_DASHBOARD_REPO"
+    DisplayRepoStatus "/usr/local/bin" "$OFFICIAL_BINARIES_REPO"
+    DisplayRepoStatus "/usr/local/sbin" "$OFFICIAL_SBINARIES_REPO"
+}
+
+function DisplayHelp() {
+    echo "`basename $0` usage:"
+    echo ""
+    echo "  -h, --help                      Display this help text."
+    echo "  -ia, --install-all              Install personnal dashboard, binariess and system binaries"
+    echo "  -ra, --restore-all              Restore original dashboard, binariess and system binaries"
+    echo "  -id, --install-dashboard        Install personnal dashboard."
+    echo "  -rd, --restore-dashboard        Restore original dashboard."
+    echo "  -ib, --install-binaries         Install personnal binaries."
+    echo "  -rb, --restore-binaries         Restore original binaries."
+    echo "  -is, --install-sbinaries        Install personnal system binaries."
+    echo "  -rs, --restore-sbinaries        Restore original system binaries."
+    echo "  -s, --status                    Display current install, original or personnal installations."
+    echo ""
+}
+
+
+if [ $# -eq 0 ]; then
+    DisplayHelp
+    exit 1
+fi
+
+if [ -z "$NO_SELF_UPDATE" -a x"$NO_UPDATE_SELF" != "x1" ]; then
+    if [[ ${UPDATE_SELF} -ne 0 ]]; then
+        UpdateSelf
+    else
+        rm -f "${SELFUPDATE_SCRIPT}"
+    fi
+fi
+
+
+## Parse command line
+while [[ $# -gt 0 ]]; do
+    key="$1"
+
+    case $key in
+	"-ia" | "--install-all")
+	    echo "INFO: Installing everything, this may take some time..."
+	    SanityCheck
+	    InstallDashboard
+	    InstallBinaries
+	    InstallSBinaries
+	    DisplayConfigUpdate
+	    shift
+	    ;;
+
+	"-ra" | "--restore-all")
+	    RestoreDashboard
+	    RestoreBinaries
+	    RestoreSBinaries
+	    RestoreDataAndDowngrade
+	    DisplayConfigUpdate
+	    RestoreSanityCheck
+	    shift
+	    ;;
+
+	"-id" | "--install-dashboard")
+	    echo "INFO: Installing the dashboard, this may take some time..."
+	    SanityCheck
+	    InstallDashboard
+	    DisplayConfigUpdate
+	    shift
+	    ;;
+
+	"-rd" | "--restore-dashboard")
+	    RestoreDashboard
+	    RestoreDataAndDowngrade
+	    DisplayConfigUpdate
+	    RestoreSanityCheck
+	    shift
+	    ;;
+
+	"-ib" | "--install-binaries")
+	    echo "INFO: Installing the binaries, this may take some time..."
+	    SanityCheck
+	    InstallBinaries
+	    shift
+	    ;;
+
+	"-rb" | "--restore-binaries")
+	    RestoreBinaries
+	    RestoreSanityCheck
+	    shift
+	    ;;
+
+	"-is" | "--install-sbinaries")
+	    echo "INFO: Installing the system binaries, this may take some time..."
+	    SanityCheck
+	    InstallSBinaries
+	    shift
+	    ;;
+
+	"-rs" | "--restore-sbinaries")
+	    RestoreSBinaries
+	    RestoreSanityCheck
+	    shift
+	    ;;
+
+	"-s" | "--status")
+	    DisplayStatus
+	    shift
+	    ;;
+
+	"-h" | "--help")
+	    DisplayHelp
+	    shift
+	    ;;
+
+	*)
+	    DisplayHelp;
+	    exit 1
+	    ;;
+    esac
+done
+
+exit 0
+
