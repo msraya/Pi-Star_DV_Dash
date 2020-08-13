@@ -347,11 +347,13 @@ if (file_exists('/etc/dstar-radio.mmdvmhost')) {
 
 <div class="footer">
     <?php if ($_SERVER["PHP_SELF"] == "/admin/index.php") {
+	echo 'PI-STAR V.MOD DG-ID YSFGateway BY EA7EE,'."\n";
 	echo 'Pi-Star web config, &copy; Andy Taylor (MW0MWZ) 2014-'.date("Y").'<br />'."\n";
 	echo 'Need help? Click <a style="color: #ffffff;" href="https://www.facebook.com/groups/pistarusergroup/" target="_new">here for the Support Group</a><br />'."\n";
 	echo 'or Click <a style="color: #ffffff;" href="https://forum.pistar.uk/" target="_new">here to join the Support Forum</a><br />'."\n";
     }
     else {
+	echo 'PI-STAR V.MOD DG-ID YSFGateway BY EA7EE,'."\n";
 	echo 'Pi-Star / Pi-Star Dashboard, &copy; Andy Taylor (MW0MWZ) 2014-'.date("Y").'<br />'."\n";
 	echo 'ircDDBGateway Dashboard by Hans-J. Barthen (DL5DI),<br />'."\n";
 	echo 'MMDVMDash developed by Kim Huebel (DG9VH), <br />'."\n";
