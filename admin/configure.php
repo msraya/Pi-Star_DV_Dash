@@ -45,6 +45,10 @@ if ($configfile = fopen($gatewayConfigPath,'r')) {
         fclose($configfile);
 }
 
+// ini_set('display_errors', 1);
+// ini_set("log_errors", 1);
+// ini_set("error_log", "/tmp/php-error.log");
+
 // Load the mmdvmhost config file
 $mmdvmConfigFile = '/etc/mmdvmhost';
 $configmmdvm = parse_ini_file($mmdvmConfigFile, true);
@@ -60,6 +64,18 @@ function ensureFileExists($fname) {
 	exec('sudo mount -o remount,ro /');
     }
 }
+
+// function write_log($log_msg) {
+//     $log_filename = "/tmp/ea7ee_logs";
+//     if (!file_exists($log_filename))
+//     {
+//         mkdir($log_filename, 0777, true);
+//     }
+//     $log_file_data = $log_filename.'/debug.log';
+//   file_put_contents($log_file_data, $log_msg . "\n", FILE_APPEND);
+   
+// }
+//write_log(print_r($configysfgateway, true));
 
 // Load the ysf2dmr config file
 ensureFileExists('ysf2dmr');
@@ -772,7 +788,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  $configdmrgateway['Info']['TXFrequency'] = $newFREQtx;
 	  $configysfgateway['Info']['RXFrequency'] = $newFREQrx;
 	  $configysfgateway['Info']['TXFrequency'] = $newFREQtx;
-	  $configysfgateway['General']['Suffix'] = "RPT";
+	  //$configysfgateway['General']['Suffix'] = "RPT";
 	  $configysf2dmr['Info']['RXFrequency'] = $newFREQrx;
 	  $configysf2dmr['Info']['TXFrequency'] = $newFREQtx;
 	  $configysf2dmr['YSF Network']['Suffix'] = "RPT";
@@ -875,7 +891,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  $configdmrgateway['Info']['TXFrequency'] = $newFREQ;
 	  $configysfgateway['Info']['RXFrequency'] = $newFREQ;
 	  $configysfgateway['Info']['TXFrequency'] = $newFREQ;
-	  $configysfgateway['General']['Suffix'] = "ND";
+	  //$configysfgateway['General']['Suffix'] = "ND";
 	  $configysf2dmr['Info']['RXFrequency'] = $newFREQ;
 	  $configysf2dmr['Info']['TXFrequency'] = $newFREQ;
 	  $configysf2dmr['YSF Network']['Suffix'] = "ND";
@@ -1061,32 +1077,56 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  }
 	}
 
-	// Set the YSF Startup Host
-	if (empty($_POST['ysfStartupHost']) != TRUE ) {
-	  $newYSFStartupHostArr = explode(',', escapeshellcmd($_POST['ysfStartupHost']));
-	  //$newYSFStartupHost = strtoupper(escapeshellcmd($_POST['ysfStartupHost']));
-	  //if ($newYSFStartupHost == "NONE") { unset($configysfgateway['Network']['Startup']); }
-	  //else { $configysfgateway['Network']['Startup'] = $newYSFStartupHost; }
-	  if (isset($configysfgateway['FCS Network'])) {
-		if ($newYSFStartupHostArr[0] == "none") {
-			unset($configysfgateway['Network']['Startup']);
-			$configdmr2ysf['DMR Network']['DefaultDstTG'] = "9";
-		}
-	  	else {
-			$configysfgateway['Network']['Startup'] = $newYSFStartupHostArr[1];
-			$configdmr2ysf['DMR Network']['DefaultDstTG'] = str_replace("FCS", "1", $newYSFStartupHostArr[0]);
-		}
-	  } else {
-	  	if ($newYSFStartupHostArr[0] == "none") {
-			unset($configysfgateway['Network']['Startup']);
-			$configdmr2ysf['DMR Network']['DefaultDstTG'] = "9";
-		}
-	  	else {
-			$configysfgateway['Network']['Startup'] = $newYSFStartupHostArr[0];
-			$configdmr2ysf['DMR Network']['DefaultDstTG'] = str_replace("FCS", "1", $newYSFStartupHostArr[0]);
-		}
-	  }
+	// Set the ysfgateway Startup Set
+	$configysfgateway['YSF Network']['Enable'] = "1";
+	if (empty($_POST['ysfESSId']) != TRUE ) {
+		$configysfgateway['General']['Id'] = escapeshellcmd($_POST['ysfESSId']);
 	}
+	if (empty($_POST['ysfStartupHost']) != TRUE ) {
+	   $newYSFStartupHostArr = explode(',', escapeshellcmd($_POST['ysfStartupHost']));
+	   $newYSFStartupHost = strtoupper($newYSFStartupHostArr[1]);
+	   if ($newYSFStartupHost == "NONE") { unset($configysfgateway['YSF Network']['Startup']); }
+	   else { $configysfgateway['YSF Network']['Startup'] = $newYSFStartupHost; }
+	}
+
+	if (empty($_POST['dmrStartupHost']) != TRUE ) {
+		$newDMRStartupHost = strtoupper(escapeshellcmd($_POST['dmrStartupHost']));
+		if ($newDMRStartupHost == "NONE") { unset($configysfgateway['DMR Network']['Startup']); }
+		else { $configysfgateway['DMR Network']['Startup'] = $newDMRStartupHost; }
+	}
+
+	if (empty($_POST['fcsStartupHost']) != TRUE ) {
+		$newFCSStartupHostArr = explode(',', escapeshellcmd($_POST['fcsStartupHost']));
+		$newFCSStartupHost = strtoupper($newFCSStartupHostArr[0]);
+		if ($newFCSStartupHost == "NONE") { unset($configysfgateway['FCS Network']['Startup']); }
+		else { $configysfgateway['FCS Network']['Startup'] = $newFCSStartupHost; }
+	}	 
+
+	if (empty($_POST['ysfStartupMode']) != TRUE ) {
+		$newysfStartupMode = strtoupper(escapeshellcmd($_POST['ysfStartupMode']));
+		$configysfgateway['Network']['Type'] = $newysfStartupMode;
+		switch ($newysfStartupMode) {
+			case "YSF":
+				$configysfgateway['Network']['Startup'] = $newYSFStartupHost;
+			break;
+			case "DMR":
+				$configysfgateway['Network']['Startup'] = $newDMRStartupHost;
+			break;
+			case "FCS":
+				$configysfgateway['Network']['Startup'] = $newFCSStartupHost;
+			break;
+		}
+	}	
+
+	if (empty($_POST['DMREnable']) != TRUE ) {	
+		if (escapeshellcmd($_POST['DMREnable']) == 'ON' )  { $configysfgateway['DMR Network']['Enable'] = "1"; }
+		if (escapeshellcmd($_POST['DMREnable']) == 'OFF' ) { $configysfgateway['DMR Network']['Enable'] = "0"; }
+	  }	
+
+	if (empty($_POST['FCSEnable']) != TRUE ) {	
+		if (escapeshellcmd($_POST['FCSEnable']) == 'ON' )  { $configysfgateway['FCS Network']['Enable'] = "1"; }
+		if (escapeshellcmd($_POST['FCSEnable']) == 'OFF' ) { $configysfgateway['FCS Network']['Enable'] = "0"; }
+	  }	
 
 	// Set YSFGateway to automatically pass through WiresX
 	if (empty($_POST['wiresXCommandPassthrough']) != TRUE ) {
@@ -1099,6 +1139,54 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 		if (escapeshellcmd($_POST['confHostFilesYSFUpper']) == 'ON' )   { $configysfgateway['General']['WiresXMakeUpper'] = "1"; }
 		if (escapeshellcmd($_POST['confHostFilesYSFUpper']) == 'OFF' )  { $configysfgateway['General']['WiresXMakeUpper'] = "0"; }
 		if (file_exists('/etc/hostfiles.ysfupper')) { system('sudo rm -rf /etc/hostfiles.ysfupper'); }
+	}
+
+	// Set YSFGateway HotSpotFollow
+	if (empty($_POST['HotSpotFollow']) != TRUE ) {
+		if (escapeshellcmd($_POST['HotSpotFollow']) == 'ON' )  { $configysfgateway['aprs.fi']['HotSpotFollow'] = "1"; }
+		if (escapeshellcmd($_POST['HotSpotFollow']) == 'OFF' ) { $configysfgateway['aprs.fi']['HotSpotFollow'] = "0"; }
+	}
+
+	if (empty($_POST['ysfdmrMasterHost']) != TRUE ) {
+		$ysf2dmrMasterHostArr = explode(',', escapeshellcmd($_POST['ysfdmrMasterHost']));		
+		$configysfgateway['DMR Network']['Address'] = $ysf2dmrMasterHostArr[0];
+		$configysfgateway['DMR Network']['Password'] = '"'.$ysf2dmrMasterHostArr[1].'"';
+		$configysfgateway['DMR Network']['Port'] = $ysf2dmrMasterHostArr[2];
+
+		if (substr($ysf2dmrMasterHostArr[3], 0, 2) == "BM") {
+			$configysfgateway['DMR Network']['EnableUnlink'] = "1";
+			unset ($configysfgateway['DMR Network']['Options']); 
+		} else {
+			$configysfgateway['DMR Network']['EnableUnlink'] = "0"; 
+			if (empty($_POST['ysfgatewayNetworkOptions']) != TRUE ) {
+				$ysf2dmrOptionsLineStripped = str_replace('"', "", $_POST['ysfgatewayNetworkOptions']);
+				$configysfgateway['DMR Network']['Options'] = '"'.$ysf2dmrOptionsLineStripped.'"';
+			 }
+			 else {
+				$configysfgateway['DMR Network']['Options'] = "\"StartRef=4370;RlinkTime=40;TS1_1=214;TS1_2=;TS2_1=2147;\"";
+				$configysfgateway['DMR Network']['Startup'] = "4370";
+			 }
+		}
+
+	}
+
+	if (empty($_POST['APIKey']) != TRUE ) {
+		$newAPIKey = escapeshellcmd($_POST['APIKey']);
+		$configysfgateway['aprs.fi']['APIKey'] = $newAPIKey;
+	}
+	if (empty($_POST['BeaconTime']) != TRUE ) {
+		$newBeaconTime = escapeshellcmd($_POST['BeaconTime']);
+		$configysfgateway['General']['BeaconTime'] = $newBeaconTime;
+	}
+	if (empty($_POST['TimeoutTime']) != TRUE ) {
+		$newTimeoutTime = escapeshellcmd($_POST['TimeoutTime']);
+		$configysfgateway['Network']['InactivityTimeout'] = $newTimeoutTime;
+	}
+	$configysfgateway['aprs.fi']['AprsCallsign'] = strtoupper($callsign);
+
+	if (empty($_POST['dmrPassWord']) != TRUE ) {
+		$newdmrPassWord = escapeshellcmd($_POST['dmrPassWord']);
+		$configysfgateway['DMR Network']['Password'] = $newdmrPassWord;
 	}
 
 	// Set the YSF2DMR Master
@@ -1194,7 +1282,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 
 	  $configmmdvm['General']['Id'] = $newPostDmrId;
 	  $configmmdvm['DMR']['Id'] = $newPostDmrId;
-	  $configysfgateway['General']['Id'] = $newPostDmrId;
+	  //$configysfgateway['General']['Id'] = $newPostDmrId;
 	  $configdmrgateway['XLX Network']['Id'] = $newPostDmrId;
 	  $configdmr2ysf['DMR Network']['Id'] = $newPostDmrId;
 	  $configdmr2nxdn['DMR Network']['Id'] = $newPostDmrId;
@@ -2259,16 +2347,43 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	$configdmr2ysf['Log']['FileLevel'] = "2";
 
 	// Add missing options to YSFGateway
+	if (!isset($configysfgateway['General']['SaveAMBE'])) { $configysfgateway['General']['SaveAMBE'] = "0"; }
+	if (!isset($configysfgateway['General']['AMBECompA'])) { $configysfgateway['General']['AMBECompA'] = "4"; }
+	if (!isset($configysfgateway['General']['AMBECompB'])) { $configysfgateway['General']['WiresXMakeUpper'] = "3"; }			
 	if (!isset($configysfgateway['General']['WiresXMakeUpper'])) { $configysfgateway['General']['WiresXMakeUpper'] = "1"; }
-	if (!isset($configysfgateway['Network']['Revert'])) { $configysfgateway['Network']['Revert'] = "0"; }
 	if (!isset($configysfgateway['Network']['Port'])) { $configysfgateway['Network']['Port'] = "42000"; }
 	if (isset($configysfgateway['Network']['YSF2DMRAddress'])) { unset($configysfgateway['Network']['YSF2DMRAddress']); }
 	if (isset($configysfgateway['Network']['YSF2DMRPort'])) { unset($configysfgateway['Network']['YSF2DMRPort']); }
-	unset($configysfgateway['Network']['DataPort']);
-	unset($configysfgateway['Network']['StatusPort']);
 	if (!isset($configysfgateway['GPSD']['Enable'])) { $configysfgateway['GPSD']['Enable'] = "0"; }
  	if (!isset($configysfgateway['GPSD']['Address'])) { $configysfgateway['GPSD']['Address'] = "127.0.0.1"; }
 	if (!isset($configysfgateway['GPSD']['Port'])) { $configysfgateway['GPSD']['Port'] = "2947"; }
+	if (!isset($configysfgateway['aprs.fi']['Enable'])) { $configysfgateway['aprs.fi']['Enable'] = "1"; }
+	
+	$configysfgateway['Network']['Debug'] = "0";
+	if (!isset($configysfgateway['Network']['NoChange'])) { $configysfgateway['Network']['NoChange'] = "0"; }	
+	$configysfgateway['YSF Network']['Port'] = "42000";
+	$configysfgateway['YSF Network']['Hosts'] = "/usr/local/etc/YSFHosts.txt";
+	$configysfgateway['YSF Network']['ReloadTime'] = "60";
+	$configysfgateway['YSF Network']['ParrotAddress'] = "127.0.0.1";
+	$configysfgateway['YSF Network']['ParrotPort'] = "42012";
+	if (!isset($configysfgateway['YSF Network']['NXDNEnable'])) { $configysfgateway['YSF Network']['NXDNEnable'] = "0"; }
+	if (!isset($configysfgateway['YSF Network']['NXDNStartup'])) { $configysfgateway['YSF Network']['NXDNStartup'] = "400"; }
+	if (!isset($configysfgateway['YSF Network']['NXDNHosts'])) { $configysfgateway['YSF Network']['NXDNHosts'] = "/usr/local/etc/TGList_NXDN.txt"; }				
+	$configysfgateway['YSF Network']['YSF2NXDNAddress'] = "127.0.0.1";
+	$configysfgateway['YSF Network']['YSF2NXDNPort'] = "42014";
+	if (!isset($configysfgateway['YSF Network']['P25Enable'])) { $configysfgateway['YSF Network']['P25Enable'] = "0"; }
+	if (!isset($configysfgateway['YSF Network']['P25Startup'])) { $configysfgateway['YSF Network']['P25Startup'] = "400"; }	
+	if (!isset($configysfgateway['YSF Network']['P25Hosts'])) { $configysfgateway['YSF Network']['P25Hosts'] = "/usr/local/etc/TGList_P25.txt"; }
+	$configysfgateway['YSF Network']['YSF2P25Address'] = "127.0.0.1";
+	$configysfgateway['YSF Network']['YSF2P25Port'] = "42015";
+	$configysfgateway['FCS Network']['Port'] = "42001";
+	$configysfgateway['FCS Network']['Rooms'] = "/usr/local/etc/FCSHosts.txt";
+	if (!isset($configysfgateway['DMR Network']['TGUnlink'])) { $configysfgateway['DMR Network']['TGUnlink'] = "4000"; }
+	if (!isset($configysfgateway['DMR Network']['PCUnlink'])) { $configysfgateway['DMR Network']['PCUnlink'] = "0"; }
+	if (!isset($configysfgateway['DMR Network']['Debug'])) { $configysfgateway['DMR Network']['Debug'] = "0"; }
+	if (!isset($configysfgateway['DMR Network']['Local'])) { $configysfgateway['DMR Network']['Local'] = "62032"; }
+	if (!isset($configysfgateway['DMR Network']['File'])) { $configysfgateway['DMR Network']['File'] = "/usr/local/etc/DMRIds.dat"; }
+	if (!isset($configysfgateway['DMR Network']['Time'])) { $configysfgateway['DMR Network']['Time'] = "720"; }		
 
 	// Add missing options to YSF2DMR
 	if (!isset($configysf2dmr['Info']['Power'])) { $configysf2dmr['Info']['Power'] = "1"; }
@@ -2393,37 +2508,6 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	if ($nxdnGatewayVer >= 20200403) {
 		if (!isset($confignxdngateway['Remote Commands']['Enable'])) { $confignxdngateway['Remote Commands']['Enable'] = "1"; }
 		if (!isset($confignxdngateway['Remote Commands']['Port'])) { $confignxdngateway['Remote Commands']['Port'] = "6075"; }
-	}
-
-	// Migrate YSFGateway Config
-	$ysfGatewayVer = exec("YSFGateway -v | awk {'print $3'} | cut -c 1-8");
-	if ($ysfGatewayVer > 20180303) {
-		if (isset($configysfgateway['Network']['Startup'])) { $ysfTmpStartup = $configysfgateway['Network']['Startup']; }
-		if (!isset($configysfgateway['aprs.fi']['Enable'])) { $configysfgateway['aprs.fi']['Enable'] = "1"; }
-		//unset($configysfgateway['Network']);
-		if (isset($ysfTmpStartup)) { $configysfgateway['Network']['Startup'] = $ysfTmpStartup; }
-		if (!isset($configysfgateway['Network']['InactivityTimeout'])) { $configysfgateway['Network']['InactivityTimeout'] = "0"; }
-		if (!isset($configysfgateway['Network']['Revert'])) { $configysfgateway['Network']['Revert'] = "0"; }
-		$configysfgateway['Network']['Debug'] = "0";
-		$configysfgateway['YSF Network']['Enable'] = "1";
-		$configysfgateway['YSF Network']['Port'] = "42000";
-		$configysfgateway['YSF Network']['Hosts'] = "/usr/local/etc/YSFHosts.txt";
-		$configysfgateway['YSF Network']['ReloadTime'] = "60";
-		$configysfgateway['YSF Network']['ParrotAddress'] = "127.0.0.1";
-		$configysfgateway['YSF Network']['ParrotPort'] = "42012";
-		$configysfgateway['YSF Network']['YSF2DMRAddress'] = "127.0.0.1";
-		$configysfgateway['YSF Network']['YSF2DMRPort'] = "42013";
-		$configysfgateway['YSF Network']['YSF2NXDNAddress'] = "127.0.0.1";
-		$configysfgateway['YSF Network']['YSF2NXDNPort'] = "42014";
-		$configysfgateway['YSF Network']['YSF2P25Address'] = "127.0.0.1";
-		$configysfgateway['YSF Network']['YSF2P25Port'] = "42015";
-		$configysfgateway['FCS Network']['Enable'] = "1";
-		$configysfgateway['FCS Network']['Port'] = "42001";
-		$configysfgateway['FCS Network']['Rooms'] = "/usr/local/etc/FCSHosts.txt";
-	}
-	if ($ysfGatewayVer >= 20180303) {
-		if (!isset($configysfgateway['Remote Commands']['Enable'])) { $configysfgateway['Remote Commands']['Enable'] = "1"; }
-		if (!isset($configysfgateway['Remote Commands']['Port'])) { $configysfgateway['Remote Commands']['Port'] = "6073"; }
 	}
 
 	// Add the DAPNet Config
@@ -3007,7 +3091,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 
 else:
 	// Output the HTML Form here
-	if ((file_exists('/etc/dstar-radio.mmdvmhost') || file_exists('/etc/dstar-radio.dstarrepeater')) && !$configModem['Modem']['Hardware']) { echo "<script type\"text/javascript\">\n\talert(\"WARNING:\\nThe Modem selection section has been updated,\\nPlease re-select your modem from the list.\")\n</script>\n"; }
+	if ((file_exists('/etc/dstar-radio.mmdvmhost') || file_exists('/etc/dstar-radio.dstarrepeater')) && !$configModem['Modem']['Hardware']) { echo "<script type\"text/javascript\">\n\talert(\"WARNING:\\nThe Modem selection section has been updated,\\nPlease re-select your modem from the list.\")\n</script>\n";$configModem['Modem']['Hardware'] = "None"; }
 ?>
 <form id="factoryReset" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
 	<div><input type="hidden" name="factoryReset" value="1" /></div>
@@ -3997,45 +4081,70 @@ fclose($dextraFile);
 $ysfHosts = fopen("/usr/local/etc/YSFHosts.txt", "r"); ?>
 	<input type="hidden" name="confHostFilesYSFUpper" value="OFF" />
 	<input type="hidden" name="wiresXCommandPassthrough" value="OFF" />
-	<h2><?php echo $lang['ysf_config'];?></h2>
+	<input type="hidden" name="HotSpotFollow" value="OFF" />
+	<input type="hidden" name="DMREnable" value="OFF" />
+	<input type="hidden" name="FCSEnable" value="OFF" />	
+	<h2><?php echo "EA7EE Yaesu System Fusion Configuration";?></h2>
     <table>
     <tr>
     <th width="200"><a class="tooltip" href="#"><?php echo $lang['setting'];?><span><b>Setting</b></span></a></th>
     <th colspan="2"><a class="tooltip" href="#"><?php echo $lang['value'];?><span><b>Value</b>The current value from the<br />configuration files</span></a></th>
     </tr>
+
     <tr>
-    <td align="left"><a class="tooltip2" href="#"><?php echo $lang['ysf_startup_host'];?>:<span><b>YSF Host</b>Set your prefered YSF Host here</span></a></td>
-    <td colspan="2" style="text-align: left;"><select name="ysfStartupHost">
+    <td align="left"><a class="tooltip2" href="#"><?php echo "Startup Mode";?>:<span><b>Mode</b>Set your prefered Startup Mode here</span></a></td>
+    <td colspan="2" style="text-align: left;"><select name="ysfStartupMode">
 <?php
-        if (isset($configysfgateway['Network']['Startup'])) {
-                $testYSFHost = $configysfgateway['Network']['Startup'];
+        if (isset($configysfgateway['Network']['Type'])) {
+                $testYSFType = $configysfgateway['Network']['Type'];
+                echo "      <option value=\"none\">None</option>\n";
+        	}
+        else {
+                $testYSFType = "none";
+                echo "      <option value=\"none\" selected=\"selected\">None</option>\n";
+			}
+
+		if ($testYSFType == "YSF")  {
+			echo "      <option value=\"YSF\" selected=\"selected\">YSF</option>\n";
+	    } else {
+			echo "      <option value=\"YSF\">YSF</option>\n";
+		} 
+	   	if ($testYSFType == "FCS") {
+			echo "      <option value=\"FCS\" selected=\"selected\">FCS</option>\n";
+		} else {
+			echo "      <option value=\"FCS\">FCS</option>\n";
+		}
+		if ($testYSFType == "DMR")  {
+			echo "      <option value=\"DMR\" selected=\"selected\">DMR</option>\n";
+		} else {
+			echo "      <option value=\"DMR\">DMR</option>\n";
+		}
+		if ($testYSFType == "NXDN") {
+			echo "      <option value=\"NXDN\" selected=\"selected\">NXDN</option>\n";
+	   	} else {
+			echo "      <option value=\"NXDN\">NXDN</option>\n";
+		}
+	   	if ($testYSFType == "P25") {
+		   echo "      <option value=\"P25\" selected=\"selected\">P25</option>\n";
+	   	} else {
+			echo "      <option value=\"P25\">P25</option>\n";
+		}		
+?>
+</select></td>	
+</tr>	
+<tr>
+<td align="left"><a class="tooltip2" href="#"><?php echo $lang['ysf_startup_host'];?>:<span><b>YSF Host</b>Set your prefered YSF Host here</span></a></td>
+<td colspan="2" style="text-align: left;"><select name="ysfStartupHost">
+<?php
+        if (isset($configysfgateway['YSF Network']['Startup'])) {
+                $testYSFHost = $configysfgateway['YSF Network']['Startup'];
                 echo "      <option value=\"none\">None</option>\n";
         	}
         else {
                 $testYSFHost = "none";
                 echo "      <option value=\"none\" selected=\"selected\">None</option>\n";
-    		}
-	if ($testYSFHost == "ZZ Parrot")  {
-		echo "      <option value=\"00001,ZZ Parrot\" selected=\"selected\">YSF00001 - Parrot</option>\n";
-	} else {
-		echo "      <option value=\"00001,ZZ Parrot\">YSF00001 - Parrot</option>\n";
-	}
-	if ($testYSFHost == "YSF2DMR")  {
-		echo "      <option value=\"00002,YSF2DMR\"  selected=\"selected\">YSF00002 - Link YSF2DMR</option>\n";
-	} else {
-		echo "      <option value=\"00002,YSF2DMR\">YSF00002 - Link YSF2DMR</option>\n";
-	}
-	if ($testYSFHost == "YSF2NXDN") {
-		echo "      <option value=\"00003,YSF2NXDN\" selected=\"selected\">YSF00003 - Link YSF2NXDN</option>\n";
-	} else {
-		echo "      <option value=\"00003,YSF2NXDN\">YSF00003 - Link YSF2NXDN</option>\n";
-	}
-	if ($testYSFHost == "YSF2P25")  {
-		echo "      <option value=\"00004,YSF2P25\"  selected=\"selected\">YSF00004 - Link YSF2P25</option>\n";
-	} else {
-		echo "      <option value=\"00004,YSF2P25\">YSF00004 - Link YSF2P25</option>\n";
-	}
-        while (!feof($ysfHosts)) {
+			} 
+       while (!feof($ysfHosts)) {
                 $ysfHostsLine = fgets($ysfHosts);
                 $ysfHost = preg_split('/;/', $ysfHostsLine);
                 if ((strpos($ysfHost[0], '#') === FALSE ) && ($ysfHost[0] != '')) {
@@ -4044,21 +4153,21 @@ $ysfHosts = fopen("/usr/local/etc/YSFHosts.txt", "r"); ?>
                 }
         }
         fclose($ysfHosts);
-	if (file_exists("/usr/local/etc/FCSHosts.txt")) {
-                $fcsHosts = fopen("/usr/local/etc/FCSHosts.txt", "r");
-                while (!feof($fcsHosts)) {
-                        $ysfHostsLine = fgets($fcsHosts);
-                        $ysfHost = preg_split('/;/', $ysfHostsLine);
-			if (substr($ysfHost[0], 0, 3) == "FCS") {
-                                if ( ($testYSFHost == $ysfHost[0]) || ($testYSFHost == $ysfHost[1]) ) { echo "      <option value=\"$ysfHost[0],$ysfHost[0]\" selected=\"selected\">$ysfHost[0] - ".htmlspecialchars($ysfHost[1])."</option>\n"; }
-                                else { echo "      <option value=\"$ysfHost[0],$ysfHost[0]\">$ysfHost[0] - ".htmlspecialchars($ysfHost[1])."</option>\n"; }
-                        }
-                }
-                fclose($fcsHosts);
-        }
         ?>
     </select></td>
     </tr>
+ 	<td align="left"><a class="tooltip2" href="#"><?php echo "aprs.fi ApiKey";?>:<span><b>ApiKey from aprs.fi</b>The AprsKey from registration on aprs.fi</span></a></td>
+    <td align="left" colspan="2"><input type="text" name="APIKey" size="23" maxlength="23" value="<?php echo $configysfgateway['aprs.fi']['APIKey'];?>" /></td>
+    </tr>
+    <tr>
+ 	<td align="left"><a class="tooltip2" href="#"><?php echo "Beacon Time";?>:<span><b>Beacon Time in minutes</b>Beacon Time, 0 = Beacon OFF</span></a></td>
+    <td align="left" colspan="2"><input type="text" name="BeaconTime" size="2" maxlength="2" value="<?php echo $configysfgateway['General']['BeaconTime'];?>" /></td>
+    </tr>
+    <tr>
+ 	<td align="left"><a class="tooltip2" href="#"><?php echo "Re-Link Time";?>:<span><b>Re-Link Time in minutes</b>Timeout Time, 0 = No Timeout</span></a></td>
+    <td align="left" colspan="2"><input type="text" name="TimeoutTime" size="2" maxlength="2" value="<?php echo $configysfgateway['Network']['InactivityTimeout'];?>" /></td>
+    </tr>
+    <tr>
     <tr>
     <td align="left"><a class="tooltip2" href="#">UPPERCASE Hostfiles:<span><b>UPPERCASE Hostfiles</b>Should host files use UPPERCASE only - fixes issues with FT-70D radios.</span></a></td>
     <?php
@@ -4089,6 +4198,153 @@ $ysfHosts = fopen("/usr/local/etc/YSFHosts.txt", "r"); ?>
 		echo "<td align=\"left\" colspan=\"2\"><div class=\"switch\"><input id=\"toggle-confWiresXCommandPassthrough\" class=\"toggle toggle-round-flat\" type=\"checkbox\" name=\"wiresXCommandPassthrough\" value=\"ON\" /><label for=\"toggle-confWiresXCommandPassthrough\"></label></div></td>\n";
 	}
     ?>
+    </tr>
+    <tr>
+    <td align="left"><a class="tooltip2" href="#">Hotspot Follow User:<span><b>Hotspot Follow User</b>Use this to change HotSpot Location when main user changes location (personal moving hotspots).</span></a></td>
+    <?php
+	if ( isset($configysfgateway['aprs.fi']['HotSpotFollow']) ) {
+		if ( $configysfgateway['aprs.fi']['HotSpotFollow'] ) {
+			echo "<td align=\"left\" colspan=\"2\"><div class=\"switch\"><input id=\"toggle-confHotSpotFollow\" class=\"toggle toggle-round-flat\" type=\"checkbox\" name=\"HotSpotFollow\" value=\"ON\" checked=\"checked\" /><label for=\"toggle-confHotSpotFollow\"></label></div></td>\n";
+		}
+		else {
+			echo "<td align=\"left\" colspan=\"2\"><div class=\"switch\"><input id=\"toggle-confHotSpotFollow\" class=\"toggle toggle-round-flat\" type=\"checkbox\" name=\"HotSpotFollow\" value=\"ON\" /><label for=\"toggle-confHotSpotFollow\"></label></div></td>\n";
+		}
+	} else {
+		echo "<td align=\"left\" colspan=\"2\"><div class=\"switch\"><input id=\"toggle-confHotSpotFollow\" class=\"toggle toggle-round-flat\" type=\"checkbox\" name=\"HotSpotFollow\" value=\"ON\" /><label for=\"toggle-confHotSpotFollow\"></label></div></td>\n";
+	}
+    ?>
+    </tr>
+	<tr>
+    <td align="left"><a class="tooltip2" href="#">DMR Enable:<span><b>DMR Enable</b>Enable DMR Transcoding.</span></a></td>
+    <?php
+	if ( isset($configysfgateway['DMR Network']['Enable']) ) {
+		if ( $configysfgateway['DMR Network']['Enable'] ) {
+			echo "<td align=\"left\"><div class=\"switch\"><input id=\"toggle-DMREnable\" class=\"toggle toggle-round-flat\" type=\"checkbox\" name=\"DMREnable\" value=\"ON\" checked=\"checked\" /><label for=\"toggle-DMREnable\"></label></div></td>\n";
+		}
+		else {
+			echo "<td align=\"left\"><div class=\"switch\"><input id=\"toggle-DMREnable\" class=\"toggle toggle-round-flat\" type=\"checkbox\" name=\"DMREnable\" value=\"ON\" /><label for=\"toggle-DMREnable\"></label></div></td>\n";
+		}
+	} else {
+		echo "<td align=\"left\"><div class=\"switch\"><input id=\"toggle-DMREnable\" class=\"toggle toggle-round-flat\" type=\"checkbox\" name=\"DMREnable\" value=\"ON\" /><label for=\"toggle-DMREnable\"></label></div></td>\n";
+	}
+    ?>
+    <td>Note: Update Required if changed</td>
+    </tr>
+
+
+	
+    </tr>
+	<td align="left"><a class="tooltip2" href="#"><?php echo "ESS DMR Id";?>:<span><b>ESS DMR Id</b>Extended (9 digit number) Id for DMR</span></a></td>
+    <td align="left" colspan="2"><input type="text" name="ysfESSId" size="13" maxlength="9" value="<?php echo $configysfgateway['General']['Id'];?>" /></td>
+    </tr>
+
+
+	<tr>
+	<td align="left"><a class="tooltip2" href="#"><?php echo "DMR Startup Host";?>:<span><b>DMR Host</b>Set your prefered DMR Host here</span></a></td>
+	<td colspan="2" style="text-align: left;"><select name="dmrStartupHost">
+	<?php
+			if (isset($configysfgateway['DMR Network']['Startup'])) {
+				$testDMRHost = $configysfgateway['DMR Network']['Startup'];
+				echo "      <option value=\"none\">None</option>\n";
+			}
+			else {
+					$testDMRHost = "none";
+					echo "      <option value=\"none\" selected=\"selected\">None</option>\n";
+				} 
+
+			if ($configysfgateway['DMR Network']['EnableUnlink']) $dmrFile = fopen("/usr/local/etc/DMRHosts.txt", "r");
+			else $dmrFile = fopen("/usr/local/etc/DMRP_Talkgroups.txt", "r");
+			while (!feof($dmrFile)) {
+					$dmrLine = fgets($dmrFile);
+					$dmrHost = preg_split('/;/', $dmrLine);
+					if ($configysfgateway['DMR Network']['EnableUnlink']) {
+						if ((strpos($dmrHost[0], '#') === FALSE ) && ($dmrHost[0] != '')) {
+								if (($testDMRHost == $dmrHost[0]) || ($testDMRHost == $dmrHost[3]) ) { echo "      <option value=\"$dmrHost[0]\" selected=\"selected\">$dmrHost[0] - ".htmlspecialchars($dmrHost[3])."</option>\n";}
+								else { echo "      <option value=\"$dmrHost[0]\">$dmrHost[0] - ".htmlspecialchars($dmrHost[3])."</option>\n"; }
+						}
+					}
+					else {
+						if ((strpos($dmrHost[0], '#') === FALSE ) && ($dmrHost[0] != '')) {
+							if (($testDMRHost == $dmrHost[0]) || ($testDMRHost == $dmrHost[3]) ) { echo "      <option value=\"$dmrHost[0]\" selected=\"selected\">$dmrHost[0] - ".htmlspecialchars($dmrHost[2])."</option>\n";}
+							else { echo "      <option value=\"$dmrHost[0]\">$dmrHost[0] - ".htmlspecialchars($dmrHost[2])."</option>\n"; }
+					  }
+					}
+			}
+			fclose($dmrFile);
+
+			?>
+	</select></td>
+	</tr>
+    <tr>
+    <td align="left"><a class="tooltip2" href="#"><?php echo $lang['dmr_master'];?>:<span><b>DMR Master</b>Set your prefered DMR master here</span></a></td>
+    <td colspan="2" style="text-align: left;"><select name="ysfdmrMasterHost">
+<?php
+		$dmrMasterFile = fopen("/usr/local/etc/DMR_Hosts.txt", "r");
+        $testMMDVMysf2dmrMaster = $configysfgateway['DMR Network']['Address'];
+        while (!feof($dmrMasterFile)) {
+                $dmrMasterLine = fgets($dmrMasterFile);
+                $ysfdmrMasterHost = preg_split('/\s+/', $dmrMasterLine);
+                if ((strpos($ysfdmrMasterHost[0], '#') === FALSE ) && (substr($ysfdmrMasterHost[0], 0, 3) != "XLX") && (substr($ysfdmrMasterHost[0], 0, 4) != "DMRG") && (substr($ysfdmrMasterHost[0], 0, 4) != "DMR2") && ($ysfdmrMasterHost[0] != '')) {
+                        if ($testMMDVMysf2dmrMaster == $ysfdmrMasterHost[2]) { echo "      <option value=\"$ysfdmrMasterHost[2],$ysfdmrMasterHost[3],$ysfdmrMasterHost[4],$ysfdmrMasterHost[0]\" selected=\"selected\">$ysfdmrMasterHost[0]</option>\n";}
+                        else { echo "      <option value=\"$ysfdmrMasterHost[2],$ysfdmrMasterHost[3],$ysfdmrMasterHost[4],$ysfdmrMasterHost[0]\">$ysfdmrMasterHost[0]</option>\n"; }
+                }
+        }
+        fclose($dmrMasterFile);
+        ?>
+    </select></td>
+    </tr>
+    <tr>	
+	<td align="left"><a class="tooltip2" href="#"><?php echo "PassWord";?>:<span><b>Password</b>Password for DMR Server</span></a></td>
+    <td align="left" colspan="2"><input type="password" name="dmrPassWord" size="23" maxlength="23" value="<?php echo $configysfgateway['DMR Network']['Password'];?>" /></td>
+    </tr>
+    <tr>
+    <td align="left"><a class="tooltip2" href="#"><?php echo $lang['dmr_plus_network'];?>:<span><b>DMR+ Network</b>Set your options= for DMR+ here</span></a></td>
+    <td align="left" colspan="2"> Options=<input type="text" name="ysfgatewayNetworkOptions" size="40" maxlength="100" value="<?php if (isset($configysfgateway['DMR Network']['Options'])) { echo $configysfgateway['DMR Network']['Options']; } ?>" /></td>
+    </tr>
+	<tr>
+	<td align="left"><a class="tooltip2" href="#">FCS Enable:<span><b>FCS Enable</b>Enable FCS.</span></a></td>
+	<?php
+	if ( isset($configysfgateway['FCS Network']['Enable']) ) {
+		if ( $configysfgateway['FCS Network']['Enable'] ) {
+			echo "<td align=\"left\"><div class=\"switch\"><input id=\"toggle-FCSEnable\" class=\"toggle toggle-round-flat\" type=\"checkbox\" name=\"FCSEnable\" value=\"ON\" checked=\"checked\" /><label for=\"toggle-FCSEnable\"></label></div></td>\n";
+		}
+		else {
+			echo "<td align=\"left\"><div class=\"switch\"><input id=\"toggle-FCSEnable\" class=\"toggle toggle-round-flat\" type=\"checkbox\" name=\"FCSEnable\" value=\"ON\" /><label for=\"toggle-FCSEnable\"></label></div></td>\n";
+		}
+	} else {
+		echo "<td align=\"left\"><div class=\"switch\"><input id=\"toggle-FCSEnable\" class=\"toggle toggle-round-flat\" type=\"checkbox\" name=\"FCSEnable\" value=\"ON\" /><label for=\"toggle-FCSEnable\"></label></div></td>\n";
+	}
+	?>
+	<td>Note: Update Required if changed</td>
+	</tr>
+	<tr>
+	<td align="left"><a class="tooltip2" href="#"><?php echo "FCS Startup Host";?>:<span><b>FCS Host</b>Set your prefered FCS Host here</span></a></td>
+	<td colspan="2" style="text-align: left;"><select name="fcsStartupHost">
+	<?php
+        if (isset($configysfgateway['FCS Network']['Startup'])) {
+                $testFCSHost = $configysfgateway['FCS Network']['Startup'];
+                echo "      <option value=\"none\">None</option>\n";
+        	}
+        else {
+                $testFCSHost = "none";
+                echo "      <option value=\"none\" selected=\"selected\">None</option>\n";
+			} 
+
+		if (file_exists("/usr/local/etc/FCSHosts.txt")) {
+            $fcsHosts = fopen("/usr/local/etc/FCSHosts.txt", "r");
+            while (!feof($fcsHosts)) {
+                $fcsHostsLine = fgets($fcsHosts);
+                $fcsHost = preg_split('/;/', $fcsHostsLine);
+				if (substr($fcsHost[0], 0, 3) == "FCS") {
+                    if ( ($testFCSHost == $fcsHost[0]) || ($testFCSHost == $fcsHost[1]) ) { echo "      <option value=\"$fcsHost[0],$fcsHost[0]\" selected=\"selected\">$fcsHost[0] - ".htmlspecialchars($fcsHost[1])."</option>\n"; }
+                    else { echo "      <option value=\"$fcsHost[0],$fcsHost[0]\">$fcsHost[0] - ".htmlspecialchars($fcsHost[1])."</option>\n"; }
+                        }
+                }
+                fclose($fcsHosts);
+        }
+
+        ?>
+    </select></td>
     </tr>
     <?php if (file_exists('/etc/dstar-radio.mmdvmhost') && $configysf2dmr['Enabled']['Enabled'] == 1) {
     $dmrMasterFile = fopen("/usr/local/etc/DMR_Hosts.txt", "r"); ?>
