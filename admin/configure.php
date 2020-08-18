@@ -2368,7 +2368,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	if (!isset($configysfgateway['Log']['FileRoot'])) { $configysfgateway['Log']['FileRoot'] = "YSFGateway"; }
 	if (!isset($configysfgateway['aprs.fi']['Icon'])) { $configysfgateway['aprs.fi']['Icon'] = "YY"; }
 	if (!isset($configysfgateway['aprs.fi']['Beacon'])) { $configysfgateway['aprs.fi']['Beacon'] = "Yaesu DMO with EA7EE Sofware"; }
-	if (!isset($configysfgateway['aprs.fi']['BeaconTime'])) { $configysfgateway['aprs.fi']['BeaconTime'] = "20"; }
+	if (!isset($configysfgateway['aprs.fi']['BeaconTime'])) { $configysfgateway['aprs.fi']['BeaconTime'] = "0"; }
 	if (!isset($configysfgateway['aprs.fi']['Port'])) { $configysfgateway['aprs.fi']['Port'] = "14580"; }
 	if (!isset($configysfgateway['aprs.fi']['Refresh'])) { $configysfgateway['aprs.fi']['Refresh'] = "4"; }
 	if (!isset($configysfgateway['General']['SaveAMBE'])) { $configysfgateway['General']['SaveAMBE'] = "0"; }
@@ -2376,6 +2376,9 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	if (!isset($configysfgateway['General']['AMBECompB'])) { $configysfgateway['General']['AMBECompB'] = "3"; }			
 	if (isset($configysfgateway['Network']['YSF2DMRAddress'])) { unset($configysfgateway['Network']['YSF2DMRAddress']); }
 	if (isset($configysfgateway['Network']['YSF2DMRPort'])) { unset($configysfgateway['Network']['YSF2DMRPort']); }
+
+	if (!isset($configysfgateway['Remote Commands']['Enable'])) { $configysfgateway['Remote Commands']['Enable'] = "1"; }
+	if (!isset($configysfgateway['Remote Commands']['Port'])) { $configysfgateway['Remote Commands']['Port'] = "6073"; }
 	
 	$configysfgateway['Network']['Debug'] = "0";
 	if (!isset($configysfgateway['Network']['NoChange'])) { $configysfgateway['Network']['NoChange'] = "0"; }	
@@ -4301,7 +4304,7 @@ $ysfHosts = fopen("/usr/local/etc/YSFHosts.txt", "r"); ?>
 					if ($configysfgateway['DMR Network']['EnableUnlink']) {
 						if ((strpos($dmrHost[0], '#') === FALSE ) && ($dmrHost[0] != '')) {
 								if (($testDMRHost == $dmrHost[0]) || ($testDMRHost == $dmrHost[3]) ) { echo "      <option value=\"$dmrHost[0]\" selected=\"selected\">$dmrHost[0] - ".htmlspecialchars($dmrHost[3])."</option>\n";}
-								else { echo "      <option value=\"$dmrHost[0]\">$dmrHost[0] - ".htmlspecialchars($dmrHost[3])."</option>\n"; }
+								else { echo "      <option value=\"$dmrHost[0]\">$dmrHost[0] - ".htmlspecialchars($dmrHost[1])."</option>\n"; }
 						}
 					}
 					else {
