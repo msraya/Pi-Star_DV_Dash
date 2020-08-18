@@ -4304,12 +4304,12 @@ $ysfHosts = fopen("/usr/local/etc/YSFHosts.txt", "r"); ?>
 					if ($configysfgateway['DMR Network']['EnableUnlink']) {
 						if ((strpos($dmrHost[0], '#') === FALSE ) && ($dmrHost[0] != '')) {
 								if (($testDMRHost == $dmrHost[0]) || ($testDMRHost == $dmrHost[3]) ) { echo "      <option value=\"$dmrHost[0]\" selected=\"selected\">$dmrHost[0] - ".htmlspecialchars($dmrHost[3])."</option>\n";}
-								else { echo "      <option value=\"$dmrHost[0]\">$dmrHost[0] - ".htmlspecialchars($dmrHost[2])."</option>\n"; }
+								else { echo "      <option value=\"$dmrHost[0]\">$dmrHost[0] - ".htmlspecialchars($dmrHost[3])."</option>\n"; }
 						}
 					}
 					else {
 						if ((strpos($dmrHost[0], '#') === FALSE ) && ($dmrHost[0] != '')) {
-							if (($testDMRHost == $dmrHost[0]) || ($testDMRHost == $dmrHost[3]) ) { echo "      <option value=\"$dmrHost[0]\" selected=\"selected\">$dmrHost[0] - ".htmlspecialchars($dmrHost[2])."</option>\n";}
+							if (($testDMRHost == $dmrHost[0]) || ($testDMRHost == $dmrHost[1]) ) { echo "      <option value=\"$dmrHost[0]\" selected=\"selected\">$dmrHost[0] - ".htmlspecialchars($dmrHost[2])."</option>\n";}
 							else { echo "      <option value=\"$dmrHost[0]\">$dmrHost[0] - ".htmlspecialchars($dmrHost[1])."</option>\n"; }
 					  }
 					}
