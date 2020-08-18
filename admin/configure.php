@@ -1102,8 +1102,11 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	}
 
 	if (empty($_POST['fcsStartupHost']) != TRUE ) {	
-		if ($_POST['fcsStartupHost'] != "None") 
-			$newFCSStartupHost = substr($_POST['fcsStartupHost'],3);
+		if ($_POST['fcsStartupHost'] != "None") {
+			$newFCSStartupHostarr = explode(',', escapeshellcmd($_POST['ysfdmrMasterHost']));
+			$newFCSStartupHost = substr($newFCSStartupHostarr[0],3);
+			write_log($newFCSStartupHost);
+		}
 		else $newFCSStartupHost = "400";
 		$configysfgateway['FCS Network']['Startup'] = $newFCSStartupHost;
 	} else $configysfgateway['FCS Network']['Startup'] = "00118";
@@ -1159,11 +1162,11 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	}
 
 	if (empty($_POST['ysfdmrMasterHost']) != TRUE ) {
-		$ysf2dmrMasterHostArr = explode(',', escapeshellcmd($_POST['ysfdmrMasterHost']));		
+		$ysf2dmrMasterHostArr = explode(',', escapeshellcmd($_POST['ysfdmrMasterHost']));
+		write_log(print_r($ysf2dmrMasterHostArr, true));			
 		$configysfgateway['DMR Network']['Address'] = $ysf2dmrMasterHostArr[0];
 		$configysfgateway['DMR Network']['Password'] = '"'.$ysf2dmrMasterHostArr[1].'"';
 		$configysfgateway['DMR Network']['Port'] = $ysf2dmrMasterHostArr[2];
-
 		if (substr($ysf2dmrMasterHostArr[3], 0, 2) == "BM") {
 			$configysfgateway['DMR Network']['EnableUnlink'] = "1";
 			unset ($configysfgateway['DMR Network']['Options']); 
@@ -4280,6 +4283,24 @@ $ysfHosts = fopen("/usr/local/etc/YSFHosts.txt", "r"); ?>
     <td align="left" colspan="2"><input type="text" name="ysfESSId" size="13" maxlength="9" value="<?php echo $configysfgateway['General']['Id'];?>" /></td>
     </tr>
 
+    <tr>
+    <td align="left"><a class="tooltip2" href="#"><?php echo $lang['dmr_master'];?>:<span><b>DMR Master</b>Set your prefered DMR master here</span></a></td>
+    <td colspan="2" style="text-align: left;"><select name="ysfdmrMasterHost">
+<?php
+		$dmrMasterFile = fopen("/usr/local/etc/DMR_Hosts.txt", "r");
+        $testMMDVMysf2dmrMaster = $configysfgateway['DMR Network']['Address'];
+        while (!feof($dmrMasterFile)) {
+                $dmrMasterLine = fgets($dmrMasterFile);
+                $ysfdmrMasterHost = preg_split('/\s+/', $dmrMasterLine);
+                if ((strpos($ysfdmrMasterHost[0], '#') === FALSE ) && (substr($ysfdmrMasterHost[0], 0, 3) != "XLX") && (substr($ysfdmrMasterHost[0], 0, 4) != "DMRG") && (substr($ysfdmrMasterHost[0], 0, 4) != "DMR2") && ($ysfdmrMasterHost[0] != '')) {
+                        if ($testMMDVMysf2dmrMaster == $ysfdmrMasterHost[2]) { echo "      <option value=\"$ysfdmrMasterHost[2],$ysfdmrMasterHost[3],$ysfdmrMasterHost[4],$ysfdmrMasterHost[0]\" selected=\"selected\">$ysfdmrMasterHost[0]</option>\n"; $mastertmp = ysfdmrMasterHost[0]; }
+                        else { echo "      <option value=\"$ysfdmrMasterHost[2],$ysfdmrMasterHost[3],$ysfdmrMasterHost[4],$ysfdmrMasterHost[0]\">$ysfdmrMasterHost[0]</option>\n"; $mastertmp = "BM";}
+                }
+        }
+        fclose($dmrMasterFile);
+        ?>
+    </select></td>
+    </tr>
 
 	<tr>
 	<td align="left"><a class="tooltip2" href="#"><?php echo "DMR Startup Host";?>:<span><b>DMR Host</b>Set your prefered DMR Host here</span></a></td>
@@ -4293,50 +4314,37 @@ $ysfHosts = fopen("/usr/local/etc/YSFHosts.txt", "r"); ?>
 					$testDMRHost = "none";
 					echo "      <option value=\"none\" selected=\"selected\">None</option>\n";
 				} 
-			
-			if (isset($configysfgateway['DMR Network']['EnableUnlink'])) {
-				if ($configysfgateway['DMR Network']['EnableUnlink']) $dmrFile = fopen("/usr/local/etc/DMRHosts.txt", "r");
-				else $dmrFile = fopen("/usr/local/etc/DMRP_Talkgroups.txt", "r");
-			} else $dmrFile = fopen("/usr/local/etc/DMRHosts.txt", "r");
-			while (!feof($dmrFile)) {
+			write_log($mastertmp);
+			if (substr($mastertmp,0,2) == "BM") {
+				write_log("BM File");
+				$dmrFile = fopen("/usr/local/etc/DMRHosts.txt", "r");
+				while (!feof($dmrFile)) {
 					$dmrLine = fgets($dmrFile);
 					$dmrHost = preg_split('/;/', $dmrLine);
-					if ($configysfgateway['DMR Network']['EnableUnlink']) {
-						if ((strpos($dmrHost[0], '#') === FALSE ) && ($dmrHost[0] != '')) {
-								if (($testDMRHost == $dmrHost[0]) || ($testDMRHost == $dmrHost[3]) ) { echo "      <option value=\"$dmrHost[0]\" selected=\"selected\">$dmrHost[0] - ".htmlspecialchars($dmrHost[3])."</option>\n";}
-								else { echo "      <option value=\"$dmrHost[0]\">$dmrHost[0] - ".htmlspecialchars($dmrHost[3])."</option>\n"; }
-						}
+					if ((strpos($dmrHost[0], '#') === FALSE ) && ($dmrHost[0] != '')) {
+						if (($testDMRHost == $dmrHost[0]) || ($testDMRHost == $dmrHost[3]) ) { echo "      <option value=\"$dmrHost[0]\" selected=\"selected\">$dmrHost[0] - ".htmlspecialchars($dmrHost[3])."</option>\n";}
+						else { echo "      <option value=\"$dmrHost[0]\">$dmrHost[0] - ".htmlspecialchars($dmrHost[3])."</option>\n"; }
 					}
-					else {
-						if ((strpos($dmrHost[0], '#') === FALSE ) && ($dmrHost[0] != '')) {
-							if (($testDMRHost == $dmrHost[0]) || ($testDMRHost == $dmrHost[1]) ) { echo "      <option value=\"$dmrHost[0]\" selected=\"selected\">$dmrHost[0] - ".htmlspecialchars($dmrHost[2])."</option>\n";}
-							else { echo "      <option value=\"$dmrHost[0]\">$dmrHost[0] - ".htmlspecialchars($dmrHost[1])."</option>\n"; }
-					  }
+				}
+				fclose($dmrFile);
+			}	
+			else {
+				write_log("DMR + file");
+				$dmrFile = fopen("/usr/local/etc/DMRP_Talkgroups.txt", "r");
+				while (!feof($dmrFile)) {
+					$dmrLine = fgets($dmrFile);
+					$dmrHost = preg_split('/;/', $dmrLine);			
+					if ((strpos($dmrHost[0], '#') === FALSE ) && ($dmrHost[0] != '')) {
+						if (($testDMRHost == $dmrHost[0]) || ($testDMRHost == $dmrHost[1]) ) { echo "      <option value=\"$dmrHost[0]\" selected=\"selected\">$dmrHost[0] - ".htmlspecialchars($dmrHost[1])."</option>\n";}
+						else { echo "      <option value=\"$dmrHost[0]\">$dmrHost[0] - ".htmlspecialchars($dmrHost[1])."</option>\n"; }
 					}
+				}
+				fclose($dmrFile);		
 			}
-			fclose($dmrFile);
-
 			?>
 	</select></td>
 	</tr>
-    <tr>
-    <td align="left"><a class="tooltip2" href="#"><?php echo $lang['dmr_master'];?>:<span><b>DMR Master</b>Set your prefered DMR master here</span></a></td>
-    <td colspan="2" style="text-align: left;"><select name="ysfdmrMasterHost">
-<?php
-		$dmrMasterFile = fopen("/usr/local/etc/DMR_Hosts.txt", "r");
-        $testMMDVMysf2dmrMaster = $configysfgateway['DMR Network']['Address'];
-        while (!feof($dmrMasterFile)) {
-                $dmrMasterLine = fgets($dmrMasterFile);
-                $ysfdmrMasterHost = preg_split('/\s+/', $dmrMasterLine);
-                if ((strpos($ysfdmrMasterHost[0], '#') === FALSE ) && (substr($ysfdmrMasterHost[0], 0, 3) != "XLX") && (substr($ysfdmrMasterHost[0], 0, 4) != "DMRG") && (substr($ysfdmrMasterHost[0], 0, 4) != "DMR2") && ($ysfdmrMasterHost[0] != '')) {
-                        if ($testMMDVMysf2dmrMaster == $ysfdmrMasterHost[2]) { echo "      <option value=\"$ysfdmrMasterHost[2],$ysfdmrMasterHost[3],$ysfdmrMasterHost[4],$ysfdmrMasterHost[0]\" selected=\"selected\">$ysfdmrMasterHost[0]</option>\n";}
-                        else { echo "      <option value=\"$ysfdmrMasterHost[2],$ysfdmrMasterHost[3],$ysfdmrMasterHost[4],$ysfdmrMasterHost[0]\">$ysfdmrMasterHost[0]</option>\n"; }
-                }
-        }
-        fclose($dmrMasterFile);
-        ?>
-    </select></td>
-    </tr>
+
     <tr>	
 	<td align="left"><a class="tooltip2" href="#"><?php echo "PassWord";?>:<span><b>Password</b>Password for DMR Server</span></a></td>
     <td align="left" colspan="2"><input type="password" name="dmrPassWord" size="23" maxlength="23" value="<?php echo $configysfgateway['DMR Network']['Password'];?>" /></td>
