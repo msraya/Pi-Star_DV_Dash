@@ -4303,6 +4303,7 @@ $ysfHosts = fopen("/usr/local/etc/YSFHosts.txt", "r"); ?>
 	<td align="left"><a class="tooltip2" href="#"><?php echo "DMR Startup Host";?>:<span><b>DMR Host</b>Set your prefered DMR Host here</span></a></td>
 	<td colspan="2" style="text-align: left;"><select name="dmrStartupHost">
 	<?php
+
 			if (isset($configysfgateway['DMR Network']['Startup'])) {
 				$testDMRHost = $configysfgateway['DMR Network']['Startup'];
 				echo "      <option value=\"none\">None</option>\n";
@@ -4311,29 +4312,33 @@ $ysfHosts = fopen("/usr/local/etc/YSFHosts.txt", "r"); ?>
 					$testDMRHost = "none";
 					echo "      <option value=\"none\" selected=\"selected\">None</option>\n";
 			} 
-			if (substr($ysfmastertmp,0,2) == "BM") {
-				$dmrFile = fopen("/usr/local/etc/DMRHosts.txt", "r");
-				while (!feof($dmrFile)) {
-					$dmrLine = fgets($dmrFile);
-					$dmrHost = preg_split('/;/', $dmrLine);
-					if ((strpos($dmrHost[0], '#') === FALSE ) && ($dmrHost[0] != '')) {
-						if (($testDMRHost == $dmrHost[0]) || ($testDMRHost == $dmrHost[3]) ) { echo "      <option value=\"$dmrHost[0]\" selected=\"selected\">$dmrHost[0] - ".htmlspecialchars($dmrHost[3])."</option>\n";}
-						else { echo "      <option value=\"$dmrHost[0]\">$dmrHost[0] - ".htmlspecialchars($dmrHost[3])."</option>\n"; }
+
+
+			if (file_exists("/usr/local/etc/DMRHosts.txt") && file_exists("/usr/local/etc/DMRP_Talkgroups.txt")) {
+				if (substr($ysfmastertmp,0,2) == "BM") {
+					$dmrFile = fopen("/usr/local/etc/DMRHosts.txt", "r");
+					while (!feof($dmrFile)) {
+						$dmrLine = fgets($dmrFile);
+						$dmrHost = preg_split('/;/', $dmrLine);
+						if ((strpos($dmrHost[0], '#') === FALSE ) && ($dmrHost[0] != '')) {
+							if (($testDMRHost == $dmrHost[0]) || ($testDMRHost == $dmrHost[3]) ) { echo "      <option value=\"$dmrHost[0]\" selected=\"selected\">$dmrHost[0] - ".htmlspecialchars($dmrHost[3])."</option>\n";}
+							else { echo "      <option value=\"$dmrHost[0]\">$dmrHost[0] - ".htmlspecialchars($dmrHost[3])."</option>\n"; }
+						}
 					}
-				}
-				fclose($dmrFile);
-			}	
-			else {
-				$dmrFile = fopen("/usr/local/etc/DMRP_Talkgroups.txt", "r");
-				while (!feof($dmrFile)) {
-					$dmrLine = fgets($dmrFile);
-					$dmrHost = preg_split('/;/', $dmrLine);			
-					if ((strpos($dmrHost[0], '#') === FALSE ) && ($dmrHost[0] != '')) {
-						if (($testDMRHost == $dmrHost[0]) || ($testDMRHost == $dmrHost[1]) ) { echo "      <option value=\"$dmrHost[0]\" selected=\"selected\">$dmrHost[0] - ".htmlspecialchars($dmrHost[1])."</option>\n";}
-						else { echo "      <option value=\"$dmrHost[0]\">$dmrHost[0] - ".htmlspecialchars($dmrHost[1])."</option>\n"; }
+					fclose($dmrFile);
+				}	
+				else {
+					$dmrFile = fopen("/usr/local/etc/DMRP_Talkgroups.txt", "r");
+					while (!feof($dmrFile)) {
+						$dmrLine = fgets($dmrFile);
+						$dmrHost = preg_split('/;/', $dmrLine);			
+						if ((strpos($dmrHost[0], '#') === FALSE ) && ($dmrHost[0] != '')) {
+							if (($testDMRHost == $dmrHost[0]) || ($testDMRHost == $dmrHost[1]) ) { echo "      <option value=\"$dmrHost[0]\" selected=\"selected\">$dmrHost[0] - ".htmlspecialchars($dmrHost[1])."</option>\n";}
+							else { echo "      <option value=\"$dmrHost[0]\">$dmrHost[0] - ".htmlspecialchars($dmrHost[1])."</option>\n"; }
+						}
 					}
+					fclose($dmrFile);		
 				}
-				fclose($dmrFile);		
 			}
 			?>
 	</select></td>

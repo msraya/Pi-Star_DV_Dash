@@ -94,7 +94,7 @@ function ApplyFix_PI4fstab() {
 		fixNeeded="YES"
 		;;
 	esac
-	
+
 	if [[ ${hardwareField} == "ODROID"* ]]; then
 	    :
 	elif [[ ${hardwareField} == *"sun8i"* ]]; then
@@ -242,27 +242,27 @@ function RestoreDataAndDowngrade() {
 	# Delete MobileGPS service
 	systemctl disable mobilegps.timer
 	rm -f /lib/systemd/system/mobilegps.timer
-	rm -f /lib/systemd/system/mobilegps.service	
-	
+	rm -f /lib/systemd/system/mobilegps.service
+
 	systemctl daemon-reload
-	
+
 	sed -i "s/$PISTAR_VERSION/$OFFICIAL_RELEASE_VERSION/g" /etc/pistar-release
 
 	/usr/local/sbin/pistar-motdgen
 
 	echo "Downgraded from ${PISTAR_VERSION} to $OFFICIAL_RELEASE_VERSION..."
-	
+
     elif [ ${PISTAR_VERSION_INFO[0]} -eq 4 ]; then
 	# Revert shellinabox localhost-only
 	#rm -f /etc/nginx/default.d/shellinabox.conf
 	#grep -q 'SHELLINABOX_ARGS' /etc/default/shellinabox && (grep -q '^SHELLINABOX_ARGS=.*\-\-localhost\-only' /etc/default/shellinabox && (sed -i 's/\-\-localhost\-only\ //g' /etc/default/shellinabox))
 	#grep -q 'font-family' /etc/shellinabox/options-available/00_White\ On\ Black.css && (sed -i '/#vt100 #console, #vt100 #alt_console, #vt100 #cursor, #vt100 #lineheight {/,/}/d' /etc/shellinabox/options-available/00_White\ On\ Black.css)
 	#systemctl reload nginx.service
-	
+
 	# Revert MobileGPS
 	systemctl disable mobilegps.timer
 	rm -f /lib/systemd/system/mobilegps.timer
-	
+
 	echo '[Unit]' > /lib/systemd/system/mobilegps.service
 	echo 'Description=Pi-Star MobileGPS Service' >> /lib/systemd/system/mobilegps.service
 	echo 'After=syslog.target network.target' >> /lib/systemd/system/mobilegps.service
@@ -275,12 +275,12 @@ function RestoreDataAndDowngrade() {
 	echo '' >> /lib/systemd/system/mobilegps.service
 	echo '[Install]' >> /lib/systemd/system/mobilegps.service
 	echo 'WantedBy=multi-user.target' >> /lib/systemd/system/mobilegps.service
-	
+
 	# Enable unattended-upgrades
         systemctl unmask unattended-upgrades
         LC_ALL=C systemctl enable unattended-upgrades > /dev/null 2<&1
         systemctl start unattended-upgrades
-	
+
 	# Enable SAMBA
 	systemctl unmask smbd
 	systemctl unmask nmbd
@@ -292,18 +292,18 @@ function RestoreDataAndDowngrade() {
 	# Enable agetty on tty1
 	systemctl enable getty@tty1.service
 	systemctl start getty@tty1.service
-	
+
 	# Enable the service
 	systemctl daemon-reload
 	systemctl enable mobilegps.service
-	
+
 	sed -i "s/$PISTAR_VERSION/$OFFICIAL_RELEASE_VERSION/g" /etc/pistar-release
 
 	/usr/local/sbin/pistar-motdgen
 
 	echo "Downgraded from ${PISTAR_VERSION} to $OFFICIAL_RELEASE_VERSION..."
     fi
-    
+
     _ro
 }
 
@@ -318,21 +318,21 @@ function UpdateSelf() {
 	_ro
         exit 1
     fi
-    
+
     if [[ "$(head -1 ${_tempFileName})" != '#!/usr/bin/env bash' ]]; then
         echo "ERROR: Failed to download update for ea7ee-pistar!"
         echo "ERROR: Contents of file is not as expected - github may be down"
 	_ro
         exit 1
     fi
-    
+
     local OCTAL_MODE=$(stat -c '%a' "$0")
     if ! chmod ${OCTAL_MODE} "${_tempFileName}" ; then
         echo "ERROR: Error while trying to set mode on ${_tempFileName}"
 	_ro
         exit 1
     fi
-    
+
     cat > "${SELFUPDATE_SCRIPT}" << EOF
       	mount -o remount,rw /
     	mount -o remount,rw /boot
@@ -352,6 +352,7 @@ EOF
 }
 
 function DisplayConfigUpdate() {
+    sudo /usr/local/sbin/HostFilesUpdate.sh
     echo " ****************************************** NOTICE ******************************************"
     echo " *                                                                                           *"
     echo " * Now you need to open the Pi-Star's Configuration page, and click \"Apply Changes\" button *"
