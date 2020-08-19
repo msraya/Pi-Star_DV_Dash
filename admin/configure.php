@@ -1091,23 +1091,19 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	if (empty($_POST['ysfStartupHost']) != TRUE ) {
 	   $newYSFStartupHostArr = explode(',', escapeshellcmd($_POST['ysfStartupHost']));
 	   $newYSFStartupHost = strtoupper($newYSFStartupHostArr[1]);
-	   if ($newYSFStartupHost == "NONE") { $configysfgateway['YSF Network']['Startup'] = "7"; }
+	   if ($newYSFStartupHost == "none") { $configysfgateway['YSF Network']['Startup'] = "7"; }
 	   else { $configysfgateway['YSF Network']['Startup'] = $newYSFStartupHostArr[0]; }
 	}
 
 	if (empty($_POST['dmrStartupHost']) != TRUE ) {
 		$newDMRStartupHost = escapeshellcmd($_POST['dmrStartupHost']);
-		if ($newDMRStartupHost == "NONE") { unset($configysfgateway['DMR Network']['Startup']); }
+		if ($newDMRStartupHost == "none") { unset($configysfgateway['DMR Network']['Startup']); }
 		else { $configysfgateway['DMR Network']['Startup'] = $newDMRStartupHost; }
 	}
 
 	if (empty($_POST['fcsStartupHost']) != TRUE ) {	
-		if ($_POST['fcsStartupHost'] != "None") {
-			$newFCSStartupHostarr = explode(',', escapeshellcmd($_POST['ysfdmrMasterHost']));
-			$newFCSStartupHost = substr($newFCSStartupHostarr[0],3);
-			write_log($newFCSStartupHost);
-		}
-		else $newFCSStartupHost = "400";
+		if ($_POST['fcsStartupHost'] != "none") $newFCSStartupHost = substr($_POST['fcsStartupHost'],3);
+		else $newFCSStartupHost = "00118";
 		$configysfgateway['FCS Network']['Startup'] = $newFCSStartupHost;
 	} else $configysfgateway['FCS Network']['Startup'] = "00118";
 
@@ -1162,8 +1158,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	}
 
 	if (empty($_POST['ysfdmrMasterHost']) != TRUE ) {
-		$ysf2dmrMasterHostArr = explode(',', escapeshellcmd($_POST['ysfdmrMasterHost']));
-		write_log(print_r($ysf2dmrMasterHostArr, true));			
+		$ysf2dmrMasterHostArr = explode(',', escapeshellcmd($_POST['ysfdmrMasterHost']));			
 		$configysfgateway['DMR Network']['Address'] = $ysf2dmrMasterHostArr[0];
 		$configysfgateway['DMR Network']['Password'] = '"'.$ysf2dmrMasterHostArr[1].'"';
 		$configysfgateway['DMR Network']['Port'] = $ysf2dmrMasterHostArr[2];
@@ -1191,11 +1186,12 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	if (empty($_POST['BeaconTime']) != TRUE ) {
 		$newBeaconTime = escapeshellcmd($_POST['BeaconTime']);
 		$configysfgateway['General']['BeaconTime'] = $newBeaconTime;
-	}
+	} else $configysfgateway['General']['BeaconTime'] = "0";
+
 	if (empty($_POST['TimeoutTime']) != TRUE ) {
 		$newTimeoutTime = escapeshellcmd($_POST['TimeoutTime']);
 		$configysfgateway['Network']['InactivityTimeout'] = $newTimeoutTime;
-	}
+	} else $configysfgateway['Network']['InactivityTimeout'] = "0";
 
 	if (empty($_POST['dmrPassWord']) != TRUE ) {
 		$newdmrPassWord = escapeshellcmd($_POST['dmrPassWord']);
@@ -2371,7 +2367,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	if (!isset($configysfgateway['Log']['FileRoot'])) { $configysfgateway['Log']['FileRoot'] = "YSFGateway"; }
 	if (!isset($configysfgateway['aprs.fi']['Icon'])) { $configysfgateway['aprs.fi']['Icon'] = "YY"; }
 	if (!isset($configysfgateway['aprs.fi']['Beacon'])) { $configysfgateway['aprs.fi']['Beacon'] = "Yaesu DMO with EA7EE Sofware"; }
-	if (!isset($configysfgateway['aprs.fi']['BeaconTime'])) { $configysfgateway['aprs.fi']['BeaconTime'] = "0"; }
+	if (!isset($configysfgateway['aprs.fi']['BeaconTime'])) { $configysfgateway['aprs.fi']['BeaconTime'] = "20"; }
 	if (!isset($configysfgateway['aprs.fi']['Port'])) { $configysfgateway['aprs.fi']['Port'] = "14580"; }
 	if (!isset($configysfgateway['aprs.fi']['Refresh'])) { $configysfgateway['aprs.fi']['Refresh'] = "4"; }
 	if (!isset($configysfgateway['General']['SaveAMBE'])) { $configysfgateway['General']['SaveAMBE'] = "0"; }
@@ -4314,9 +4310,7 @@ $ysfHosts = fopen("/usr/local/etc/YSFHosts.txt", "r"); ?>
 					$testDMRHost = "none";
 					echo "      <option value=\"none\" selected=\"selected\">None</option>\n";
 				} 
-			write_log($mastertmp);
 			if (substr($mastertmp,0,2) == "BM") {
-				write_log("BM File");
 				$dmrFile = fopen("/usr/local/etc/DMRHosts.txt", "r");
 				while (!feof($dmrFile)) {
 					$dmrLine = fgets($dmrFile);
@@ -4329,7 +4323,6 @@ $ysfHosts = fopen("/usr/local/etc/YSFHosts.txt", "r"); ?>
 				fclose($dmrFile);
 			}	
 			else {
-				write_log("DMR + file");
 				$dmrFile = fopen("/usr/local/etc/DMRP_Talkgroups.txt", "r");
 				while (!feof($dmrFile)) {
 					$dmrLine = fgets($dmrFile);
