@@ -953,7 +953,8 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 
 	// Set Callsign
 	if (empty($_POST['confCallsign']) != TRUE ) {
-	  $newCallsignUpper = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', $_POST['confCallsign']));
+	  $newCallsignUpper = strtoupper($_POST['confCallsign']);
+		  //preg_replace('/[^A-Za-z0-9]/', '', $_POST['confCallsign']));
 	  // Removed the need for the r prefix - OpenQuad have fixed up the servers not to require it.
 	  // if (preg_match("/^[0-9]/", $newCallsignUpper)) { $newCallsignUpperIRC = 'r'.$newCallsignUpper; } else { $newCallsignUpperIRC = $newCallsignUpper; }
 	  $newCallsignUpperIRC = $newCallsignUpper;
@@ -2327,6 +2328,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	if (!isset($configysfgateway['DMR Network']['File'])) { $configysfgateway['DMR Network']['File'] = "/usr/local/etc/DMRIds.dat"; }
 	if (!isset($configysfgateway['DMR Network']['Time'])) { $configysfgateway['DMR Network']['Time'] = "720"; }	
 	if (!isset($configysfgateway['General']['NewsPath'])) { $configysfgateway['General']['NewsPath'] = "/tmp/news"; }			
+	if (!isset($configysfgateway['General']['BeaconPath'])) { $configysfgateway['General']['BeaconPath'] = "/usr/local/sbin/beacon.amb"; }	
 
 	// Add missing options to YSF2NXDN
 	$configysf2nxdn['YSF Network']['LocalPort'] = $configysfgateway['YSF Network']['YSF2NXDNPort'];
