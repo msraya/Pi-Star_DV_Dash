@@ -1137,9 +1137,11 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 		$configysfgateway['DMR Network']['Password'] = '"'.$ysf2dmrMasterHostArr[1].'"';
 		$configysfgateway['DMR Network']['Port'] = $ysf2dmrMasterHostArr[2];
 		if (substr($ysf2dmrMasterHostArr[3], 0, 2) == "BM") {
+			$configysfgateway['DMR Network']['Hosts'] = "/usr/local/etc/DMRHosts.txt";
 			$configysfgateway['DMR Network']['EnableUnlink'] = "1";
 			unset ($configysfgateway['DMR Network']['Options']); 
 		} else {
+			$configysfgateway['DMR Network']['Hosts'] = "/usr/local/etc/DMRP_Talkgroups.txt";
 			$configysfgateway['DMR Network']['EnableUnlink'] = "0"; 
 			if (empty($_POST['ysfgatewayNetworkOptions']) != TRUE ) {
 				$ysf2dmrOptionsLineStripped = str_replace('"', "", $_POST['ysfgatewayNetworkOptions']);
@@ -2323,7 +2325,8 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	if (!isset($configysfgateway['DMR Network']['PCUnlink'])) { $configysfgateway['DMR Network']['PCUnlink'] = "0"; }
 	if (!isset($configysfgateway['DMR Network']['Local'])) { $configysfgateway['DMR Network']['Local'] = "62032"; }
 	if (!isset($configysfgateway['DMR Network']['File'])) { $configysfgateway['DMR Network']['File'] = "/usr/local/etc/DMRIds.dat"; }
-	if (!isset($configysfgateway['DMR Network']['Time'])) { $configysfgateway['DMR Network']['Time'] = "720"; }		
+	if (!isset($configysfgateway['DMR Network']['Time'])) { $configysfgateway['DMR Network']['Time'] = "720"; }	
+	if (!isset($configysfgateway['General']['NewsPath'])) { $configysfgateway['General']['NewsPath'] = "/tmp/news"; }			
 
 	// Add missing options to YSF2NXDN
 	$configysf2nxdn['YSF Network']['LocalPort'] = $configysfgateway['YSF Network']['YSF2NXDNPort'];
@@ -4237,9 +4240,6 @@ fclose($dextraFile);
         ?>
     </select></td>
     </tr>
-    <?php } ?>
-
-
 
     <?php if (file_exists('/etc/dstar-radio.mmdvmhost') && $configysf2nxdn['Enabled']['Enabled'] == 1) { ?>
     <tr>
@@ -4281,8 +4281,6 @@ fclose($dextraFile);
 </select></td>
 </tr>
 <?php } ?>
-
-
 
     <?php if (file_exists('/etc/dstar-radio.mmdvmhost') && $configysf2p25['Enabled']['Enabled'] == 1) { ?>
     <tr>
@@ -4328,8 +4326,11 @@ fclose($dextraFile);
     </select></td>
     </tr>  
 <?php } ?>
+
 </table>
 	<div><input type="button" value="<?php echo $lang['apply'];?>" onclick="submitform()" /><br /><br /></div>
+    <?php } ?>
+
 	
 <?php if (file_exists('/etc/dstar-radio.mmdvmhost') && $configmmdvm['P25 Network']['Enable'] == 1) {
 $p25Hosts = fopen("/usr/local/etc/P25Hosts.txt", "r");
@@ -4438,6 +4439,8 @@ $p25Hosts = fopen("/usr/local/etc/P25Hosts.txt", "r");
 	<div><input type="button" value="<?php echo $lang['apply'];?>" onclick="submitform()" /><br /><br /></div>
 <?php } ?>
 
+
+
 <!-- GPSd -->
 <?php if ( $configmmdvm['GPSD']['Enable'] == 1 ) { ?>
 	<h2><?php echo $lang['gpsd_config'];?></h2>
@@ -4515,6 +4518,7 @@ $p25Hosts = fopen("/usr/local/etc/P25Hosts.txt", "r");
     </table>
 	<div><input type="button" value="<?php echo $lang['apply'];?>" onclick="submitform()" /><br /><br /></div>
 <?php } ?>	
+
 
 	<h2><?php echo $lang['fw_config'];?></h2>
     <table>
