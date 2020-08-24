@@ -1,3 +1,3 @@
 <?php
-$version = '20200822-ea7ee';
+$version = '20200824-ea7ee';
 ?>

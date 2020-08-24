@@ -614,6 +614,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  $rollDesc1 = 'sudo sed -i "/description1=/c\\description1='.$newConfDesc1.'" /etc/ircddbgateway';
 	  $rollDesc11 = 'sudo sed -i "/description1_1=/c\\description1_1='.$newConfDesc1.'" /etc/ircddbgateway';
 	  $configmmdvm['Info']['Location'] = '"'.$newConfDesc1.'"';
+	  $configysfgateway['Info']['Location'] = '"'.$newConfDesc1.'"';	  
 	  $configdmrgateway['Info']['Location'] = '"'.$newConfDesc1.'"';
 	  $configysf2nxdn['Info']['Location'] = '"'.$newConfDesc1.'"';
 	  $configysf2p25['Info']['Location'] = '"'.$newConfDesc1.'"';
@@ -1097,6 +1098,11 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 			break;
 		}
 	}	
+
+	if (empty($_POST['StartupDGID']) != TRUE ) {
+		$newDGID = escapeshellcmd($_POST['StartupDGID']);
+		$configysfgateway['YSF Network']['StartupDGID'] = $newDGID;
+	}
 
 	if (empty($_POST['DMREnable']) != TRUE ) {	
 		if (escapeshellcmd($_POST['DMREnable']) == 'ON' )  { $configysfgateway['DMR Network']['Enable'] = "1"; }
@@ -2329,6 +2335,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	if (!isset($configysfgateway['DMR Network']['Time'])) { $configysfgateway['DMR Network']['Time'] = "720"; }	
 	if (!isset($configysfgateway['General']['NewsPath'])) { $configysfgateway['General']['NewsPath'] = "/tmp/news"; }			
 	if (!isset($configysfgateway['General']['BeaconPath'])) { $configysfgateway['General']['BeaconPath'] = "/usr/local/sbin/beacon.amb"; }	
+	if (!isset($configysfgateway['YSF Network']['StartupDGID'])) { $configysfgateway['YSF Network']['StartupDGID'] = "0"; }
 
 	// Add missing options to YSF2NXDN
 	$configysf2nxdn['YSF Network']['LocalPort'] = $configysfgateway['YSF Network']['YSF2NXDNPort'];
@@ -4024,7 +4031,10 @@ fclose($dextraFile);
         ?>
     </select></td>
     </tr>
-
+    <tr>
+ 	<td align="left"><a class="tooltip2" href="#"><?php echo "Startup DG-ID";?>:<span><b>Initial DG-ID to use</b>This is default DGID room for the YSF connection</span></a></td>
+    <td align="left" colspan="2"><input type="text" name="StartupDGID" size="2" maxlength="2" value="<?php echo $configysfgateway['YSF Network']['StartupDGID'];?>" /></td>
+    </tr>
 
     <td align="left"><a class="tooltip2" href="#">APRS Enable:<span><b>APRS Enable</b>Enable APRS output only for EA7EE ysfgateway.</span></a></td>
     <?php
