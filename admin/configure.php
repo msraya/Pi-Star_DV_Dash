@@ -1100,9 +1100,8 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	}	
 
 	if (empty($_POST['StartupDGID']) != TRUE ) {
-		$newDGID = escapeshellcmd($_POST['StartupDGID']);
-		$configysfgateway['YSF Network']['StartupDGID'] = $newDGID;
-	}
+		$configysfgateway['YSF Network']['StartupDGID'] = $_POST['StartupDGID'];
+	} else if ($_POST['StartupDGID'] == "0") $configysfgateway['YSF Network']['StartupDGID'] = "0";
 
 	if (empty($_POST['DMREnable']) != TRUE ) {	
 		if (escapeshellcmd($_POST['DMREnable']) == 'ON' )  { $configysfgateway['DMR Network']['Enable'] = "1"; }
