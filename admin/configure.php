@@ -1169,12 +1169,12 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	if (empty($_POST['BeaconTime']) != TRUE ) {
 		$newBeaconTime = escapeshellcmd($_POST['BeaconTime']);
 		$configysfgateway['General']['BeaconTime'] = $newBeaconTime;
-	}
+	} else if ($_POST['BeaconTime'] == "0") $configysfgateway['General']['BeaconTime'] = "0";
 
 	if (empty($_POST['TimeoutTime']) != TRUE ) {
 		$newTimeoutTime = escapeshellcmd($_POST['TimeoutTime']);
 		$configysfgateway['Network']['InactivityTimeout'] = $newTimeoutTime;
-	}
+	} else if ($_POST['TimeoutTime'] == "0") $configysfgateway['Network']['InactivityTimeout'] = "0";
 
 	if (empty($_POST['dmrPassWord']) != TRUE ) {
 		$newdmrPassWord = escapeshellcmd($_POST['dmrPassWord']);
