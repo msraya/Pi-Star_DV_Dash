@@ -1064,6 +1064,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	if (empty($_POST['ysfESSId']) != TRUE ) {
 		$configysfgateway['General']['Id'] = escapeshellcmd($_POST['ysfESSId']);
 	}
+
 	if (empty($_POST['ysfStartupHost']) != TRUE ) {
 	   $newYSFStartupHostArr = explode(',', escapeshellcmd($_POST['ysfStartupHost']));
 	   $newYSFStartupHost = strtoupper($newYSFStartupHostArr[1]);
@@ -1098,6 +1099,16 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 			break;
 		}
 	}	
+
+	if (empty($_POST['ysfgatewayYSFNetworkOptions']) != TRUE ) {
+		$newYCSOptions = $_POST['ysfgatewayYSFNetworkOptions'];
+		$configysfgateway['YSF Network']['Options'] = $newYCSOptions;
+	}
+
+	if (empty($_POST['ysfgatewayFCSNetworkOptions']) != TRUE ) {
+		$newFCSOptions = $_POST['ysfgatewayFCSNetworkOptions'];
+		$configysfgateway['FCS Network']['Options'] = $newFCSOptions;
+	}
 
 	if (empty($_POST['StartupDGID']) != TRUE ) {
 		$configysfgateway['YSF Network']['StartupDGID'] = $_POST['StartupDGID'];
@@ -2304,6 +2315,9 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	if (!isset($configysfgateway['General']['AMBECompB'])) { $configysfgateway['General']['AMBECompB'] = "3"; }			
 	if (isset($configysfgateway['Network']['YSF2DMRAddress'])) { unset($configysfgateway['Network']['YSF2DMRAddress']); }
 	if (isset($configysfgateway['Network']['YSF2DMRPort'])) { unset($configysfgateway['Network']['YSF2DMRPort']); }
+
+	if (!isset($configysfgateway['YSF Network']['Options'])) { $configysfgateway['YSF Network']['Options'] = "";}
+	if (!isset($configysfgateway['FCS Network']['Options'])) { $configysfgateway['FCS Network']['Options'] = "";}
 
 	if (!isset($configysfgateway['Remote Commands']['Enable'])) { $configysfgateway['Remote Commands']['Enable'] = "1"; }
 	if (!isset($configysfgateway['Remote Commands']['Port'])) { $configysfgateway['Remote Commands']['Port'] = "6073"; }
@@ -4035,6 +4049,11 @@ fclose($dextraFile);
     <td align="left" colspan="2"><input type="text" name="StartupDGID" size="2" maxlength="2" value="<?php echo $configysfgateway['YSF Network']['StartupDGID'];?>" /></td>
     </tr>
 
+    <tr>
+    <td align="left"><a class="tooltip2" href="#"><?php echo "YCS Network";?>:<span><b>YCS Network</b>Set your options for YCS here</span></a></td>
+    <td align="left" colspan="2"> Options=<input type="text" name="ysfgatewayYSFNetworkOptions" size="40" maxlength="100" value="<?php if (isset($configysfgateway['YSF Network']['Options'])) { echo $configysfgateway['YSF Network']['Options']; } ?>" /></td>
+    </tr>
+
     <td align="left"><a class="tooltip2" href="#">APRS Enable:<span><b>APRS Enable</b>Enable APRS output only for EA7EE ysfgateway.</span></a></td>
     <?php
 	if ( isset($configysfgateway['aprs.fi']['Enable']) ) {
@@ -4247,8 +4266,13 @@ fclose($dextraFile);
                 }
                 fclose($fcsHosts);
         }
-
         ?>
+
+		<!-- <tr>
+		<td align="left"><a class="tooltip2" href="#"><?php echo "FCS Network";?>:<span><b>FCS Network</b>Set your options for FCS here</span></a></td>
+		<td align="left" colspan="2"> Options=<input type="text" name="ysfgatewayFCSNetworkOptions" size="40" maxlength="100" value="<?php if (isset($configysfgateway['FCS Network']['Options'])) { echo $configysfgateway['FCS Network']['Options']; } ?>" /></td>
+		</tr> -->
+
     </select></td>
     </tr>
 
