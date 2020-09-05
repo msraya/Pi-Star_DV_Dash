@@ -1103,12 +1103,12 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	if (empty($_POST['ysfgatewayYSFNetworkOptions']) != TRUE ) {
 		$newYCSOptions = $_POST['ysfgatewayYSFNetworkOptions'];
 		$configysfgateway['YSF Network']['Options'] = $newYCSOptions;
-	}
+	} else if ($_POST['ysfgatewayYSFNetworkOptions'] == "") $configysfgateway['YSF Network']['Options'] = "";
 
 	if (empty($_POST['ysfgatewayFCSNetworkOptions']) != TRUE ) {
 		$newFCSOptions = $_POST['ysfgatewayFCSNetworkOptions'];
 		$configysfgateway['FCS Network']['Options'] = $newFCSOptions;
-	}
+	} else if ($_POST['ysfgatewayFCSNetworkOptions'] == "") $configysfgateway['FCS Network']['Options'] = "";
 
 	if (empty($_POST['StartupDGID']) != TRUE ) {
 		$configysfgateway['YSF Network']['StartupDGID'] = $_POST['StartupDGID'];
