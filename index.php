@@ -64,7 +64,8 @@ $configPistarRelease = parse_ini_file($pistarReleaseConfig, true);
 			echo ' <a class="menuupdate" href="/admin/update.php">'.$lang['update'].'</a>'."\n";
 			echo ' <a class="menupower" href="/admin/power.php">'.$lang['power'].'</a>'."\n";
 			echo ' <a class="menusysinfo" href="/admin/sysinfo.php">Sysinfo</a>'."\n";
-			echo ' <a class="menulogs" href="/admin/live_modem_log.php">'.$lang['live_logs'].'</a>'."\n";
+			echo ' <a class="menulogs" href="/admin/live_modem_log.php">Modem Log</a>'."\n";
+			echo ' <a class="menulogs" href="/admin/live_ysf_log.php">YSF Log</a>'."\n";			
 		    } ?>
 		    <a class="menuadmin" href="/admin/"><?php echo $lang['admin'];?></a>
 			<a class="menulogs" href="/news/index.php">WiresX News</a>			
