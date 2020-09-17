@@ -2296,6 +2296,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	$configdmr2ysf['Log']['FileLevel'] = "2";
 
 	// Add missing options to YSFGateway
+	if (!isset($configysfgateway['Network']['Jitter'])) { $configysfgateway['Network']['Jitter'] = "3"; }
 	if (!isset($configysfgateway['General']['RptAddress'])) { $configysfgateway['General']['RptAddress'] = "127.0.0.1"; }
 	if (!isset($configysfgateway['General']['RptPort'])) { $configysfgateway['General']['RptPort'] = "3200"; }
 	if (!isset($configysfgateway['General']['LocalAddress'])) { $configysfgateway['General']['LocalAddress'] = "127.0.0.1"; }
