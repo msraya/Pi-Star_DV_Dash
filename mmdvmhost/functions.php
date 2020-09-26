@@ -673,9 +673,9 @@ function getHeardList($logLines) {
 		$mode = substr($logLine, 27, strpos($logLine,",") - 27);
 		$callsign2 = substr($logLine, strpos($logLine,"from") + 5, strpos($logLine,"to") - strpos($logLine,"from") - 6);
 		$callsign = $callsign2;
-		if (strpos($callsign2,"/") > 0) {
-			$callsign = substr($callsign2, 0, strpos($callsign2,"/"));
-		}
+		// if (strpos($callsign2,"/") > 0) {
+		// 	$callsign = substr($callsign2, 0, strpos($callsign2,"/"));
+		// }
 		$callsign = trim($callsign);
 
 		$id ="";
@@ -758,7 +758,7 @@ function getLastHeard($logLines) {
 	//returns last heard list from log
 	$lastHeard = array();
 	$heardCalls = array();
-	$heardList = getHeardList($logLines);
+	$heardList = getHeardList($logLines);	
 	foreach ($heardList as $listElem) {
 		if ( ($listElem[1] == "D-Star") || ($listElem[1] == "YSF") || ($listElem[1] == "P25") || ($listElem[1] == "NXDN") || ($listElem[1] == "POCSAG") || (startsWith($listElem[1], "DMR")) ) {
 			$callUuid = $listElem[2]."#".$listElem[1].$listElem[3].$listElem[5];
@@ -768,6 +768,7 @@ function getLastHeard($logLines) {
 			}
 		}
 	}
+
 	return $lastHeard;
 }
 
