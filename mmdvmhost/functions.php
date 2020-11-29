@@ -673,9 +673,11 @@ function getHeardList($logLines) {
 		$mode = substr($logLine, 27, strpos($logLine,",") - 27);
 		$callsign2 = substr($logLine, strpos($logLine,"from") + 5, strpos($logLine,"to") - strpos($logLine,"from") - 6);
 		$callsign = $callsign2;
-		// if (strpos($callsign2,"/") > 0) {
-		// 	$callsign = substr($callsign2, 0, strpos($callsign2,"/"));
-		// }
+		if ($mode != "YSF") {
+		  if (strpos($callsign2,"/") > 0) {
+		  $callsign = substr($callsign2, 0, strpos($callsign2,"/"));
+		  }
+		}
 		$callsign = trim($callsign);
 
 		$id ="";
