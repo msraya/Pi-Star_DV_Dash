@@ -4051,7 +4051,7 @@ fclose($dextraFile);
     </tr>
 
     <tr>
-    <td align="left"><a class="tooltip2" href="#"><?php echo "YCS Network";?>:<span><b>YCS Network</b>Set your options for YCS here</span></a></td>
+    <td align="left"><a class="tooltip2" href="#"><?php echo "YCS Network";?>:<span><b>YCS Network</b>YCS Options. Example:  14;24;96  </span></a></td>
     <td align="left" colspan="2"> Options=<input type="text" name="ysfgatewayYSFNetworkOptions" size="40" maxlength="100" value="<?php if (isset($configysfgateway['YSF Network']['Options'])) { echo $configysfgateway['YSF Network']['Options']; } ?>" /></td>
     </tr>
 
@@ -4270,7 +4270,7 @@ fclose($dextraFile);
         ?>
 
 		<tr>
-		<td align="left"><a class="tooltip2" href="#"><?php echo "FCS Network";?>:<span><b>FCS Network</b>Set your options for FCS here</span></a></td>
+		<td align="left"><a class="tooltip2" href="#"><?php echo "FCS Network";?>:<span><b>FCS Network</b>FCS Options. Example:  14;24;96  </span></a></td>
 		<td align="left" colspan="2"> Options=<input type="text" name="ysfgatewayFCSNetworkOptions" size="40" maxlength="100" value="<?php if (isset($configysfgateway['FCS Network']['Options'])) { echo $configysfgateway['FCS Network']['Options']; } ?>" /></td>
 		</tr>
 
