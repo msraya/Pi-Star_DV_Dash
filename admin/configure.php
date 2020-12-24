@@ -4046,12 +4046,12 @@ fclose($dextraFile);
     </select></td>
     </tr>
     <tr>
- 	<td align="left"><a class="tooltip2" href="#"><?php echo "Startup DG-ID";?>:<span><b>Initial DG-ID to use</b>This is default DGID room for the YSF connection</span></a></td>
+ 	<td align="left"><a style="color:red;" class="tooltip2" href="#"><?php echo "Startup DG-ID for TreeHouse";?>:<span><b style="background-color:#6bff33;">Initial DG-ID to use</b>This is default DGID room for the TreeHouse server only</span></a></td>
     <td align="left" colspan="2"><input type="text" name="StartupDGID" size="2" maxlength="2" value="<?php echo $configysfgateway['YSF Network']['StartupDGID'];?>" /></td>
     </tr>
 
     <tr>
-    <td align="left"><a class="tooltip2" href="#"><?php echo "YCS Network";?>:<span><b>YCS Network</b>YCS Options. Example:  14;24;96  </span></a></td>
+    <td align="left"><a style="color:red;" class="tooltip2" href="#"><?php echo "Statical DGID's for YCS-Network";?>:<span><b style="background-color:#6bff33;">YCS Network</b>Example: 14;24;96</span></a></td>
     <td align="left" colspan="2"> Options=<input type="text" name="ysfgatewayYSFNetworkOptions" size="80" maxlength="100" value="<?php if (isset($configysfgateway['YSF Network']['Options'])) { echo $configysfgateway['YSF Network']['Options']; } ?>" /></td>
     </tr>
 
@@ -4070,7 +4070,7 @@ fclose($dextraFile);
     ?>
     </tr>
 
-	<td align="left"><a class="tooltip2" href="#"><?php echo "APRS Callsign";?>:<span><b>Callsign for APRS-IS</b>When conected to APRS-IS Callsign must be unique. You can add -1,-2.. for ARPS to work when using many hotspot</span></a></td>
+	<td align="left"><a class="tooltip2" href="#"><?php echo "APRS Callsign";?>:<span><b>Callsign for APRS-IS</b>When conected to APRS-IS Callsign must be unique. You would need to add -1,-2.. for APRS to connect when using many hotspot</span></a></td>
     <td align="left" colspan="2"><input type="text" name="APRSCallsign" size="10" maxlength="10" value="<?php echo $configysfgateway['aprs.fi']['AprsCallsign'];?>" /></td>
     </tr>
     <tr>
@@ -4270,7 +4270,7 @@ fclose($dextraFile);
         ?>
 
 		<tr>
-		<td align="left"><a class="tooltip2" href="#"><?php echo "FCS Network";?>:<span><b>FCS Network</b>FCS Options. Example:  14;24;96  </span></a></td>
+		<td align="left"><a style="color:red;" class="tooltip2" href="#"><?php echo "Statical DGID's for YCS Network";?><span><b style="background-color:#6bff33;">FCS Options</b>Example: 14;24;96</span></a></td>
 		<td align="left" colspan="2"> Options=<input type="text" name="ysfgatewayFCSNetworkOptions" size="80" maxlength="100" value="<?php if (isset($configysfgateway['FCS Network']['Options'])) { echo $configysfgateway['FCS Network']['Options']; } ?>" /></td>
 		</tr>
 
