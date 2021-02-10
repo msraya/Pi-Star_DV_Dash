@@ -1112,7 +1112,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 
 	if (empty($_POST['StartupDGID']) != TRUE ) {
 		$configysfgateway['YSF Network']['StartupDGID'] = $_POST['StartupDGID'];
-	} else if ($_POST['StartupDGID'] == "0") $configysfgateway['YSF Network']['StartupDGID'] = "0";
+	} else if ($_POST['StartupDGID'] == "") $configysfgateway['YSF Network']['StartupDGID'] = "";
 
 	if (empty($_POST['DMREnable']) != TRUE ) {	
 		if (escapeshellcmd($_POST['DMREnable']) == 'ON' )  { $configysfgateway['DMR Network']['Enable'] = "1"; }
@@ -4046,7 +4046,7 @@ fclose($dextraFile);
     </select></td>
     </tr>
     <tr>
- 	<td align="left"><a style="color:red;" class="tooltip2" href="#"><?php echo "Startup DG-ID for TreeHouse";?>:<span><b style="background-color:#6bff33;">Initial DG-ID to use</b>This is default DGID room for the TreeHouse server only</span></a></td>
+ 	<td align="left"><a style="color:red;" class="tooltip2" href="#"><?php echo "Startup DG-ID for TreeHouse";?>:<span><b style="background-color:#6bff33;">Initial DG-ID to use</b>This is default DGID room for the TreeHouse server. Others servers leave blank</span></a></td>
     <td align="left" colspan="2"><input type="text" name="StartupDGID" size="2" maxlength="2" value="<?php echo $configysfgateway['YSF Network']['StartupDGID'];?>" /></td>
     </tr>
 
