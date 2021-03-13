@@ -116,6 +116,19 @@ if ( $testMMDVModeYSF == 1 ) {
                 }
                 fclose($fcsHosts);
               }
+        if (file_exists("/usr/local/etc/DMRHosts.txt")) {
+                $dmrHosts = fopen("/usr/local/etc/DMRHosts.txt", "r");
+                while (!feof($dmrHosts)) {
+                        $ysfHostsLine = fgets($dmrHosts);
+                        $ysfHost = preg_split('/;/', $ysfHostsLine);
+                        if ((strpos($ysfHost[0], '#') === FALSE ) && ($ysfHost[0] != '')) {
+				                  if (strlen($ysfHost[3]) >= 30) { $ysfHost[3] = substr($ysfHost[3], 0, 27)."..."; }
+                          if ( ($testYSFHost == $ysfHost[0]) || ($testYSFHost == $ysfHost[3]) ) { echo "      <option value=\"DMR$ysfHost[0]\" selected=\"selected\">DMR$ysfHost[0] - ".htmlspecialchars($ysfHost[3])."</option>\n"; }
+                                else { echo "      <option value=\"DMR$ysfHost[0]\">DMR$ysfHost[0] - ".htmlspecialchars($ysfHost[3])."</option>\n"; }
+                        }
+                }
+                fclose($fcsHosts);
+              }              
             ?>
           </td>
           <td>
