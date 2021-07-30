@@ -1158,18 +1158,21 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 			$configysfgateway['DMR Network']['EnableUnlink'] = "1";
 			unset ($configysfgateway['DMR Network']['Options']); 
 		} else {
-			$configysfgateway['DMR Network']['Hosts'] = "/usr/local/etc/DMRP_Talkgroups.txt";
+			if (substr($ysf2dmrMasterHostArr[3], 0, 2) == "AA") 
+				$configysfgateway['DMR Network']['Hosts'] = "/usr/local/etc/DMRPA7_Talkgroups.txt";
+			else {
+				$configysfgateway['DMR Network']['Hosts'] = "/usr/local/etc/DMRP_Talkgroups.txt";
+				if (empty($_POST['ysfgatewayNetworkOptions']) != TRUE ) {
+					$ysf2dmrOptionsLineStripped = str_replace('"', "", $_POST['ysfgatewayNetworkOptions']);
+					$configysfgateway['DMR Network']['Options'] = '"'.$ysf2dmrOptionsLineStripped.'"';
+				 }
+				 else {
+					$configysfgateway['DMR Network']['Options'] = "\"StartRef=4370;RlinkTime=40;\"";
+					$configysfgateway['DMR Network']['Startup'] = "4370";
+				 }
+			}				 				
 			$configysfgateway['DMR Network']['EnableUnlink'] = "0"; 
-			if (empty($_POST['ysfgatewayNetworkOptions']) != TRUE ) {
-				$ysf2dmrOptionsLineStripped = str_replace('"', "", $_POST['ysfgatewayNetworkOptions']);
-				$configysfgateway['DMR Network']['Options'] = '"'.$ysf2dmrOptionsLineStripped.'"';
-			 }
-			 else {
-				$configysfgateway['DMR Network']['Options'] = "\"StartRef=4370;RlinkTime=40;\"";
-				$configysfgateway['DMR Network']['Startup'] = "4370";
-			 }
 		}
-
 	}
 
 	if (empty($_POST['APIKey']) != TRUE ) {
@@ -4188,7 +4191,7 @@ fclose($dextraFile);
 			} 
 
 
-			if (file_exists("/usr/local/etc/DMRHosts.txt") && file_exists("/usr/local/etc/DMRP_Talkgroups.txt")) {
+			if (file_exists("/usr/local/etc/DMRHosts.txt") && file_exists("/usr/local/etc/DMRP_Talkgroups.txt") && file_exists("/usr/local/etc/DMRPA7_Talkgroups.txt")) {
 				if (substr($ysfmastertmp,0,2) == "BM") {
 					$dmrFile = fopen("/usr/local/etc/DMRHosts.txt", "r");
 					while (!feof($dmrFile)) {
@@ -4200,9 +4203,11 @@ fclose($dextraFile);
 						}
 					}
 					fclose($dmrFile);
-				}	
-				else {
-					$dmrFile = fopen("/usr/local/etc/DMRP_Talkgroups.txt", "r");
+				} else {
+					if (substr($ysfmastertmp,0,2) == "AA") 
+						$dmrFile = fopen("/usr/local/etc/DMRPA7_Talkgroups.txt", "r");
+					else
+						$dmrFile = fopen("/usr/local/etc/DMRP_Talkgroups.txt", "r");
 					while (!feof($dmrFile)) {
 						$dmrLine = fgets($dmrFile);
 						$dmrHost = preg_split('/;/', $dmrLine);			
