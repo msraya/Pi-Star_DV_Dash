@@ -1159,17 +1159,8 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 
 	if (empty($_POST['ysfdmrMasterHost']) != TRUE ) {
 		$ysf2dmrMasterHostArr = explode(',', escapeshellcmd($_POST['ysfdmrMasterHost']));
-		if ($configPistarRelease['Pi-Star']['Version'] == "4.1.3") {
-			$configmmdvm['DMR Network']['Port'] = $dmrMasterHostArr[2];
-			$configmmdvm['DMR Network']['Address'] = $dmrMasterHostArr[0];
-			unset ($configmmdvm['DMR Network']['RemotePort']);
-			unset ($configmmdvm['DMR Network']['RemoteAddress']);
-		} else {
-			$configmmdvm['DMR Network']['RemotePort'] = $dmrMasterHostArr[2];
-			$configmmdvm['DMR Network']['RemoteAddress'] = $dmrMasterHostArr[0];
-			unset ($configmmdvm['DMR Network']['Port']);
-			unset ($configmmdvm['DMR Network']['Address']);		
-		}
+		$configysfgateway['DMR Network']['Port'] = $ysf2dmrMasterHostArr[2];
+		$configysfgateway['DMR Network']['Address'] = $ysf2dmrMasterHostArr[0];
 		$configysfgateway['DMR Network']['Password'] = '"'.$ysf2dmrMasterHostArr[1].'"';
 		if (substr($ysf2dmrMasterHostArr[3], 0, 2) == "BM") {
 			$configysfgateway['DMR Network']['Hosts'] = "/usr/local/etc/DMRHosts.txt";
@@ -4470,7 +4461,7 @@ fclose($dextraFile);
     <td align="left"><a class="tooltip2" href="#"><?php echo $lang['dmr_master'];?>:<span><b>DMR Master</b>Set your prefered DMR master here</span></a></td>
     <td align="left" colspan="2"><select name="ysfdmrMasterHost">
 <?php
-		$mastertmp = "BM"; 
+		$ysfmastertmp = "BM"; 
 		$dmrMasterFile = fopen("/usr/local/etc/DMR_Hosts.txt", "r");
 		$testMMDVMysf2dmrMaster = $configysfgateway['DMR Network']['Address'];			
 
