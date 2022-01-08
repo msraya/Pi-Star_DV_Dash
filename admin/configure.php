@@ -874,7 +874,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  $configdmrgateway['Info']['TXFrequency'] = $newFREQ;
 	  $configysfgateway['Info']['RXFrequency'] = $newFREQ;
 	  $configysfgateway['Info']['TXFrequency'] = $newFREQ;
-	  //$configysfgateway['General']['Suffix'] = "ND";
+	  unset($configysfgateway['General']['Suffix']);
 	  $configysf2nxdn['Info']['RXFrequency'] = $newFREQ;
 	  $configysf2nxdn['Info']['TXFrequency'] = $newFREQ;
 	  $configysf2nxdn['YSF Network']['Suffix'] = "ND";
@@ -971,7 +971,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  if ($configs['ircddbHostname'] == "rr.openquad.net") {
 		  $rollIRCUSER = 'sudo sed -i "/ircddbUsername=/c\\ircddbUsername='.$newCallsignUpperIRC.'" /etc/ircddbgateway';
 		  system($rollIRCUSER);
-	  }
+	  } else $rollIRCUSER = "";
 
 	  //if ( strlen($newCallsignUpper) < 6 ) { $configysfgateway['General']['Callsign'] = $newCallsignUpper."-1"; }
 	  //else { $configysfgateway['General']['Callsign'] = $newCallsignUpper; }
@@ -1006,7 +1006,9 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  }
 
 	  system($rollGATECALL);
-	  system($rollIRCUSER);
+	  if (empty($rollIRCUSER) != TRUE ) {
+		  system($rollIRCUSER);
+	  }
 	  system($rollDPLUSLOGIN);
 	  system($rollDASHBOARDcall);
 	  system($rollTIMESERVERcall);
@@ -1082,7 +1084,9 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 		if ($_POST['fcsStartupHost'] != "none") $newFCSStartupHost = substr($_POST['fcsStartupHost'],3);
 		else $newFCSStartupHost = "00118";
 		$configysfgateway['FCS Network']['Startup'] = $newFCSStartupHost;
-	} else $configysfgateway['FCS Network']['Startup'] = "00118";
+	} else {
+		if (!isset($configysfgateway['FCS Network']['Startup'])) $configysfgateway['FCS Network']['Startup'] = "00118";
+	}
 
 	if (empty($_POST['ysfStartupMode']) != TRUE ) {
 		$newysfStartupMode = strtoupper(escapeshellcmd($_POST['ysfStartupMode']));
@@ -1103,16 +1107,21 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	if (empty($_POST['ysfgatewayYSFNetworkOptions']) != TRUE ) {
 		$newYCSOptions = $_POST['ysfgatewayYSFNetworkOptions'];
 		$configysfgateway['YSF Network']['Options'] = '"'.$newYCSOptions.'"';
-	} else if ($_POST['ysfgatewayYSFNetworkOptions'] == "") $configysfgateway['YSF Network']['Options'] = "";
-
+	} else {
+		if (!isset($configysfgateway['YSF Network']['Options'])) $configysfgateway['YSF Network']['Options'] = "";
+	}
 	if (empty($_POST['ysfgatewayFCSNetworkOptions']) != TRUE ) {
 		$newFCSOptions = $_POST['ysfgatewayFCSNetworkOptions'];
 		$configysfgateway['FCS Network']['Options'] = '"'.$newFCSOptions.'"';
-	} else if ($_POST['ysfgatewayFCSNetworkOptions'] == "") $configysfgateway['FCS Network']['Options'] = "";
+	} else {
+		if (!isset($configysfgateway['FCS Network']['Options'])) $configysfgateway['FCS Network']['Options'] = "";
+	}
 
 	if (empty($_POST['StartupDGID']) != TRUE ) {
 		$configysfgateway['YSF Network']['StartupDGID'] = $_POST['StartupDGID'];
-	} else if ($_POST['StartupDGID'] == "") $configysfgateway['YSF Network']['StartupDGID'] = "";
+	} else {
+		if (!isset($configysfgateway['YSF Network']['StartupDGID'])) $configysfgateway['YSF Network']['StartupDGID'] = "";
+	}
 
 	if (empty($_POST['DMREnable']) != TRUE ) {	
 		if (escapeshellcmd($_POST['DMREnable']) == 'ON' )  { $configysfgateway['DMR Network']['Enable'] = "1"; }
@@ -1149,10 +1158,19 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	}
 
 	if (empty($_POST['ysfdmrMasterHost']) != TRUE ) {
-		$ysf2dmrMasterHostArr = explode(',', escapeshellcmd($_POST['ysfdmrMasterHost']));			
-		$configysfgateway['DMR Network']['Address'] = $ysf2dmrMasterHostArr[0];
+		$ysf2dmrMasterHostArr = explode(',', escapeshellcmd($_POST['ysfdmrMasterHost']));
+		if ($configPistarRelease['Pi-Star']['Version'] == "4.1.3") {
+			$configmmdvm['DMR Network']['Port'] = $dmrMasterHostArr[2];
+			$configmmdvm['DMR Network']['Address'] = $dmrMasterHostArr[0];
+			unset ($configmmdvm['DMR Network']['RemotePort']);
+			unset ($configmmdvm['DMR Network']['RemoteAddress']);
+		} else {
+			$configmmdvm['DMR Network']['RemotePort'] = $dmrMasterHostArr[2];
+			$configmmdvm['DMR Network']['RemoteAddress'] = $dmrMasterHostArr[0];
+			unset ($configmmdvm['DMR Network']['Port']);
+			unset ($configmmdvm['DMR Network']['Address']);		
+		}
 		$configysfgateway['DMR Network']['Password'] = '"'.$ysf2dmrMasterHostArr[1].'"';
-		$configysfgateway['DMR Network']['Port'] = $ysf2dmrMasterHostArr[2];
 		if (substr($ysf2dmrMasterHostArr[3], 0, 2) == "BM") {
 			$configysfgateway['DMR Network']['Hosts'] = "/usr/local/etc/DMRHosts.txt";
 			$configysfgateway['DMR Network']['EnableUnlink'] = "1";
@@ -1183,12 +1201,16 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	if (empty($_POST['BeaconTime']) != TRUE ) {
 		$newBeaconTime = escapeshellcmd($_POST['BeaconTime']);
 		$configysfgateway['General']['BeaconTime'] = $newBeaconTime;
-	} else if ($_POST['BeaconTime'] == "0") $configysfgateway['General']['BeaconTime'] = "0";
+	} else {
+		if (!isset($configysfgateway['General']['BeaconTime'])) $configysfgateway['General']['BeaconTime'] = "0";
+	}
 
 	if (empty($_POST['TimeoutTime']) != TRUE ) {
 		$newTimeoutTime = escapeshellcmd($_POST['TimeoutTime']);
 		$configysfgateway['Network']['InactivityTimeout'] = $newTimeoutTime;
-	} else if ($_POST['TimeoutTime'] == "0") $configysfgateway['Network']['InactivityTimeout'] = "0";
+	} else {
+		if (!isset($configysfgateway['Network']['InactivityTimeout'])) $configysfgateway['Network']['InactivityTimeout'] = "0";
+	}
 
 	if (empty($_POST['dmrPassWord']) != TRUE ) {
 		$newdmrPassWord = escapeshellcmd($_POST['dmrPassWord']);
@@ -1292,9 +1314,19 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	// Set DMR Master Server
 	if (empty($_POST['dmrMasterHost']) != TRUE ) {
 	  $dmrMasterHostArr = explode(',', escapeshellcmd($_POST['dmrMasterHost']));
-	  $configmmdvm['DMR Network']['Address'] = $dmrMasterHostArr[0];
 	  $configmmdvm['DMR Network']['Password'] = '"'.$dmrMasterHostArr[1].'"';
-	  $configmmdvm['DMR Network']['Port'] = $dmrMasterHostArr[2];
+	  if ($configPistarRelease['Pi-Star']['Version'] == "4.1.3") {
+		$configmmdvm['DMR Network']['Port'] = $dmrMasterHostArr[2];
+		$configmmdvm['DMR Network']['Address'] = $dmrMasterHostArr[0];
+		unset ($configmmdvm['DMR Network']['RemotePort']);
+		unset ($configmmdvm['DMR Network']['RemoteAddress']);
+	  } else {
+		$configmmdvm['DMR Network']['RemotePort'] = $dmrMasterHostArr[2];
+		$configmmdvm['DMR Network']['RemoteAddress'] = $dmrMasterHostArr[0];
+		unset ($configmmdvm['DMR Network']['Port']);
+		unset ($configmmdvm['DMR Network']['Address']);		
+	  }
+	  
 	  if (empty($_POST['bmHSSecurity']) != TRUE ) {
 		  $configModem['BrandMeister']['Password'] = '"'.$_POST['bmHSSecurity'].'"';
 		  if ($dmrMasterHostArr[0] != '127.0.0.1') { $configmmdvm['DMR Network']['Password'] = '"'.$_POST['bmHSSecurity'].'"'; }
@@ -1305,7 +1337,12 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 		if (substr($dmrMasterHostArr[3], 0, 2) == "BM") {
 			unset ($configmmdvm['DMR Network']['Options']);
 			unset ($configdmrgateway['DMR Network 2']['Options']);
-			unset ($configmmdvm['DMR Network']['Local']);
+			if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+				unset ($configmmdvm['DMR Network']['Local']);
+			} else {
+				unset ($configmmdvm['DMR Network']['LocalPort']);
+			}
+			
 		}
 
 		// DMR Gateway
@@ -1313,7 +1350,14 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 			unset ($configmmdvm['DMR Network']['Options']);
 			// F1RMB: don't erase DMR Network 2::Options
 			//unset ($configdmrgateway['DMR Network 2']['Options']);
-			$configmmdvm['DMR Network']['Local'] = "62032";
+			if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+				$configmmdvm['DMR Network']['Local'] = "62032";
+				unset ($configmmdvm['DMR Network']['LocalPort']);
+			} else {
+				$configmmdvm['DMR Network']['LocalPort'] = "62032";
+				unset ($configmmdvm['DMR Network']['Local']);
+			}
+
 			if (isset($configdmr2ysf['DMR Network']['LocalAddress'])) {
 				$configdmr2ysf['DMR Network']['LocalAddress'] = "127.0.0.1";
 			}
@@ -1325,7 +1369,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 		// DMR2YSF
 		if ($dmrMasterHostArr[0] == '127.0.0.2' && $dmrMasterHostArr[2] == '62033') {
 			unset ($configmmdvm['DMR Network']['Options']);
-			$configmmdvm['DMR Network']['Local'] = "62034";
+			if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+				$configmmdvm['DMR Network']['Local'] = "62034";
+				unset ($configmmdvm['DMR Network']['LocalPort']);
+			} else {
+				$configmmdvm['DMR Network']['LocalPort'] = "62034";
+				unset ($configmmdvm['DMR Network']['Local']);
+			}
 			if (isset($configdmr2ysf['DMR Network']['LocalAddress'])) {
 				$configdmr2ysf['DMR Network']['LocalAddress'] = "127.0.0.2";
 			}
@@ -1334,7 +1384,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 		// DMR2NXDN
 		if ($dmrMasterHostArr[0] == '127.0.0.3' && $dmrMasterHostArr[2] == '62035') {
 			unset ($configmmdvm['DMR Network']['Options']);
-			$configmmdvm['DMR Network']['Local'] = "62036";
+			if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+				$configmmdvm['DMR Network']['Local'] = "62036";
+				unset ($configmmdvm['DMR Network']['LocalPort']);
+			} else {
+				$configmmdvm['DMR Network']['LocalPort'] = "62036";
+				unset ($configmmdvm['DMR Network']['Local']);
+			}			
 			if (isset($configdmr2nxdn['DMR Network']['LocalAddress'])) {
 				$configdmr2nxdn['DMR Network']['LocalAddress'] = "127.0.0.3";
 			}
@@ -1342,7 +1398,12 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 
 		// Set the DMR+ Options= line
 		if (substr($dmrMasterHostArr[3], 0, 4) == "DMR+") {
-			unset ($configmmdvm['DMR Network']['Local']);
+			if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+				unset ($configmmdvm['DMR Network']['Local']);
+			} else {
+				unset ($configmmdvm['DMR Network']['LocalPort']);
+			}
+
 			if (empty($_POST['dmrNetworkOptions']) != TRUE ) {
 				$dmrOptionsLineStripped = str_replace('"', "", $_POST['dmrNetworkOptions']);
 				$configmmdvm['DMR Network']['Options'] = '"'.$dmrOptionsLineStripped.'"';
@@ -1528,7 +1589,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $rollModemType = 'sudo sed -i "/modemType=/c\\modemType=DVMEGA" /etc/dstarrepeater';
 	    $rollDVMegaPort = 'sudo sed -i "/dvmegaPort=/c\\dvmegaPort=/dev/ttyAMA0" /etc/dstarrepeater';
 	    $rollDVMegaVariant = 'sudo sed -i "/dvmegaVariant=/c\\dvmegaVariant=2" /etc/dstarrepeater';
-	    $configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollDVMegaPort);
@@ -1542,7 +1609,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $rollModemType = 'sudo sed -i "/modemType=/c\\modemType=DVMEGA" /etc/dstarrepeater';
 	    $rollDVMegaPort = 'sudo sed -i "/dvmegaPort=/c\\dvmegaPort=/dev/ttyAMA0" /etc/dstarrepeater';
 	    $rollDVMegaVariant = 'sudo sed -i "/dvmegaVariant=/c\\dvmegaVariant=3" /etc/dstarrepeater';
-	    $configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollDVMegaPort);
@@ -1556,7 +1629,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $rollModemType = 'sudo sed -i "/modemType=/c\\modemType=DVMEGA" /etc/dstarrepeater';
 	    $rollDVMegaPort = 'sudo sed -i "/dvmegaPort=/c\\dvmegaPort=/dev/ttyUSB0" /etc/dstarrepeater';
 	    $rollDVMegaVariant = 'sudo sed -i "/dvmegaVariant=/c\\dvmegaVariant=3" /etc/dstarrepeater';
-            $configmmdvm['Modem']['Port'] = "/dev/ttyUSB0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollDVMegaPort);
@@ -1570,7 +1649,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $rollModemType = 'sudo sed -i "/modemType=/c\\modemType=DVMEGA" /etc/dstarrepeater';
 	    $rollDVMegaPort = 'sudo sed -i "/dvmegaPort=/c\\dvmegaPort=/dev/ttyACM0" /etc/dstarrepeater';
 	    $rollDVMegaVariant = 'sudo sed -i "/dvmegaVariant=/c\\dvmegaVariant=3" /etc/dstarrepeater';
-            $configmmdvm['Modem']['Port'] = "/dev/ttyACM0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollDVMegaPort);
@@ -1586,7 +1671,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $rollDVMegaVariant = 'sudo sed -i "/dvmegaVariant=/c\\dvmegaVariant=2" /etc/dstarrepeater';
 	    $rollDstarRepeaterStartDelay = 'sudo sed -i "/OnStartupSec=/c\\OnStartupSec=60" /lib/systemd/system/dstarrepeater.timer';
 	    $rollMMDVMHostStartDelay = 'sudo sed -i "/OnStartupSec=/c\\OnStartupSec=60" /lib/systemd/system/mmdvmhost.timer';
-            $configmmdvm['Modem']['Port'] = "/dev/ttyUSB0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollDVMegaPort);
@@ -1602,7 +1693,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $rollDVMegaVariant = 'sudo sed -i "/dvmegaVariant=/c\\dvmegaVariant=3" /etc/dstarrepeater';
 	    $rollDstarRepeaterStartDelay = 'sudo sed -i "/OnStartupSec=/c\\OnStartupSec=60" /lib/systemd/system/dstarrepeater.timer';
 	    $rollMMDVMHostStartDelay = 'sudo sed -i "/OnStartupSec=/c\\OnStartupSec=60" /lib/systemd/system/mmdvmhost.timer';
-            $configmmdvm['Modem']['Port'] = "/dev/ttyUSB0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollDVMegaPort);
@@ -1616,7 +1713,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $rollModemType = 'sudo sed -i "/modemType=/c\\modemType=DVMEGA" /etc/dstarrepeater';
 	    $rollDVMegaPort = 'sudo sed -i "/dvmegaPort=/c\\dvmegaPort=/dev/ttyUSB0" /etc/dstarrepeater';
 	    $rollDVMegaVariant = 'sudo sed -i "/dvmegaVariant=/c\\dvmegaVariant=0" /etc/dstarrepeater';
-            $configmmdvm['Modem']['Port'] = "/dev/ttyUSB0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollDVMegaPort);
@@ -1628,7 +1731,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $rollModemType = 'sudo sed -i "/modemType=/c\\modemType=DVMEGA" /etc/dstarrepeater';
 	    $rollDVMegaPort = 'sudo sed -i "/dvmegaPort=/c\\dvmegaPort=/dev/ttyACM0" /etc/dstarrepeater';
 	    $rollDVMegaVariant = 'sudo sed -i "/dvmegaVariant=/c\\dvmegaVariant=0" /etc/dstarrepeater';
-            $configmmdvm['Modem']['Port'] = "/dev/ttyACM0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollDVMegaPort);
@@ -1639,7 +1748,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  if ( $confHardware == 'dvrptr1' ) {
 	    $rollModemType = 'sudo sed -i "/modemType=/c\\modemType=DV-RPTR V1" /etc/dstarrepeater';
 	    $rollDVRPTRPort = 'sudo sed -i "/dvrptr1Port=/c\\dvrptr1Port=/dev/ttyACM0" /etc/dstarrepeater';
-            $configmmdvm['Modem']['Port'] = "/dev/ttyACM0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollDVRPTRPort);
@@ -1649,7 +1764,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  if ( $confHardware == 'dvrptr2' ) {
 	    $rollModemType = 'sudo sed -i "/modemType=/c\\modemType=DV-RPTR V2" /etc/dstarrepeater';
 	    $rollDVRPTRPort = 'sudo sed -i "/dvrptr1Port=/c\\dvrptr1Port=/dev/ttyACM0" /etc/dstarrepeater';
-            $configmmdvm['Modem']['Port'] = "/dev/ttyACM0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollDVRPTRPort);
@@ -1659,7 +1780,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  if ( $confHardware == 'dvrptr3' ) {
 	    $rollModemType = 'sudo sed -i "/modemType=/c\\modemType=DV-RPTR V3" /etc/dstarrepeater';
 	    $rollDVRPTRPort = 'sudo sed -i "/dvrptr1Port=/c\\dvrptr1Port=/dev/ttyACM0" /etc/dstarrepeater';
-            $configmmdvm['Modem']['Port'] = "/dev/ttyACM0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);		
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);			
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollDVRPTRPort);
@@ -1675,7 +1802,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 
 	  if ( $confHardware == 'dvap' ) {
 	    $rollModemType = 'sudo sed -i "/modemType=/c\\modemType=DVAP" /etc/dstarrepeater';
-            $configmmdvm['Modem']['Port'] = "/dev/ttyUSB0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollRepeaterType1);
@@ -1686,7 +1819,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollRepeaterType1);
-	    $configmmdvm['Modem']['Port'] = "/dev/ttyACM0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	    $configmmdvm['General']['Duplex'] = 0;
 	    $configmmdvm['DMR Network']['Slot1'] = 0;
 	  }
@@ -1696,7 +1835,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollRepeaterType1);
-	    $configmmdvm['Modem']['Port'] = "/dev/ttyACM0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	    $configmmdvm['General']['Duplex'] = 0;
 	    $configmmdvm['DMR Network']['Slot1'] = 0;
 	  }
@@ -1706,7 +1851,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollRepeaterType1);
-	    $configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	    $configmmdvm['General']['Duplex'] = 0;
 	    $configmmdvm['DMR Network']['Slot1'] = 0;
 	  }
@@ -1716,7 +1867,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollRepeaterType1);
-	    $configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	    $configmmdvm['General']['Duplex'] = 0;
 	    $configmmdvm['DMR Network']['Slot1'] = 0;
 	  }
@@ -1726,7 +1883,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollRepeaterType1);
-	    $configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	    $configmmdvm['General']['Duplex'] = 1;
 	  }
 
@@ -1734,7 +1897,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
             $rollModemType = 'sudo sed -i "/modemType=/c\\modemType=MMDVM" /etc/dstarrepeater';
             $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
             system($rollRepeaterType1);
-            $configmmdvm['Modem']['Port'] = "/dev/ttyACM0";
+			if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+				unset($configmmdvm['Modem']['UARTPort']);
+				$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+			} else {
+				unset($configmmdvm['Modem']['Port']);
+				$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+			}
             $configmmdvm['General']['Duplex'] = 0;
             $configmmdvm['DMR Network']['Slot1'] = 0;
           }
@@ -1746,7 +1915,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    system($rollModemType);
 	    system($rollMMDVMPort);
 	    system($rollRepeaterType1);
-	    $configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	  }
 
 	  if ( $confHardware == 'zum' ) {
@@ -1756,7 +1931,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    system($rollModemType);
 	    system($rollMMDVMPort);
 	    system($rollRepeaterType1);
-            $configmmdvm['Modem']['Port'] = "/dev/ttyACM0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	  }
 
 	  if ( $confHardware == 'stm32dvm' ) {
@@ -1766,7 +1947,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    system($rollModemType);
 	    system($rollMMDVMPort);
 	    system($rollRepeaterType1);
-	    $configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	  }
 
 	  if ( $confHardware == 'stm32usb' ) {
@@ -1776,7 +1963,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    system($rollModemType);
 	    system($rollMMDVMPort);
 	    system($rollRepeaterType1);
-	    $configmmdvm['Modem']['Port'] = "/dev/ttyUSB0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	  }
 
 	  if ( $confHardware == 'f4mgpio' ) {
@@ -1786,7 +1979,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    system($rollModemType);
 	    system($rollMMDVMPort);
 	    system($rollRepeaterType1);
-	    $configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	  }
 
 	  if ( $confHardware == 'f4mf7m' ) {
@@ -1794,7 +1993,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollRepeaterType1);
-	    $configmmdvm['Modem']['Port'] = "/dev/ttyUSB0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	    $configmmdvm['General']['Duplex'] = 1;
 	  }
 
@@ -1803,7 +2008,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollRepeaterType1);
-	    $configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	    $configmmdvm['General']['Duplex'] = 0;
 	    $configmmdvm['DMR Network']['Slot1'] = 0;
 	  }
@@ -1813,7 +2024,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollRepeaterType1);
-	    $configmmdvm['Modem']['Port'] = "/dev/ttySC0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttySC0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttySC0";
+		}		
 	    $configmmdvm['General']['Duplex'] = 0;
 	    $configmmdvm['DMR Network']['Slot1'] = 0;
 	  }
@@ -1823,7 +2040,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollRepeaterType1);
-	    $configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	    $configmmdvm['General']['Duplex'] = 1;
 	  }
 
@@ -1832,7 +2055,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollRepeaterType1);
-	    $configmmdvm['Modem']['Port'] = "/dev/ttyACM0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyACM0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyCM0";
+		}
 	    $configmmdvm['General']['Duplex'] = 1;
 	  }
 
@@ -1841,7 +2070,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollRepeaterType1);
-	    $configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	    $configmmdvm['General']['Duplex'] = 1;
 	  }
 
@@ -1850,7 +2085,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollRepeaterType1);
-	    $configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	    $configmmdvm['General']['Duplex'] = 0;
 	    $configmmdvm['DMR Network']['Slot1'] = 0;
 	  }
@@ -1860,7 +2101,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollRepeaterType1);
-	    $configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	    $configmmdvm['General']['Duplex'] = 0;
 	    $configmmdvm['DMR Network']['Slot1'] = 0;
 	  }
@@ -1870,7 +2117,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollRepeaterType1);
-	    $configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	    $configmmdvm['General']['Duplex'] = 1;
 	  }
 
@@ -1879,7 +2132,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollRepeaterType1);
-	    $configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	    $configmmdvm['General']['Duplex'] = 0;
 	    $configmmdvm['DMR Network']['Slot1'] = 0;
 	  }
@@ -1891,7 +2150,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    system($rollModemType);
 	    system($rollMMDVMPort);
 	    system($rollRepeaterType1);
-	    $configmmdvm['Modem']['Port'] = "/dev/ttyUSB0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyUSB0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyUSB0";
+		}		
 	    $configmmdvm['General']['Duplex'] = 0;
 	    $configmmdvm['DMR Network']['Slot1'] = 0;
 	  }
@@ -1901,7 +2166,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollRepeaterType1);
-	    $configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	    $configmmdvm['General']['Duplex'] = 0;
 	    $configmmdvm['DMR Network']['Slot1'] = 0;
 	  }
@@ -1911,7 +2182,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollRepeaterType1);
-	    $configmmdvm['Modem']['Port'] = "/dev/ttyACM0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyACM0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyACM0";
+		}
 	    $configmmdvm['General']['Duplex'] = 0;
 	    $configmmdvm['DMR Network']['Slot1'] = 0;
 	  }
@@ -1921,7 +2198,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $rollDVMegaPort = 'sudo sed -i "/dvmegaPort=/c\\dvmegaPort=/dev/ttyAMA0" /etc/dstarrepeater';
 	    $rollDVMegaVariant = 'sudo sed -i "/dvmegaVariant=/c\\dvmegaVariant=2" /etc/dstarrepeater';
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
-	    $configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyAMA0";
+		}
 	    system($rollModemType);
 	    system($rollDVMegaPort);
 	    system($rollDVMegaVariant);
@@ -1935,7 +2218,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $rollDVMegaPort = 'sudo sed -i "/dvmegaPort=/c\\dvmegaPort=/dev/ttyS2" /etc/dstarrepeater';
 	    $rollDVMegaVariant = 'sudo sed -i "/dvmegaVariant=/c\\dvmegaVariant=3" /etc/dstarrepeater';
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
-	    $configmmdvm['Modem']['Port'] = "/dev/ttyS2";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyS2";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyS2";
+		}
 	    system($rollModemType);
 	    system($rollDVMegaPort);
 	    system($rollDVMegaVariant);
@@ -1949,7 +2238,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $rollDVMegaPort = 'sudo sed -i "/dvmegaPort=/c\\dvmegaPort=/dev/ttyS2" /etc/dstarrepeater';
 	    $rollDVMegaVariant = 'sudo sed -i "/dvmegaVariant=/c\\dvmegaVariant=3" /etc/dstarrepeater';
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
-	    $configmmdvm['Modem']['Port'] = "/dev/ttyS2";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyS2";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyS2";
+		}
 	    system($rollModemType);
 	    system($rollDVMegaPort);
 	    system($rollDVMegaVariant);
@@ -1963,7 +2258,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
 	    system($rollModemType);
 	    system($rollRepeaterType1);
-	    $configmmdvm['Modem']['Port'] = "/dev/ttyACM0";
+		if ($configPistarRelease['Pi-Star']['Version'] == '4.1.3') {
+			unset($configmmdvm['Modem']['UARTPort']);
+			$configmmdvm['Modem']['Port'] = "/dev/ttyACM0";
+		} else {
+			unset($configmmdvm['Modem']['Port']);
+			$configmmdvm['Modem']['UARTPort'] = "/dev/ttyACM0";
+		}
 	    $configmmdvm['General']['Duplex'] = 0;
 	    $configmmdvm['DMR Network']['Slot1'] = 0;
 
@@ -3454,8 +3755,17 @@ else:
     <td align="left"><a class="tooltip2" href="#"><?php echo $lang['dmr_master'];?>:<span><b>DMR Master (MMDVMHost)</b>Set your prefered DMR master here</span></a></td>
     <td style="text-align: left;"><select name="dmrMasterHost">
 <?php
-        $testMMDVMdmrMaster = $configmmdvm['DMR Network']['Address'];
-	$testMMDVMdmrMasterPort = $configmmdvm['DMR Network']['Port'];
+    if ($configPistarRelease['Pi-Star']['Version'] == "4.1.3") {
+		unset($configmmdvm['DMR Network']['RemoteAddress']);
+		unset($configmmdvm['DMR Network']['RemotePort']);		
+		$testMMDVMdmrMaster = $configmmdvm['DMR Network']['Address'];
+		$testMMDVMdmrMasterPort = $configmmdvm['DMR Network']['Port'];		
+	} else {
+		unset($configmmdvm['DMR Network']['Address']);
+		unset($configmmdvm['DMR Network']['Port']);		
+		$testMMDVMdmrMaster = $configmmdvm['DMR Network']['RemoteAddress'];
+		$testMMDVMdmrMasterPort = $configmmdvm['DMR Network']['RemotePort'];
+	}
         while (!feof($dmrMasterFile)) {
                 $dmrMasterLine = fgets($dmrMasterFile);
                 $dmrMasterHost = preg_split('/\s+/', $dmrMasterLine);
@@ -3984,7 +4294,7 @@ fclose($dextraFile);
 
     <tr>
     <td align="left"><a class="tooltip2" href="#"><?php echo "Startup Mode";?>:<span><b>Mode</b>Set your prefered Startup Mode here</span></a></td>
-    <td colspan="2" style="text-align: left;"><select name="ysfStartupMode">
+    <td align="left" colspan="2"><select name="ysfStartupMode">
 <?php
         if (isset($configysfgateway['Network']['Type'])) {
                 $testYSFType = $configysfgateway['Network']['Type'];
@@ -4025,7 +4335,7 @@ fclose($dextraFile);
 </tr>	
 <tr>
 <td align="left"><a class="tooltip2" href="#"><?php echo $lang['ysf_startup_host'];?>:<span><b>YSF Host</b>Set your prefered YSF Host here</span></a></td>
-<td colspan="2" style="text-align: left;"><select name="ysfStartupHost">
+<td align="left" colspan="2"><select name="ysfStartupHost">
 <?php
 		$ysfHosts = fopen("/usr/local/etc/YSFHosts.txt", "r");
 		if (isset($configysfgateway['YSF Network']['Startup'])) {
@@ -4055,7 +4365,7 @@ fclose($dextraFile);
 
     <tr>
     <td align="left"><a style="color:red;" class="tooltip2" href="#"><?php echo "Statical DGID's for YCS-Network";?>:<span><b style="background-color:#6bff33;">YCS Network</b>Example: 14;24;96</span></a></td>
-    <td align="left" colspan="2"> Options=<input type="text" name="ysfgatewayYSFNetworkOptions" size="67" maxlength="100" value="<?php if (isset($configysfgateway['YSF Network']['Options'])) { echo $configysfgateway['YSF Network']['Options']; } ?>" /></td>
+    <td align="left" colspan="2"> Options=<input type="text" name="ysfgatewayYSFNetworkOptions" size="70" maxlength="67" value="<?php if (isset($configysfgateway['YSF Network']['Options'])) { echo $configysfgateway['YSF Network']['Options']; } ?>" /></td>
     </tr>
 
     <td align="left"><a class="tooltip2" href="#">APRS Enable:<span><b>APRS Enable</b>Enable APRS output only for EA7EE ysfgateway.</span></a></td>
@@ -4158,11 +4468,12 @@ fclose($dextraFile);
 
     <tr>
     <td align="left"><a class="tooltip2" href="#"><?php echo $lang['dmr_master'];?>:<span><b>DMR Master</b>Set your prefered DMR master here</span></a></td>
-    <td colspan="2" style="text-align: left;"><select name="ysfdmrMasterHost">
+    <td align="left" colspan="2"><select name="ysfdmrMasterHost">
 <?php
 		$mastertmp = "BM"; 
 		$dmrMasterFile = fopen("/usr/local/etc/DMR_Hosts.txt", "r");
-        $testMMDVMysf2dmrMaster = $configysfgateway['DMR Network']['Address'];
+		$testMMDVMysf2dmrMaster = $configysfgateway['DMR Network']['Address'];			
+
         while (!feof($dmrMasterFile)) {
                 $dmrMasterLine = fgets($dmrMasterFile);
                 $ysfdmrMasterHost = preg_split('/\s+/', $dmrMasterLine);
@@ -4177,8 +4488,8 @@ fclose($dextraFile);
     </tr>
 
 	<tr>
-	<td align="left"><a class="tooltip2" href="#"><?php echo "DMR Startup Host";?>:<span><b>DMR Host</b>Set your prefered DMR Host here</span></a></td>
-	<td colspan="2" style="text-align: left;"><select name="dmrStartupHost">
+	<td align="left"><a class="tooltip2" href="#"><?php echo "DMR Startup TG";?>:<span><b>DMR TG</b>Set your prefered DMR TG here</span></a></td>
+	<td align="left" colspan="2"><select name="dmrStartupHost">
 	<?php
 
 			if (isset($configysfgateway['DMR Network']['Startup'])) {
@@ -4191,7 +4502,7 @@ fclose($dextraFile);
 			} 
 
 
-			if (file_exists("/usr/local/etc/DMRHosts.txt") && file_exists("/usr/local/etc/DMRP_Talkgroups.txt") && file_exists("/usr/local/etc/DMRPA7_Talkgroups.txt")) {
+			if (file_exists("/usr/local/etc/DMRHosts.txt") && file_exists("/usr/local/etc/DMRP_Talkgroups.txt")) {
 				if (substr($ysfmastertmp,0,2) == "BM") {
 					$dmrFile = fopen("/usr/local/etc/DMRHosts.txt", "r");
 					while (!feof($dmrFile)) {
@@ -4229,7 +4540,7 @@ fclose($dextraFile);
     </tr>
     <tr>
     <td align="left"><a class="tooltip2" href="#"><?php echo $lang['dmr_plus_network'];?>:<span><b>DMR+ Network</b>Set your options= for DMR+ here</span></a></td>
-    <td align="left" colspan="2"> Options=<input type="text" name="ysfgatewayNetworkOptions" size="40" maxlength="100" value="<?php if (isset($configysfgateway['DMR Network']['Options'])) { echo $configysfgateway['DMR Network']['Options']; } ?>" /></td>
+    <td align="left" colspan="2"> Options=<input type="text" name="ysfgatewayNetworkOptions" size="70" maxlength="67" value="<?php if (isset($configysfgateway['DMR Network']['Options'])) { echo $configysfgateway['DMR Network']['Options']; } ?>" /></td>
     </tr>
 	<tr>
 	<td align="left"><a class="tooltip2" href="#">FCS Enable:<span><b>FCS Enable</b>Enable FCS.</span></a></td>
@@ -4249,7 +4560,7 @@ fclose($dextraFile);
 	</tr>
 	<tr>
 	<td align="left"><a class="tooltip2" href="#"><?php echo "FCS Startup Host";?>:<span><b>FCS Host</b>Set your prefered FCS Host here</span></a></td>
-	<td colspan="2" style="text-align: left;"><select name="fcsStartupHost">
+	<td align="left" colspan="2"><select name="fcsStartupHost">
 	<?php
         if (isset($configysfgateway['FCS Network']['Startup'])) {
                 $testFCSHost = "FCS".$configysfgateway['FCS Network']['Startup'];
@@ -4276,7 +4587,7 @@ fclose($dextraFile);
 
 		<tr>
 		<td align="left"><a style="color:red;" class="tooltip2" href="#"><?php echo "Statical DGID's for YCS Network";?><span><b style="background-color:#6bff33;">FCS Options</b>Example: 14;24;96</span></a></td>
-		<td align="left" colspan="2"> Options=<input type="text" name="ysfgatewayFCSNetworkOptions" size="67" maxlength="100" value="<?php if (isset($configysfgateway['FCS Network']['Options'])) { echo $configysfgateway['FCS Network']['Options']; } ?>" /></td>
+		<td align="left" colspan="2"> Options=<input type="text" name="ysfgatewayFCSNetworkOptions" size="70" maxlength="67" value="<?php if (isset($configysfgateway['FCS Network']['Options'])) { echo $configysfgateway['FCS Network']['Options']; } ?>" /></td>
 		</tr>
 
     </select></td>
@@ -4289,7 +4600,7 @@ fclose($dextraFile);
     </tr>
     <tr>
         <td align="left"><a class="tooltip2" href="#"><?php echo $lang['nxdn_startup_host'];?>:<span><b>NXDN Host</b>Set your prefered NXDN Host here</span></a></td>
-        <td colspan="2" style="text-align: left;"><select name="ysf2nxdnStartupDstId">
+        <td align="left" colspan="2"><select name="ysf2nxdnStartupDstId">
 <?php
 	$nxdnHosts = fopen("/usr/local/etc/NXDNHosts.txt", "r");
 	$testNXDNHost = $configysf2nxdn['NXDN Network']['StartupDstId'];
